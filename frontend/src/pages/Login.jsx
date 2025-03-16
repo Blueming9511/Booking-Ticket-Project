@@ -33,14 +33,14 @@ const Login = () => {
         {/* Remember Me & Forgot Password */}
         <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
           <label className="flex items-center">
-            <input type="checkbox" className="mr-2" />
+            <input type="checkbox" className="mr-2 cursor-pointer" />
             Remember me
           </label>
           <a href="#" className="hover:text-blue-500">Forgot password?</a>
         </div>
 
         {/* Login Button */}
-        <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium text-lg hover:bg-blue-700 transition duration-300">
+        <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium text-lg hover:bg-blue-700 transition duration-300 cursor-pointer">
           Sign In
         </button>
 
@@ -49,7 +49,7 @@ const Login = () => {
 
         {/* Google Login */}
         <button
-          className="flex items-center justify-center w-full border py-3 rounded-lg hover:bg-gray-100 transition duration-300"
+          className="flex items-center justify-center w-full border py-3 rounded-lg hover:bg-gray-100 transition duration-300 cursor-pointer"
           onClick={() => (window.location.href = "http://localhost:8080/oauth2/authorization/google")}
         >
           <FcGoogle className="text-2xl mr-2" />
