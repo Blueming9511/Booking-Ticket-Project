@@ -1,8 +1,9 @@
 package com.cibook.bookingticket.service;
 
-
 import com.cibook.bookingticket.model.Room;
 import com.cibook.bookingticket.repository.RoomRepository;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -29,13 +30,11 @@ public class RoomService {
         return roomRepository.findById(id);
     }
 
-    // Update a room
     public Room updateRoom(String id, Room updatedRoom) {
-        if (roomRepository.existsById(id)) {
-            updatedRoom.setRoomID(id);
-            return roomRepository.save(updatedRoom);
-        }
-        return null;
+        return roomRepository.findById(id).map(existingRoom -> {
+            BeanUtils.copyProperties(updatedRoom, existingRoom, "roomID"); // Exclude ID
+            return roomRepository.save(existingRoom); // Save updated room
+        }).orElse(null);
     }
 
     // Delete a room
@@ -43,7 +42,6 @@ public class RoomService {
         roomRepository.deleteById(id);
     }
 
-    
     public List<Room> getRoomsByCinemaID(String cinemaID) {
         return roomRepository.findByCinemaID(cinemaID);
     }

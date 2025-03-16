@@ -3,6 +3,7 @@ package com.cibook.bookingticket.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,17 +33,13 @@ public class MovieService {
     }
 
     public Movie updateMovie(String id, Movie updatedMovie) {
-        Optional<Movie> existingMovie = movieRepository.findById(id);
-        if (existingMovie.isPresent()) {
-            updatedMovie.setMovieID(id);
-            return movieRepository.save(updatedMovie);
-        }
-
-        return null;
+        return movieRepository.findById(id).map(existingMovie -> {
+            BeanUtils.copyProperties(updatedMovie, existingMovie, "movieID"); // Exclude ID
+            return movieRepository.save(existingMovie); // Save updated movie
+        }).orElse(null);
     }
 
-
-    public void deleteMovie(String id){
+    public void deleteMovie(String id) {
         movieRepository.deleteById(id);
     }
 }

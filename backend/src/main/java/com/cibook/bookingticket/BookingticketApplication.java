@@ -11,6 +11,7 @@ import java.util.Map;
 @SpringBootApplication
 @EnableWebSecurity
 @RestController
+
 public class BookingticketApplication{
 
 	public static void main(String[] args) {

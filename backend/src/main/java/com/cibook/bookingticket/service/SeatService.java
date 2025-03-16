@@ -2,6 +2,8 @@ package com.cibook.bookingticket.service;
 
 import com.cibook.bookingticket.model.Seat;
 import com.cibook.bookingticket.repository.SeatRepository;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -28,13 +30,11 @@ public class SeatService {
         return seatRepository.findById(id);
     }
 
-    // Update a seat
     public Seat updateSeat(String id, Seat updatedSeat) {
-        if (seatRepository.existsById(id)) {
-            updatedSeat.setSeatID(id);
-            return seatRepository.save(updatedSeat);
-        }
-        return null;
+        return seatRepository.findById(id).map(existingSeat -> {
+            BeanUtils.copyProperties(updatedSeat, existingSeat, "seatID"); // Exclude ID
+            return seatRepository.save(existingSeat); 
+        }).orElse(null);
     }
 
     // Delete a seat

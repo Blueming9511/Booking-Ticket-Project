@@ -2,6 +2,8 @@ package com.cibook.bookingticket.service;
 
 import com.cibook.bookingticket.model.Cinema;
 import com.cibook.bookingticket.repository.CinemaRepository;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -30,12 +32,12 @@ public class CinemaService {
 
     // Update a cinema
     public Cinema updateCinema(String id, Cinema updatedCinema) {
-        if (cinemaRepository.existsById(id)) {
-            updatedCinema.setCinemaID(id);
-            return cinemaRepository.save(updatedCinema);
-        }
-        return null;
+        return cinemaRepository.findById(id).map(existingCinema -> {
+            BeanUtils.copyProperties(updatedCinema, existingCinema, "cinemaID"); // Exclude ID
+            return cinemaRepository.save(existingCinema); // Use correct repository
+        }).orElse(null);
     }
+    
 
     // Delete a cinema
     public void deleteCinema(String id) {

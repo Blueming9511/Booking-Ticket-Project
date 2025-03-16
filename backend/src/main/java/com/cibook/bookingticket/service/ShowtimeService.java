@@ -3,6 +3,7 @@ package com.cibook.bookingticket.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,13 @@ public class ShowtimeService {
         return showtimeRepository.save(showtime);
     }
 
-    public Showtime updateShowtime(String id, Showtime updatedShowtime) {
-        if (showtimeRepository.existsById(id)) {
-            updatedShowtime.setShowTimeID(id);
-            return showtimeRepository.save(updatedShowtime);
-        }
-        return null;
-    }
+public Showtime updateShowtime(String id, Showtime updatedShowtime) {
+    return showtimeRepository.findById(id).map(existingShowtime -> {
+        BeanUtils.copyProperties(updatedShowtime, existingShowtime, "showTimeID"); // Exclude ID
+        return showtimeRepository.save(existingShowtime); // Save updated showtime
+    }).orElse(null);
+}
+
 
     public void deleteShowtime(String id) {
         showtimeRepository.deleteById(id);
