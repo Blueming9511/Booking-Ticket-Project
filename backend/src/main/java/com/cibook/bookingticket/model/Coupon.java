@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Data
-@Document (collection = "coupon")
+@Document (collection = "coupons")
 public class Coupon {
     private String couponID;
     private int code;

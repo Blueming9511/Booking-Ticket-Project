@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Data
-@Document (collection = "notification")
+@Document (collection = "notifications")
 public class Notification {
     @Id
     private String notificationID;
