@@ -1,4 +1,34 @@
 @import "tailwindcss";
 
+--var{
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --background-color: #f1c40f;
+  --white: #F7F7F7; 
+  --black: #09122C; 
+}
 
+body {
+  background: #09122C;
+  overflow-x: hidden;
+  margin: 0;
+}
+
+.round-div {
+    width: 100%; /* Adjust size as needed */
+    height: 100%; /* Same as width to maintain round shape */
+    border-radius: 50%;
+   /* Example background color
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold; */
+  }
+  
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 

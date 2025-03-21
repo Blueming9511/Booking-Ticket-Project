@@ -1,0 +1,150 @@
+
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    background: #f5f5f5;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Slide container */
+.container .slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Slide items */
+.container .slide .item {
+    width: 17vw;
+    height: 50vh;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    border-radius: 2vw;
+    box-shadow: 0 3vh 5vh rgba(0, 0, 0, 0.3);
+    background-position: center;
+    background-size: cover;
+    transition: 0.5s;
+}
+
+/* Active slide (centered) */
+.slide .item:nth-child(1),
+.slide .item:nth-child(2) {
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Other slides positioned relatively */
+.slide .item:nth-child(3) {
+    left: 50%;
+}
+.slide .item:nth-child(4) {
+    left: calc(50% + 22vw);
+}
+.slide .item:nth-child(5) {
+    left: calc(50% + 44vw);
+}
+.slide .item:nth-child(n + 6) {
+    left: calc(50% + 66vw);
+    opacity: 0;
+}
+
+/* Content inside each slide */
+.item .content {
+    position: absolute;
+    top: 50%;
+    left: 10vw;
+    width: 30vw;
+    text-align: left;
+    color: #eee;
+    transform: translate(0, -50%);
+    font-family: system-ui;
+    display: none;
+}
+
+/* Only show content for the active slide */
+.slide .item:nth-child(2) .content {
+    display: block;
+}
+
+/* Text styles */
+.content .name {
+    font-size: 4vw;
+    text-transform: uppercase;
+    font-weight: bold;
+    opacity: 0;
+    animation: animate 1s ease-in-out 1 forwards;
+}
+
+.text-shadow-10 {
+    text-shadow: 0.2vw 0.2vw 1vw rgba(0, 0, 0, 1);
+}
+
+.content .des {
+    margin-top: 1vh;
+    margin-bottom: 2vh;
+    opacity: 0;
+    animation: animate 1s ease-in-out 0.3s 1 forwards;
+}
+
+/* Button styling */
+.content button {
+    cursor: pointer;
+    opacity: 0;
+    animation: animate .5s ease-in-out 0.6s 1 forwards;
+}
+
+@keyframes animate {
+    from {
+        opacity: 0;
+        transform: translate(0, 10vh);
+        filter: blur(3vw);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0);
+        filter: blur(0);
+    }
+}
+
+/* Navigation buttons */
+.button {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 5vh;
+    display: flex;
+    gap: 5%;
+    justify-content: center;
+    align-items: center;
+}
+
+.button button {
+    width: 3vw;
+    height: 3vw;
+    border-radius: 50%;
+    color: white; 
+    border: none;
+    cursor: pointer;
+    box-shadow: 0.2vw 0.2vw 1vw rgba(0, 0, 0, 0.3);
+    border: 0.1vw solid white;
+    transition: 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5vw;
+}
+
+.button button:hover {
+    background: #ffffff;
+    color: black;
+}
