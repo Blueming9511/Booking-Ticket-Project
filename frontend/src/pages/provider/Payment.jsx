@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Users = () => {
+const Coupon = () => {
     return (
         <div>
-            <h1>Users </h1>
+            <h1>Coupon </h1>
         </div>
     );
 }
 
-export default Users;
+export default Coupon;

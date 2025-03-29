@@ -1,5 +1,5 @@
 import React from 'react'
-import DynamicTable from '../../components/admin/DynamicTable'
+import DynamicTable from '../../components/ui/DynamicTable'
 import { Image } from 'antd'
 
 const columns = [
