@@ -6,7 +6,7 @@ import Header from './Header'
 
 const Layout_admin = () => {
   return (
-    <div className='flex w-full  h-screen'>
+    <div className='flex w-full max-h-fit'>
       <Sidebar />
       <main className='w-full'>
         <Header />

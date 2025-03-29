@@ -3,7 +3,6 @@ import { Layout, Menu } from "antd";
 import {
   UserOutlined,
   SettingOutlined,
-
   DashboardOutlined,
   VideoCameraOutlined,
   BankOutlined,
@@ -19,18 +18,57 @@ const Sidebar = () => {
   const toggleCollapse = () => setCollapsed((prev) => !prev);
 
   return (
-    <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapse}>
-      <div className="logo" style={{ height: 32, margin: 16, color: "white", textAlign: "center", fontWeight: "bold" }}>
-        {collapsed ? "💻" : "My App"}
-      </div>
-      <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-        <Menu.Item key="1" icon={<DashboardOutlined />} onClick={() => navigate("/admin/")}>Dashboard</Menu.Item>
-        <Menu.Item key="2" icon={<VideoCameraOutlined />} onClick={() => navigate("/admin/movies")}>Movies</Menu.Item>
-        <Menu.Item key="3" icon={<BankOutlined />} onClick={() => navigate("/admin/cinemas")}>cinemas</Menu.Item>
-        <Menu.Item key="4" icon={<UserOutlined />} onClick={() => navigate("/admin/users")}>Users</Menu.Item>
-  
-      </Menu>
-    </Sider>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={toggleCollapse}
+      >
+        <div
+          className="logo"
+          style={{
+            height: 32,
+            margin: 16,
+            color: "white",
+            textAlign: "center",
+            fontWeight: "bold",
+          }}
+        >
+          {collapsed ? "💻" : "My App"}
+        </div>
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={["1"]}
+          items={[
+            {
+              key: "1",
+              icon: <DashboardOutlined />,
+              label: "Dashboard",
+              onClick: () => navigate("/admin/"),
+            },
+            {
+              key: "2",
+              icon: <VideoCameraOutlined />,
+              label: "Movies",
+              onClick: () => navigate("/admin/movies"),
+            },
+            {
+              key: "3",
+              icon: <BankOutlined />,
+              label: "Cinemas",
+              onClick: () => navigate("/admin/cinemas"),
+            },
+            {
+              key: "4",
+              icon: <UserOutlined />,
+              label: "Users",
+              onClick: () => navigate("/admin/users"),
+            },
+          ]}
+        />
+      </Sider>
+    </Layout>
   );
 };
 

@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import MainRoutes from './routes/MainRoutes';
 import AdminRoutes from './routes/AdminRoutes';
+import ProviderRoutes from './routes/ProviderRoutes';
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
         
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminRoutes />} />
+
+        {/* Provider Routes */}
+        <Route path="/provider/*" element={<ProviderRoutes />} />
       </Routes>
     </Router>
   );

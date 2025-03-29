@@ -1,7 +1,6 @@
 import React from 'react'
 import DynamicTable from '../../components/admin/DynamicTable'
 import { Image } from 'antd'
-
 const columns = [
   {
     title: 'Thumbnail',
@@ -11,11 +10,20 @@ const columns = [
   },
   { title: 'Title', dataIndex: 'title', key: 'title' },
   { title: 'Genre', dataIndex: 'genre', key: 'genre' },
+  { title: 'Release Year', dataIndex: 'releaseYear', key: 'releaseYear' },
   { title: 'Director', dataIndex: 'director', key: 'director' },
+  { title: 'Rating', dataIndex: 'rating', key: 'rating' },
   { title: 'Duration', dataIndex: 'duration', key: 'duration' },
   { title: 'Box Office', dataIndex: 'boxOffice', key: 'boxOffice' },
-  { title: 'Release Year', dataIndex: 'releaseYear', key: 'releaseYear' },
-  { title: 'Rating', dataIndex: 'rating', key: 'rating' }
+  {
+    title: 'Casts',
+    dataIndex: 'casts',
+    key: 'casts',
+    render: casts => casts.join(', ')
+  },
+  { title: 'Released By', dataIndex: 'releasedBy', key: 'releasedBy' },
+  { title: 'Release Date', dataIndex: 'releaseDate', key: 'releaseDate' },
+  { title: 'End Date', dataIndex: 'endDate', key: 'endDate' }
 ]
 
 const initData = [
@@ -28,7 +36,7 @@ const initData = [
     releaseYear: '2009',
     director: 'James Cameron',
     rating: '7.8',
-    duration: '162',
+    duration: '162 min',
     language: 'English',
     budget: '$237M',
     boxOffice: '$2.923B',
@@ -46,7 +54,7 @@ const initData = [
     releaseYear: '1997',
     director: 'James Cameron',
     rating: '7.9',
-    duration: '195',
+    duration: '195 min',
     language: 'English',
     budget: '$200M',
     boxOffice: '$2.202B',
@@ -64,7 +72,7 @@ const initData = [
     releaseYear: '2019',
     director: 'Anthony & Joe Russo',
     rating: '8.4',
-    duration: '181',
+    duration: '181 min',
     language: 'English',
     budget: '$356M',
     boxOffice: '$2.798B',
@@ -82,7 +90,7 @@ const initData = [
     releaseYear: '2019',
     director: 'Todd Phillips',
     rating: '8.4',
-    duration: '122',
+    duration: '122 min',
     language: 'English',
     budget: '$55M',
     boxOffice: '$1.074B',
@@ -100,7 +108,7 @@ const initData = [
     releaseYear: '1994',
     director: 'Frank Darabont',
     rating: '9.3',
-    duration: '142',
+    duration: '142 min',
     language: 'English',
     budget: '$25M',
     boxOffice: '$73.3M',

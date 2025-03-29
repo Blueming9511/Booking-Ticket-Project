@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Table, Dropdown, Menu, Button, Modal, Descriptions, Image } from "antd";
+import { Table, Dropdown, Menu, Button } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
+import MovieModal from "./MovieModal";
 
 const DynamicTable = ({ columns, initData }) => {
   const [data, setData] = useState(initData);
@@ -16,6 +17,14 @@ const DynamicTable = ({ columns, initData }) => {
     setIsModalVisible(true);
   };
 
+  const handleSaveEdit = (updatedData) => {
+    setData((prevData) =>
+      prevData.map((item) => (item.key === updatedData.key ? updatedData : item))
+    );
+    setIsModalVisible(false);
+    setSelectedMovie(null)
+  };
+
   const handleCloseModal = () => {
     setIsModalVisible(false);
     setSelectedMovie(null);
@@ -28,9 +37,11 @@ const DynamicTable = ({ columns, initData }) => {
       key: "actions",
       render: (_, record) => (
         <Dropdown
-          overlay={
+          menu={
             <Menu>
-              <Menu.Item key="edit">Edit</Menu.Item>
+              <Menu.Item key="edit" onClick={() => handleRowClick(record)}>
+                Edit
+              </Menu.Item>
               <Menu.Item key="delete" onClick={() => handleDelete(record.key)}>
                 Delete
               </Menu.Item>
@@ -38,14 +49,14 @@ const DynamicTable = ({ columns, initData }) => {
           }
           trigger={["click"]}
         >
-          <Button icon={<MoreOutlined />} />
+          <Button icon={<MoreOutlined />} shape="circle" className="border-none shadow-none" />
         </Dropdown>
       ),
     },
   ];
 
   return (
-    <div>
+    <div className="p-4">
       <Table
         columns={modifiedColumns}
         dataSource={data}
@@ -53,35 +64,16 @@ const DynamicTable = ({ columns, initData }) => {
         onRow={(record) => ({
           onClick: () => handleRowClick(record),
         })}
+        className="rounded-lg shadow-md"
       />
-
-      {/* Movie Details Modal */}
-      <Modal
-        title={selectedMovie?.title}
-        visible={isModalVisible}
-        onCancel={handleCloseModal}
-        footer={null}
-      >
-        {selectedMovie && (
-          <Descriptions bordered column={1}>
-            {Object.entries(selectedMovie).map(([key, value]) => {
-              if (key === "key") return null; // Skip displaying key field
-              if (key === "thumbnail") {
-                return (
-                  <Descriptions.Item key={key} label="Thumbnail">
-                    <Image width={100} src={value} />
-                  </Descriptions.Item>
-                );
-              }
-              return (
-                <Descriptions.Item key={key} label={key.replace(/([A-Z])/g, " $1").trim()}>
-                  {Array.isArray(value) ? value.join(", ") : value}
-                </Descriptions.Item>
-              );
-            })}
-          </Descriptions>
-        )}
-      </Modal>
+      {selectedMovie && (
+        <MovieModal
+          visible={isModalVisible}
+          movie={selectedMovie}
+          onSave={handleSaveEdit}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
