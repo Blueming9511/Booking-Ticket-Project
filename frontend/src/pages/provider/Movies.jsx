@@ -1,122 +1,245 @@
-import React from 'react'
-import DynamicTable from '../../components/ui/DynamicTable'
-import { Image } from 'antd'
+import React from "react";
+import DynamicTable from "../../components/ui/DynamicTable";
+import { Image, Tag, Tooltip, Badge, Rate, Divider, Card, Space, Button } from "antd";
+import { 
+  PlayCircleOutlined, 
+  ClockCircleOutlined, 
+  DollarOutlined,
+  StarFilled ,
+  FilterOutlined, 
+  PlusOutlined
+} from '@ant-design/icons';
 
 const columns = [
   {
-    title: 'Thumbnail',
-    dataIndex: 'thumbnail',
-    key: 'thumbnail',
-    render: src => <Image width={50} src={src} />
+    title: "Poster",
+    dataIndex: "thumbnail",
+    key: "thumbnail",
+    render: (src) => (
+      <Image
+        width={80}
+        src={src}
+        className="rounded-lg shadow-md hover:shadow-lg transition-all"
+
+      />
+    ),
+    width: 100,
   },
-  { title: 'Title', dataIndex: 'title', key: 'title' },
-  { title: 'Genre', dataIndex: 'genre', key: 'genre' },
-  { title: 'Director', dataIndex: 'director', key: 'director' },
-  { title: 'Duration', dataIndex: 'duration', key: 'duration' },
-  { title: 'Box Office', dataIndex: 'boxOffice', key: 'boxOffice' },
-  { title: 'Release Year', dataIndex: 'releaseYear', key: 'releaseYear' },
-  { title: 'Rating', dataIndex: 'rating', key: 'rating' }
-]
+  {
+    title: "Movie Information",
+    key: "info",
+    render: (_, record) => (
+      <div className="flex flex-col">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h3 className="text-lg font-bold mb-1">{record.title}</h3>
+            <div className="flex flex-wrap gap-2 mb-2">
+              <Tag color="blue">{record.genre}</Tag>
+              <Tag color="purple">{record.releaseYear}</Tag>
+              <Tag icon={<ClockCircleOutlined />}>{record.duration} mins</Tag>
+            </div>
+            <div className="flex items-center gap-2">
+              <Rate 
+                disabled 
+                allowHalf 
+                defaultValue={record.rating / 2} 
+                character={<StarFilled />}
+                className="text-sm"
+              />
+              <span className="text-gray-600">{record.rating}/10</span>
+            </div>
+          </div>
+          <Tooltip title="Box Office">
+            <Badge 
+              count={record.boxOffice} 
+              className="bg-green-100 text-green-800 px-2 py-1 rounded-full"
+            />
+          </Tooltip>
+        </div>
+        <div className="mt-2">
+          <p className="text-gray-600 text-sm">
+            <span className="font-medium">Director:</span> {record.director}
+          </p>
+          <p className="text-gray-600 text-sm">
+            <span className="font-medium">Distributor:</span> {record.releasedBy}
+          </p>
+        </div>
+      </div>
+    ),
+    width: '40%',
+  },
+  {
+    title: "Financials",
+    key: "financials",
+    render: (_, record) => (
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <DollarOutlined className="text-green-500" />
+          <span>Budget: {record.budget}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <DollarOutlined className="text-green-500" />
+          <span>Revenue: {record.boxOffice}</span>
+        </div>
+        <div className="mt-2">
+          <p className="text-sm text-gray-500">
+            Released: {record.releaseDate}
+          </p>
+          <p className="text-sm text-gray-500">
+            Ended: {record.endDate}
+          </p>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (status) => (
+      <Tag 
+        color={status === "Ended" ? "red" : "green"} 
+        className="flex items-center gap-1"
+      >
+        {status === "Ended" ? (
+          <>
+            <span className="w-2 h-2 rounded-full bg-red-500"></span>
+            Ended
+          </>
+        ) : (
+          <>
+            <span className="w-2 h-2 rounded-full bg-green-500"></span>
+            Now Showing
+          </>
+        )}
+      </Tag>
+    ),
+    align: 'center',
+    width: 120,
+  },
+];
 
 const initData = [
   {
-    key: '1',
-    thumbnail:
-      'https://image.tmdb.org/t/p/w200/kyeqWdyUXW608qlYkRqosgbbJyK.jpg',
-    title: 'Avatar',
-    genre: 'Sci-Fi',
-    releaseYear: '2009',
-    director: 'James Cameron',
-    rating: '7.8',
-    duration: '162',
-    language: 'English',
-    budget: '$237M',
-    boxOffice: '$2.923B',
-    casts: ['Sam Worthington', 'Zoe Saldana', 'Sigourney Weaver'],
-    releasedBy: 'CGV',
-    releaseDate: '2009-12-18',
-    endDate: '2010-03-15'
+    key: "1",
+    thumbnail: "https://image.tmdb.org/t/p/w200/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+    title: "Avatar: The Way of Water",
+    genre: "Sci-Fi",
+    releaseYear: "2022",
+    director: "James Cameron",
+    rating: "7.8",
+    duration: "192",
+    language: "English",
+    budget: "$250M",
+    boxOffice: "$2.320B",
+    casts: ["Sam Worthington", "Zoe Saldana", "Sigourney Weaver"],
+    releasedBy: "CGV",
+    releaseDate: "2022-12-16",
+    endDate: "2023-03-15",
+    status: "Ended",
   },
   {
-    key: '2',
-    thumbnail:
-      'https://image.tmdb.org/t/p/w200/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg',
-    title: 'Titanic',
-    genre: 'Romance',
-    releaseYear: '1997',
-    director: 'James Cameron',
-    rating: '7.9',
-    duration: '195',
-    language: 'English',
-    budget: '$200M',
-    boxOffice: '$2.202B',
-    casts: ['Leonardo DiCaprio', 'Kate Winslet', 'Billy Zane'],
-    releasedBy: 'Cinestar',
-    releaseDate: '1997-12-19',
-    endDate: '1998-04-20'
+    key: "2",
+    thumbnail: "https://image.tmdb.org/t/p/w200/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
+    title: "Titanic",
+    genre: "Romance",
+    releaseYear: "1997",
+    director: "James Cameron",
+    rating: "7.9",
+    duration: "195",
+    language: "English",
+    budget: "$200M",
+    boxOffice: "$2.202B",
+    casts: ["Leonardo DiCaprio", "Kate Winslet", "Billy Zane"],
+    releasedBy: "Cinestar",
+    releaseDate: "1997-12-19",
+    endDate: "1998-04-20",
+    status: "Ended",
   },
   {
-    key: '3',
-    thumbnail:
-      'https://image.tmdb.org/t/p/w200/or06FN3Dka5tukK1e9sl16pB3iy.jpg',
-    title: 'Avengers: Endgame',
-    genre: 'Action',
-    releaseYear: '2019',
-    director: 'Anthony & Joe Russo',
-    rating: '8.4',
-    duration: '181',
-    language: 'English',
-    budget: '$356M',
-    boxOffice: '$2.798B',
-    casts: ['Robert Downey Jr.', 'Chris Evans', 'Scarlett Johansson'],
-    releasedBy: 'BHD',
-    releaseDate: '2019-04-26',
-    endDate: '2019-09-10'
+    key: "3",
+    thumbnail: "https://image.tmdb.org/t/p/w200/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+    title: "Avengers: Endgame",
+    genre: "Action",
+    releaseYear: "2019",
+    director: "Anthony & Joe Russo",
+    rating: "8.4",
+    duration: "181",
+    language: "English",
+    budget: "$356M",
+    boxOffice: "$2.798B",
+    casts: ["Robert Downey Jr.", "Chris Evans", "Scarlett Johansson"],
+    releasedBy: "BHD",
+    releaseDate: "2019-04-26",
+    endDate: "2019-09-10",
+    status: "Ended",
   },
   {
-    key: '4',
-    thumbnail:
-      'https://image.tmdb.org/t/p/w200/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg',
-    title: 'Joker',
-    genre: 'Drama',
-    releaseYear: '2019',
-    director: 'Todd Phillips',
-    rating: '8.4',
-    duration: '122',
-    language: 'English',
-    budget: '$55M',
-    boxOffice: '$1.074B',
-    casts: ['Joaquin Phoenix', 'Robert De Niro', 'Zazie Beetz'],
-    releasedBy: 'Lotte Cinema',
-    releaseDate: '2019-10-04',
-    endDate: '2020-01-15'
+    key: "4",
+    thumbnail: "https://image.tmdb.org/t/p/w200/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
+    title: "Joker",
+    genre: "Drama",
+    releaseYear: "2019",
+    director: "Todd Phillips",
+    rating: "8.4",
+    duration: "122",
+    language: "English",
+    budget: "$55M",
+    boxOffice: "$1.074B",
+    casts: ["Joaquin Phoenix", "Robert De Niro", "Zazie Beetz"],
+    releasedBy: "Lotte Cinema",
+    releaseDate: "2019-10-04",
+    endDate: "2020-01-15",
+    status: "Ended",
   },
   {
-    key: '5',
-    thumbnail:
-      'https://image.tmdb.org/t/p/w200/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
-    title: 'The Shawshank Redemption',
-    genre: 'Drama',
-    releaseYear: '1994',
-    director: 'Frank Darabont',
-    rating: '9.3',
-    duration: '142',
-    language: 'English',
-    budget: '$25M',
-    boxOffice: '$73.3M',
-    casts: ['Tim Robbins', 'Morgan Freeman', 'Bob Gunton'],
-    releasedBy: 'Galaxy Cinema',
-    releaseDate: '1994-09-23',
-    endDate: '1995-01-10'
-  }
-]
+    key: "5",
+    thumbnail: "https://image.tmdb.org/t/p/w200/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+    title: "The Shawshank Redemption",
+    genre: "Drama",
+    releaseYear: "1994",
+    director: "Frank Darabont",
+    rating: "9.3",
+    duration: "142",
+    language: "English",
+    budget: "$25M",
+    boxOffice: "$73.3M",
+    casts: ["Tim Robbins", "Morgan Freeman", "Bob Gunton"],
+    releasedBy: "Galaxy Cinema",
+    releaseDate: "1994-09-23",
+    endDate: "1995-01-10",
+    status: "Ended",
+  },
+];
 
 const Movies = () => {
   return (
-    <div>
-      <DynamicTable columns={columns} initData={initData} />
-    </div>
-  )
-}
+    <Card 
+    title={<span className="text-xl font-bold">Mangement Cinema</span>}
+    extra={
+      <Space>
+        <Button icon={<FilterOutlined />}>Lọc</Button>
+        <Button type="primary" icon={<PlusOutlined />}>
+          Thêm rạp mới
+        </Button>
+      </Space>
+    }
+    variant="borderless"  
+    styles ={{ header: {borderBottom: 'none'}}}
+    style={{boxShadow: 'none'}}
+  >
+      <DynamicTable 
+        columns={columns} 
+        initData={initData}
+        className="rounded-lg shadow-sm border"
+        rowClassName="hover:bg-gray-50 cursor-pointer"
+      />
+      <Divider />
+      <div className="flex justify-between text-sm text-gray-500">
+        <span>Total: {initData.length} movies</span>
+      </div>
+    </Card>
+  );
+};
 
-export default Movies
+export default Movies;

@@ -1,122 +1,171 @@
 import React from "react";
 import DynamicTable from "../../components/ui/DynamicTable";
-import { Tag } from "antd";
+import { Tag, Card, Space, Button, Badge, Table, Divider } from "antd";
+import { 
+  EnvironmentOutlined,
+  VideoCameraOutlined,
+  PlusOutlined,
+  FilterOutlined
+} from '@ant-design/icons';
 
-// Định nghĩa columns với render cho cột Status
 const columns = [
-  { title: "Name", dataIndex: "name", key: "name" },
-  { title: "Location", dataIndex: "location", key: "location" },
-  { title: "Screens", dataIndex: "screens", key: "screens" },
+  {
+    title: "Cinema names",
+    dataIndex: "name",
+    key: "name",
+    render: (name) => <span className="font-semibold text-blue-600">{name}</span>,
+    width: 200,
+  },
+  {
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+    render: (location) => (
+      <div className="flex items-center gap-2">
+        <EnvironmentOutlined className="text-gray-500" />
+        <span>{location}</span>
+      </div>
+    ),
+    width: 250,
+  },
+  {
+    title: "Screens",
+    dataIndex: "screens",
+    key: "screens",
+    render: (screens) => (
+      <Badge 
+        count={`${screens} screens`} 
+        className="bg-gray-100 text-gray-800" 
+        style={{ padding: '0 8px' }}
+      />
+    ),
+    width: 120,
+    sorter: (a, b) => a.screens - b.screens,
+  },
   {
     title: "Status",
     dataIndex: "status",
     key: "status",
-    render: (status) => {
-      let color;
-      switch (status) {
-        case "Active":
-          color = "green"; // Xanh lá
-          break;
-        case "Closed":
-          color = "red"; // Đỏ
-          break;
-        case "Renovating":
-          color = "orange"; // Cam
-          break;
-        default:
-          color = "blue"; // Xanh dương mặc định
-      }
-      return (
-        <Tag
-          color ={color}
-        >
-          <p className="text-[0.8rem]">{status}</p>
-        </Tag>
-      );
-    },
+    render: (status) => (
+      <>
+      {status === 'Active' && <Tag color="green">Active</Tag>}
+      {status === 'Closed' && <Tag color="red">Closed</Tag>}
+      {status === 'Renovating' && <Tag color="orange">Renovating</Tag>}
+      </>
+    ),
+    filters: [
+      { text: 'Active', value: 'Active' },
+      { text: 'Closed', value: 'Closed' },
+      { text: 'Renovating', value: 'Renovating' },
+    ],
+    onFilter: (value, record) => record.status === value,
+    width: 150,
   },
 ];
 
-// 10 dữ liệu mẫu về rạp chiếu phim (dựa trên thông tin thực tế và giả định)
 const initData = [
   {
     key: "1",
     name: "CGV Vincom Mega Mall",
-    location: "Ho Chi Minh City, Vietnam",
+    location: "Q. Bình Thạnh, TP.HCM",
     screens: 8,
     status: "Active",
   },
   {
     key: "2",
-    name: "Cineworld Leicester Square",
-    location: "London, UK",
-    screens: 6,
-    status: "Active",
-  },
-  {
-    key: "3",
-    name: "AMC Empire 25",
-    location: "New York, USA",
-    screens: 25,
-    status: "Active",
-  },
-  {
-    key: "4",
-    name: "Regal LA Live",
-    location: "Los Angeles, USA",
-    screens: 14,
-    status: "Active",
-  },
-  {
-    key: "5",
-    name: "Vue West End",
-    location: "London, UK",
-    screens: 9,
-    status: "Renovating",
-  },
-  {
-    key: "6",
-    name: "Cinépolis Luxury Cinemas",
-    location: "Dallas, USA",
-    screens: 6,
-    status: "Active",
-  },
-  {
-    key: "7",
-    name: "Pathé Tuschinski",
-    location: "Amsterdam, Netherlands",
-    screens: 6,
-    status: "Active",
-  },
-  {
-    key: "8",
-    name: "Odeon Luxe",
-    location: "Manchester, UK",
+    name: "CGV Crescent Mall",
+    location: "Q.7, TP.HCM",
     screens: 7,
     status: "Active",
   },
   {
-    key: "9",
-    name: "Galaxy Cinema Nguyễn Du",
-    location: "Ho Chi Minh City, Vietnam",
+    key: "3",
+    name: "CGV Pandora City",
+    location: "Q. Gò Vấp, TP.HCM",
+    screens: 6,
+    status: "Active",
+  },
+  {
+    key: "4",
+    name: "CGV Aeon Mall Tân Phú",
+    location: "Q. Tân Phú, TP.HCM",
+    screens: 5,
+    status: "Renovating",
+  },
+  {
+    key: "5",
+    name: "CGV Hùng Vương Plaza",
+    location: "Q.5, TP.HCM",
+    screens: 6,
+    status: "Active",
+  },
+  {
+    key: "6",
+    name: "CGV Vincom Đồng Khởi",
+    location: "Q.1, TP.HCM",
+    screens: 9,
+    status: "Active",
+  },
+  {
+    key: "7",
+    name: "CGV Giga Mall Thủ Đức",
+    location: "TP. Thủ Đức, TP.HCM",
+    screens: 8,
+    status: "Active",
+  },
+  {
+    key: "8",
+    name: "CGV Pearl Plaza",
+    location: "Q. Bình Thạnh, TP.HCM",
     screens: 5,
     status: "Closed",
   },
   {
+    key: "9",
+    name: "CGV Sense City",
+    location: "Q.3, TP.HCM",
+    screens: 7,
+    status: "Active",
+  },
+  {
     key: "10",
-    name: "Hoyts Chadstone",
-    location: "Melbourne, Australia",
-    screens: 13,
+    name: "CGV Vincom Landmark 81",
+    location: "Q. Bình Thạnh, TP.HCM",
+    screens: 10,
     status: "Active",
   },
 ];
 
 const Cinemas = () => {
   return (
-    <div>
-      <h1>Cinema Management</h1>
-      <DynamicTable columns={columns} initData={initData} modalType="cinema" />
-    </div>
+    <Card 
+      title={<span className="text-xl font-bold">Mangement Cinema</span>}
+      extra={
+        <Space>
+          <Button icon={<FilterOutlined />}>Lọc</Button>
+          <Button type="primary" icon={<PlusOutlined />}>
+            Thêm rạp mới
+          </Button>
+        </Space>
+      }
+      variant="borderless"  
+      styles ={{ header: {borderBottom: 'none'}}}
+      style={{boxShadow: 'none'}}
+    >
+      <Table 
+        columns={columns} 
+        dataSource={initData} 
+        pagination={{ pageSize: 5 }}
+        rowClassName={(record) => 
+          record.status === 'Closed' ? 'bg-red-50' : 
+          record.status === 'Renovating' ? 'bg-orange-50' : ''
+        }
+      />
+      <Divider />
+      <div className="flex justify-between text-sm text-gray-500">
+        <span>Total: {initData.length} cinemas</span>
+      </div>
+    </Card>
   );
 };
 

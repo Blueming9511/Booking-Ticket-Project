@@ -7,6 +7,8 @@ import { DashboardOutlined, BankOutlined, VideoCameraOutlined, UserOutlined } fr
 const providerItems = [
   { label: "Dashboard", path: "/", icon: <DashboardOutlined /> },
   { label: "Cinemas", path: "/cinemas", icon: <BankOutlined /> },
+  { label: "Screens", path: "/screens", icon: <BankOutlined /> },
+  { label: "Seats", path: "/seats", icon: <BankOutlined /> },
   { label: "Movies", path: "/movies", icon: <VideoCameraOutlined /> },
   { label: "Coupon", path: "/coupon", icon: <UserOutlined /> },
   { label: "Payment", path: "/payment", icon: <UserOutlined /> },
