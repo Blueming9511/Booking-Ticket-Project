@@ -29,14 +29,14 @@ const CinemaSelector = () => {
   }
 
   return (
-    <div className='flex gap-2 overflow-x-auto justify-center sm:justify-start'>
+    <div className='flex gap-5 overflow-x-auto justify-center sm:justify-start'>
       {cinemas.map(cinema => (
-        <Tooltip key={cinema.id} title={cinema.name}>
+        <Tooltip key={cinema.id} title={cinema.name} className='flex flex-col justify-center items-center'>
           <button
-            className={`flex flex-col cursor-pointer items-center justify-center w-16 h-16 sm:w-20 sm:h-20 p-2 rounded-lg border transition-all duration-300
+            className={`cursor-pointer p-2 rounded-lg border transition-all duration-300
             ${
               selectedCinema === cinema.id
-                ? 'border-blue-800 bg-blue-100 shadow-md'
+                ? 'border-blue-800  shadow-md'
                 : 'border-gray-300'
             }`}
             onClick={() => handleSelect(cinema.id)}
@@ -44,17 +44,16 @@ const CinemaSelector = () => {
             <img
               src={cinema.logo}
               alt={cinema.name}
-              className='w-8 h-8 sm:w-10 sm:h-10 object-contain'
+              className=' sm:w-10 sm:h-10 object-contain'
             />
-
-            <span
-              className={`text-[10px] sm:text-xs font-bold mt-1 ${
-                selectedCinema === cinema.id ? 'text-blue-800' : 'text-gray-500'
-              }`}
-            >
-              {truncateText(cinema.name, 8)}
-            </span>
           </button>
+          <span
+            className={`text-[10px] sm:text-xs font-bold mt-1 ${
+              selectedCinema === cinema.id ? 'text-blue-800' : 'text-gray-500'
+            }`}
+          >
+            {truncateText(cinema.name, 8)}
+          </span>
         </Tooltip>
       ))}
     </div>

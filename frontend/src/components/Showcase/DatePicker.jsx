@@ -13,9 +13,10 @@ const DatePicker = () => {
       date.setDate(today.getDate() + i)
 
       const dayNumber = date.getDate().toString() // Convert to string for comparison
-      const dayOfWeek = date.toLocaleDateString('vi-VN', { weekday: 'short' }) // Vietnamese day name
+      const dayOfWeek = date.toLocaleDateString('en', { weekday: 'short' })
+      const monthOfDay = date.toLocaleDateString('en', { month: 'short' })
 
-      days.push({ dayNumber, dayOfWeek })
+      days.push({ dayNumber, dayOfWeek, monthOfDay })
     }
     return days
   }
@@ -28,33 +29,29 @@ const DatePicker = () => {
   }, []) // Runs once when the component mounts
 
   return (
-    <div className='flex space-x-2'>
-      {dates.map(({ dayNumber, dayOfWeek }, index) => (
+    <div className='flex space-x-2 mb-3'>
+      {dates.map(({ dayNumber, dayOfWeek, monthOfDay }, index) => (
         <button
           key={dayNumber}
-          className={`w-16 h-20 flex flex-col cursor-pointer items-center justify-center rounded-lg border border-gray-400 
-                      transition-all duration-300
+          className={`w-16 h-full flex flex-col cursor-pointer items-center justify-center rounded-lg border border-gray-400 
+                      transition-all p-2
                       ${
                         selectedDate === dayNumber
-                          ? 'border-blue-900 text-white' // Selected state (Blue)
-                          : 'bg-gray-100 text-black' // Default state (Light Blue)
+                          ? 'bg-primary text-white' // Selected state (Blue)
+                          : ' text-primary' // Default state (Light Blue)
                       }`}
           onClick={() => setSelectedDate(dayNumber)}
         >
+          <span className='text-sm   transition-all '>{dayOfWeek}</span>
           <span
-            className={`text-lg font-bold w-full h-full flex items-center justify-center rounded-t-lg 
+            className={`text-[30px] font-bold w-full h-full flex items-center justify-center rounded-t-lg 
             transition-all duration-300
-            ${
-              selectedDate === dayNumber
-                ? 'bg-blue-600 text-white' // Selected state (Blue)
-                : 'bg-gray-100 text-black' // Default state (Light Blue)
-            }`}
+           `}
           >
             {dayNumber}
           </span>
-          <span className='text-sm py-1 bg-white w-full rounded-b-lg text-black transition-all duration-300'>
-            {index === 0 ? 'Hôm nay' : dayOfWeek}
-          </span>
+
+          <span className='text-sm transition-all '>{monthOfDay}</span>
         </button>
       ))}
     </div>
