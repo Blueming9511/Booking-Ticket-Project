@@ -1,29 +1,28 @@
-import React from "react";
-import DynamicTable from "../../components/ui/DynamicTable";
-import { Image, Tag, Tooltip, Badge, Rate, Divider, Card, Space, Button } from "antd";
-import { 
-  PlayCircleOutlined, 
-  ClockCircleOutlined, 
+import React, {useState} from "react";
+import { Tag, Card, Space, Button, Badge, Table, Divider, Dropdown, Image, Rate, Form, Tooltip } from "antd";
+import {
+  ClockCircleOutlined,
   DollarOutlined,
-  StarFilled ,
-  FilterOutlined, 
-  PlusOutlined
-} from '@ant-design/icons';
+  StarFilled,
+  FilterOutlined,
+  PlusOutlined,
+  EllipsisOutlined,
+} from "@ant-design/icons";
+import ModalMovie from "../../components/ui/ModalMovie";
 
-const columns = [
+const columns = (handleEdit) => [
   {
     title: "Poster",
     dataIndex: "thumbnail",
     key: "thumbnail",
     render: (src) => (
       <Image
-        width={80}
+        width={100}
         src={src}
         className="rounded-lg shadow-md hover:shadow-lg transition-all"
-
       />
     ),
-    width: 100,
+    width: 150,
   },
   {
     title: "Movie Information",
@@ -39,10 +38,10 @@ const columns = [
               <Tag icon={<ClockCircleOutlined />}>{record.duration} mins</Tag>
             </div>
             <div className="flex items-center gap-2">
-              <Rate 
-                disabled 
-                allowHalf 
-                defaultValue={record.rating / 2} 
+              <Rate
+                disabled
+                allowHalf
+                defaultValue={record.rating / 2}
                 character={<StarFilled />}
                 className="text-sm"
               />
@@ -50,8 +49,8 @@ const columns = [
             </div>
           </div>
           <Tooltip title="Box Office">
-            <Badge 
-              count={record.boxOffice} 
+            <Badge
+              count={record.boxOffice}
               className="bg-green-100 text-green-800 px-2 py-1 rounded-full"
             />
           </Tooltip>
@@ -61,12 +60,13 @@ const columns = [
             <span className="font-medium">Director:</span> {record.director}
           </p>
           <p className="text-gray-600 text-sm">
-            <span className="font-medium">Distributor:</span> {record.releasedBy}
+            <span className="font-medium">Distributor:</span>{" "}
+            {record.releasedBy}
           </p>
         </div>
       </div>
     ),
-    width: '40%',
+    width: 400,
   },
   {
     title: "Financials",
@@ -85,20 +85,19 @@ const columns = [
           <p className="text-sm text-gray-500">
             Released: {record.releaseDate}
           </p>
-          <p className="text-sm text-gray-500">
-            Ended: {record.endDate}
-          </p>
+          <p className="text-sm text-gray-500">Ended: {record.endDate}</p>
         </div>
       </div>
     ),
+    width: 200,
   },
   {
     title: "Status",
     dataIndex: "status",
     key: "status",
     render: (status) => (
-      <Tag 
-        color={status === "Ended" ? "red" : "green"} 
+      <Tag
+        color={status === "Ended" ? "red" : "green"}
         className="flex items-center gap-1"
       >
         {status === "Ended" ? (
@@ -114,15 +113,47 @@ const columns = [
         )}
       </Tag>
     ),
-    align: 'center',
-    width: 120,
+    align: "center",
+    width: 200,
+  },
+  {
+    title: "Actions",
+    dataIndex: "action",
+    key: "action",
+    render: (_, record) => (
+      <Dropdown
+        menu={{
+          items: [
+            {
+              key: "edit",
+              label: "Edit",
+              onClick: () => handleEdit(record),
+            },
+            {
+              key: "delete",
+              label: "Delete",
+            },
+          ],
+        }}
+        trigger={["click"]}
+
+      >
+        <Button
+          icon={<EllipsisOutlined />}
+          shape="default"
+          style={{ padding: "0" }}
+        />
+      </Dropdown>
+    ),
+    width: 100,
   },
 ];
 
 const initData = [
   {
     key: "1",
-    thumbnail: "https://image.tmdb.org/t/p/w200/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+    thumbnail:
+      "https://image.tmdb.org/t/p/w200/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
     title: "Avatar: The Way of Water",
     genre: "Sci-Fi",
     releaseYear: "2022",
@@ -140,7 +171,8 @@ const initData = [
   },
   {
     key: "2",
-    thumbnail: "https://image.tmdb.org/t/p/w200/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
+    thumbnail:
+      "https://image.tmdb.org/t/p/w200/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
     title: "Titanic",
     genre: "Romance",
     releaseYear: "1997",
@@ -158,7 +190,8 @@ const initData = [
   },
   {
     key: "3",
-    thumbnail: "https://image.tmdb.org/t/p/w200/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+    thumbnail:
+      "https://image.tmdb.org/t/p/w200/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
     title: "Avengers: Endgame",
     genre: "Action",
     releaseYear: "2019",
@@ -176,7 +209,8 @@ const initData = [
   },
   {
     key: "4",
-    thumbnail: "https://image.tmdb.org/t/p/w200/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
+    thumbnail:
+      "https://image.tmdb.org/t/p/w200/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
     title: "Joker",
     genre: "Drama",
     releaseYear: "2019",
@@ -194,7 +228,8 @@ const initData = [
   },
   {
     key: "5",
-    thumbnail: "https://image.tmdb.org/t/p/w200/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+    thumbnail:
+      "https://image.tmdb.org/t/p/w200/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
     title: "The Shawshank Redemption",
     genre: "Drama",
     releaseYear: "1994",
@@ -213,32 +248,70 @@ const initData = [
 ];
 
 const Movies = () => {
+  const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCinema, setEditingCinema] = useState(null);
+
+  const handleEdit = (record) => {
+    setEditingCinema(record);
+    console.log(editingCinema)
+    form.setFieldsValue(record);
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    form.validateFields()
+      .then(values => {
+        console.log("Saved values:", values);
+        setIsModalOpen(false);
+      })
+      .catch(info => {
+        console.log("Validate Failed:", info);
+      });
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+
   return (
-    <Card 
-    title={<span className="text-xl font-bold">Mangement Cinema</span>}
-    extra={
-      <Space>
-        <Button icon={<FilterOutlined />}>Lọc</Button>
-        <Button type="primary" icon={<PlusOutlined />}>
-          Thêm rạp mới
-        </Button>
-      </Space>
-    }
-    variant="borderless"  
-    styles ={{ header: {borderBottom: 'none'}}}
-    style={{boxShadow: 'none'}}
-  >
-      <DynamicTable 
-        columns={columns} 
-        initData={initData}
-        className="rounded-lg shadow-sm border"
-        rowClassName="hover:bg-gray-50 cursor-pointer"
+    <>
+      <Card
+        title={<span className="text-xl font-bold">Mangement Cinema</span>}
+        extra={
+          <Space>
+            <Button icon={<FilterOutlined />}>Lọc</Button>
+            <Button type="primary" icon={<PlusOutlined />}>
+              Thêm rạp mới
+            </Button>
+          </Space>
+        }
+        variant="borderless"
+        styles={{ header: { borderBottom: "none" } }}
+        style={{ boxShadow: "none" }}
+      >
+        <Table
+          columns={columns(handleEdit)}
+          dataSource={initData}
+          pagination={{ pageSize: 5 }}
+          borderless
+          className="rounded-lg"
+          rowClassName="hover:bg-gray-50 cursor-pointer"
+        />
+        <Divider />
+        <div className="flex justify-between text-sm text-gray-500">
+          <span>Total: {initData.length} movies</span>
+        </div>
+      </Card>
+      <ModalMovie
+        visible={isModalOpen}
+        onCancel={handleCancel}
+        onOk={handleOk}
+        form={form}
+        initialValues={editingCinema}
       />
-      <Divider />
-      <div className="flex justify-between text-sm text-gray-500">
-        <span>Total: {initData.length} movies</span>
-      </div>
-    </Card>
+    </>
   );
 };
 

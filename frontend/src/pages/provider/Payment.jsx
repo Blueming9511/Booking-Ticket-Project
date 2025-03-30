@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Tag, Space, Divider, Card, Button } from "antd";
+import { Table, Tag, Space, Divider, Card, Button, Dropdown } from "antd";
 import { 
   CreditCardOutlined, 
   WalletOutlined, 
@@ -9,7 +9,7 @@ import {
   CloseCircleOutlined ,
   FilterOutlined,
   PlusOutlined,
-  
+  EllipsisOutlined
 } from '@ant-design/icons';
 
 const columns = [
@@ -116,6 +116,31 @@ const columns = [
     ],
     onFilter: (value, record) => record.status === value,
   },
+  {
+    title: "Action",
+    dataIndex: "action",
+    key: "action",
+    render: () => (
+      <Dropdown
+        menu={{
+          items: [
+            {
+              key: "edit",
+              label: "Edit",
+            },
+            {
+              key: "delete",
+              label: "Delete",
+            },
+          ],
+        }}
+        trigger={["click"]}
+      >
+        <Button icon={<EllipsisOutlined />} shape="default" style={{padding: "0"}} />
+      </Dropdown>
+    ),
+    width: 100,
+  }
 ];
 
 const data = [

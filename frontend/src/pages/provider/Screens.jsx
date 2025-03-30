@@ -1,10 +1,8 @@
 import React from "react";
 import DynamicTable from "../../components/ui/DynamicTable";
-import { Tag, Divider, Badge, Table, Card, Button, Space } from "antd";
+import { Tag, Divider, Badge, Table, Card, Button, Space, Dropdown } from "antd";
 import { 
-  StarOutlined, 
-  VideoCameraOutlined, 
-  ThunderboltOutlined,
+  EllipsisOutlined,
   PlusOutlined,
   FilterOutlined
 } from '@ant-design/icons';
@@ -71,6 +69,7 @@ const columns = [
     ],
     onFilter: (value, record) => record.cinema === value,
     ellipsis: true,
+    width: 200,
   },
   {
     title: "Status",
@@ -94,6 +93,31 @@ const columns = [
     onFilter: (value, record) => record.status === value,
     width: 150,
   },
+  {
+    title: "Action",
+    dataIndex: "action",
+    key: "action",
+    render: () => (
+      <Dropdown
+        menu={{
+          items: [
+            {
+              key: "edit",
+              label: "Edit",
+            },
+            {
+              key: "delete",
+              label: "Delete",
+            },
+          ],
+        }}
+        trigger={["click"]}
+      >
+        <Button icon={<EllipsisOutlined />} shape="default" style={{padding: "0"}} />
+      </Dropdown>
+    ),
+    width: 100,
+  }
 ];
 
 const initData = [
