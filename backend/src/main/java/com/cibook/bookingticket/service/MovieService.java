@@ -35,7 +35,7 @@ public class MovieService {
     public Movie updateMovie(String id, Movie updatedMovie) {
         return movieRepository.findById(id).map(existingMovie -> {
             BeanUtils.copyProperties(updatedMovie, existingMovie, "movieID"); // Exclude ID
-            return movieRepository.save(existingMovie); // Save updated movie
+            return movieRepository.save(existingMovie);
         }).orElse(null);
     }
 

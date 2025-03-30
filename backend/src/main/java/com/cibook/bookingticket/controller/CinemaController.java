@@ -49,5 +49,3 @@ public class CinemaController {
         return ResponseEntity.noContent().build();
     }
 }
-
-// testing
