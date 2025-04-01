@@ -11,7 +11,7 @@ const AppHeader = () => {
         <Link to='/profile'>Profile</Link>
       </Menu.Item>
       <Menu.Item key='settings'>
-        <Link to='/settings'>Settings</Link>
+        <Link to='/my-ticket'>My Ticket</Link>
       </Menu.Item>
       <Menu.Item key='logout'>
         <a href='/login'>Logout</a>

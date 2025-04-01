@@ -16,7 +16,8 @@ const MainRoutes = () => {
       <Route path='/' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='/booking' element={<BookingPage />} />
-        <Route path='/user' element={<UserProfile />} />
+        <Route path='/profile' element={<UserProfile />} />
+        <Route path='/my-ticket' element={<UserProfile />} />
         <Route path='/*' element={<ErrorPage />} />
       </Route>
     </Routes>
