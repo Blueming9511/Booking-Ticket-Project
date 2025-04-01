@@ -1,197 +1,280 @@
-import React from "react";
-import DynamicTable from "../../components/ui/DynamicTable";
-import { Tag, Card, Space, Button, Badge, Table, Divider, Dropdown } from "antd";
-import { 
-  EnvironmentOutlined,
-  EllipsisOutlined,
-  PlusOutlined,
-  FilterOutlined
-} from '@ant-design/icons';
+import React, { useState, useMemo, useEffect } from "react";
+import {
+  Tag, Card, Space, Button, Badge, Table,
+  Divider, Form, Input, Modal, Select, Avatar, Progress, Tooltip
+} from "antd";
+import {
+  EnvironmentOutlined, EllipsisOutlined,
+  PlusOutlined, SearchOutlined,
+  CheckCircleOutlined, CloseCircleOutlined,
+  ExclamationCircleOutlined
+} from "@ant-design/icons";
+import ModalCinemaEdit from "../../components/ui/Modal/ModalCinemaEdit";
+import ModalCinemaAdd from "../../components/ui/Modal/ModalCinemaAdd";
+import CinemaStatistics from "../../components/ui/Card/CinemaStatistics";
+import TagStatus from "../../components/ui/Tag/TagStatus";
+import { div } from "framer-motion/client";
 
-const columns = [
-  {
-    title: "Cinema names",
-    dataIndex: "name",
-    key: "name",
-    render: (name) => <span className="font-semibold text-blue-600">{name}</span>,
-    width: 200,
-  },
-  {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
-    render: (location) => (
-      <div className="flex items-center gap-2">
-        <EnvironmentOutlined className="text-gray-500" />
-        <span>{location}</span>
-      </div>
-    ),
-    width: 250,
-  },
-  {
-    title: "Screens",
-    dataIndex: "screens",
-    key: "screens",
-    render: (screens) => (
-      <Badge 
-        count={`${screens} screens`} 
-        className="bg-gray-100 text-gray-800" 
-        style={{ padding: '0 8px' }}
-      />
-    ),
-    width: 120,
-    sorter: (a, b) => a.screens - b.screens,
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
-    render: (status) => (
-      <>
-      {status === 'Active' && <Tag color="green">Active</Tag>}
-      {status === 'Closed' && <Tag color="red">Closed</Tag>}
-      {status === 'Renovating' && <Tag color="orange">Renovating</Tag>}
-      </>
-    ),
-    filters: [
-      { text: 'Active', value: 'Active' },
-      { text: 'Closed', value: 'Closed' },
-      { text: 'Renovating', value: 'Renovating' },
-    ],
-    onFilter: (value, record) => record.status === value,
-    width: 150,
-  },
-  {
-    title: "Action",
-    dataIndex: "action",
-    key: "action",
-    render: () => (
-      <Dropdown
-        menu={{
-          items: [
-            {
-              key: "edit",
-              label: "Edit",
-            },
-            {
-              key: "delete",
-              label: "Delete",
-            },
-          ],
-        }}
-        trigger={["click"]}
-      >
-        <Button icon={<EllipsisOutlined />} shape="default" style={{padding: "0"}} />
-      </Dropdown>
-    ),
-    width: 50,
-  }
-];
+// Reusable Components
 
-const initData = [
-  {
-    key: "1",
-    name: "CGV Vincom Mega Mall",
-    location: "Q. Bình Thạnh, TP.HCM",
-    screens: 8,
-    status: "Active",
-  },
-  {
-    key: "2",
-    name: "CGV Crescent Mall",
-    location: "Q.7, TP.HCM",
-    screens: 7,
-    status: "Active",
-  },
-  {
-    key: "3",
-    name: "CGV Pandora City",
-    location: "Q. Gò Vấp, TP.HCM",
-    screens: 6,
-    status: "Active",
-  },
-  {
-    key: "4",
-    name: "CGV Aeon Mall Tân Phú",
-    location: "Q. Tân Phú, TP.HCM",
-    screens: 5,
-    status: "Renovating",
-  },
-  {
-    key: "5",
-    name: "CGV Hùng Vương Plaza",
-    location: "Q.5, TP.HCM",
-    screens: 6,
-    status: "Active",
-  },
-  {
-    key: "6",
-    name: "CGV Vincom Đồng Khởi",
-    location: "Q.1, TP.HCM",
-    screens: 9,
-    status: "Active",
-  },
-  {
-    key: "7",
-    name: "CGV Giga Mall Thủ Đức",
-    location: "TP. Thủ Đức, TP.HCM",
-    screens: 8,
-    status: "Active",
-  },
-  {
-    key: "8",
-    name: "CGV Pearl Plaza",
-    location: "Q. Bình Thạnh, TP.HCM",
-    screens: 5,
-    status: "Closed",
-  },
-  {
-    key: "9",
-    name: "CGV Sense City",
-    location: "Q.3, TP.HCM",
-    screens: 7,
-    status: "Active",
-  },
-  {
-    key: "10",
-    name: "CGV Vincom Landmark 81",
-    location: "Q. Bình Thạnh, TP.HCM",
-    screens: 10,
-    status: "Active",
-  },
-  
-];
+
+const { Search } = Input;
 
 const Cinemas = () => {
+  // State Management
+  const [state, setState] = useState({
+    filteredData: [],
+    searchText: "",
+    statusFilter: null,
+    isModalEditOpen: false,
+    isModalAddOpen: false,
+    editingCinema: null
+  });
+
+  // Constants
+  const INIT_DATA = [
+    {
+      key: "1",
+      name: "CGV Vincom Mega Mall",
+      location: "Q. Bình Thạnh, TP.HCM",
+      screens: 8,
+      status: "Active",
+    },
+    {
+      key: "2",
+      name: "CGV Vincom City",
+      location: "Q. Bình Thạnh, TP.HCM",
+      screens: 6,
+      status: "Closed",
+    },
+    {
+      key: "3",
+      name: "CGV Vincom City",
+      location: "Q. Bình Thạnh, TP.HCM",
+      screens: 6,
+      status: "Closed",
+    },
+    {
+      key: "4",
+      name: "CGV Vincom City",
+      location: "Q. Bình Thạnh, TP.HCM",
+      screens: 6,
+      status: "Closed",
+    },
+    {
+      key: "5",
+      name: "CGV Vincom City",
+      location: "Q. Bình Thạnh, TP.HCM",
+      screens: 6,
+      status: "Closed",
+    },
+    {
+      key: "6",
+      name: "CGV Vincom City",
+      location: "Q. Bình Thạnh, TP.HCM",
+      screens: 6,
+      status: "Closed",
+    },
+    {
+      key: "7",
+      name: "CGV Vincom City",
+      location: "Q. Bình Thạnh, TP.HCM",
+      screens: 6,
+      status: "Closed",
+    }
+  ];
+
+  const STATUS_OPTIONS = [
+    { value: "Active", label: "Active" },
+    { value: "Closed", label: "Closed" },
+    { value: "Renovating", label: "Renovating" }
+  ];
+
+  // Effects
+  useEffect(() => {
+    updateFilteredData();
+  }, [state.searchText, state.statusFilter]);
+
+  // Handler Functions
+  const updateFilteredData = () => {
+    let data = [...INIT_DATA];
+    
+    if (state.searchText) {
+      const lowerSearch = state.searchText.toLowerCase();
+      data = data.filter(item =>
+        item.name.toLowerCase().includes(lowerSearch) ||
+        item.location.toLowerCase().includes(lowerSearch)
+      );
+    }
+    
+    if (state.statusFilter) {
+      data = data.filter(item => item.status === state.statusFilter);
+    }
+    
+    setState(prev => ({ ...prev, filteredData: data }));
+  };
+
+  const handleEdit = record => {
+    setState(prev => ({
+      ...prev,
+      editingCinema: record,
+      isModalEditOpen: true
+    }));
+  };
+
+  const handleStatusFilter = value => {
+    setState(prev => ({ ...prev, statusFilter: value }));
+  };
+
+  const handleSearch = value => {
+    setState(prev => ({ ...prev, searchText: value }));
+  };
+
+  const handleModalToggle = (modalType, isOpen) => {
+    setState(prev => ({ ...prev, [`is${modalType}Open`]: isOpen }));
+  };
+
+  const handleAddSubmit = (values) => {
+    console.log("Added cinema:", values);
+    handleModalToggle("Add", false);
+  };
+
+  const handleEditSubmit = (values) => {
+    console.log("Edited cinema:", values);
+    handleModalToggle("Edit", false);
+  };
+
+  // Table Configuration
+  const columns = [
+    {
+      title: "Cinema Info",
+      key: "info",
+      render: (_, record) => (
+        <div className="flex items-center gap-3">
+          <Avatar 
+            size="large" 
+            style={{ backgroundColor: '#e6f7ff', color: '#1890ff' }}
+            icon={<EnvironmentOutlined />}
+          />
+          <div>
+            <div className="font-bold text-blue-600">{record.name}</div>
+            <div className="flex items-center text-sm text-gray-500">
+              <EnvironmentOutlined className="mr-1" />
+              {record.location}
+            </div>
+          </div>
+        </div>
+      ),
+      width: 200,
+    },
+    {
+      title: "Screens",
+      dataIndex: "screens",
+      key: "screens",
+      render: screens => (
+        <Tag color="red-inverse">{screens} screens</Tag>
+      ),
+      sorter: (a, b) => a.screens - b.screens,
+      width: 150,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: status => <TagStatus status={status} />,
+      width: 150,
+    },
+    {
+      title: "Actions",
+      key: "action",
+      render: (_, record) => (
+        <Button
+          icon={<EllipsisOutlined />}
+          shape="circle"
+          onClick={() => handleEdit(record)}
+        />
+      ),
+      width: 80,
+      align: 'center',
+    },
+  ];
+
   return (
-    <Card 
-      title={<span className="text-xl font-bold">Mangement Cinema</span>}
-      extra={
-        <Space>
-          <Button icon={<FilterOutlined />}>Lọc</Button>
-          <Button type="primary" icon={<PlusOutlined />}>
-            Thêm rạp mới
-          </Button>
-        </Space>
-      }
-      variant="borderless"  
-      styles ={{ header: {borderBottom: 'none'}}}
-      style={{boxShadow: 'none'}}
-    >
-      <Table 
-        columns={columns} 
-        dataSource={initData} 
-        pagination={{ pageSize: 5 }}
-        rowClassName={(record) => 
-          record.status === 'Closed' ? 'bg-red-50' : 
-          record.status === 'Renovating' ? 'bg-orange-50' : ''
+    <>
+      <Card
+        title={<span className="text-2xl font-bold">Cinema Management</span>}
+        extra={
+          <Space>
+            <Select
+              placeholder="Filter by Status"
+              value={state.statusFilter}
+              onChange={handleStatusFilter}
+              style={{ width: 150 }}
+              allowClear
+              options={STATUS_OPTIONS}
+            />
+            
+            <Search
+              placeholder="Search cinemas..."
+              allowClear
+              enterButton={<SearchOutlined />}
+              onSearch={handleSearch}
+              style={{ width: 300 }}
+            />
+            
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => handleModalToggle("ModalAdd", true)}
+            >
+              Add Cinema
+            </Button>
+          </Space>
         }
+        variant="borderless"
+        style={{boxShadow: 'none'}}
+        styles={{header: {borderBottom: 'none'}}}
+      >
+        <CinemaStatistics data={state.filteredData} />
+        
+        <Table
+          columns={columns}
+          dataSource={state.filteredData}
+          pagination={{ 
+            pageSize: 5,
+            showSizeChanger: true,
+            pageSizeOptions: ['5', '10', '20', '50']
+          }}
+          rowClassName={record => {
+            if (record.status === "Closed") return "bg-red-50 hover:bg-red-100";
+            if (record.status === "Renovating") return "bg-orange-50 hover:bg-orange-100";
+            return "hover:bg-gray-50";
+          }}
+          scroll={{ x: 800 }}
+          rowKey="key"
+        />
+        
+        <Divider />
+        
+        <div className="flex justify-between items-center text-sm text-gray-500">
+          <span>Showing {state.filteredData.length} cinemas</span>
+          <span>Last updated: {new Date().toLocaleString()}</span>
+        </div>
+      </Card>
+      
+      <ModalCinemaAdd
+        visible={state.isModalAddOpen}
+        onCancel={() => handleModalToggle("ModalAdd", false)}
+        onSuccess={handleAddSubmit}
       />
-      <Divider />
-      <div className="flex justify-between text-sm text-gray-500">
-        <span>Total: {initData.length} cinemas</span>
-      </div>
-    </Card>
+      
+      <ModalCinemaEdit
+        visible={state.isModalEditOpen}
+        onCancel={() => handleModalToggle("ModalEdit", false)}
+        onSuccess={handleEditSubmit}
+        initialValues={state.editingCinema}
+      />
+    </>
   );
 };
 

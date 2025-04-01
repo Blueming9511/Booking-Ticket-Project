@@ -1,5 +1,18 @@
-import React, {useState} from "react";
-import { Tag, Card, Space, Button, Badge, Table, Divider, Dropdown, Image, Rate, Form, Tooltip } from "antd";
+import React, { useState } from "react";
+import {
+  Tag,
+  Card,
+  Space,
+  Button,
+  Badge,
+  Table,
+  Divider,
+  Dropdown,
+  Image,
+  Rate,
+  Form,
+  Tooltip,
+} from "antd";
 import {
   ClockCircleOutlined,
   DollarOutlined,
@@ -8,7 +21,10 @@ import {
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import ModalMovie from "../../components/ui/ModalMovie";
+import dayjs from "dayjs";
+import ModalMovieEdit from "../../components/ui/Modal/ModalMovieEdit";
+import ModalMovieAdd from "../../components/ui/Modal/ModalMovieAdd";
+import MovieStatistics from "../../components/ui/Card/MovieStatistics";
 
 const columns = (handleEdit) => [
   {
@@ -92,6 +108,12 @@ const columns = (handleEdit) => [
     width: 200,
   },
   {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    width: 300,
+  },
+  {
     title: "Status",
     dataIndex: "status",
     key: "status",
@@ -136,7 +158,6 @@ const columns = (handleEdit) => [
           ],
         }}
         trigger={["click"]}
-
       >
         <Button
           icon={<EllipsisOutlined />}
@@ -249,41 +270,51 @@ const initData = [
 
 const Movies = () => {
   const [form] = Form.useForm();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCinema, setEditingCinema] = useState(null);
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+  const [editingMovie, setEditingMovie] = useState(null);
 
   const handleEdit = (record) => {
-    setEditingCinema(record);
-    console.log(editingCinema)
-    form.setFieldsValue(record);
-    setIsModalOpen(true);
+    setEditingMovie(record);
+    form.setFieldsValue({
+      ...record,
+      // Chuyển đổi ngày tháng nếu cần
+      releaseDate: record.releaseDate ? dayjs(record.releaseDate) : null,
+      endDate: record.endDate ? dayjs(record.endDate) : null,
+    });
+    setIsModalEditOpen(true);
   };
 
-  const handleOk = () => {
-    form.validateFields()
-      .then(values => {
-        console.log("Saved values:", values);
-        setIsModalOpen(false);
-      })
-      .catch(info => {
-        console.log("Validate Failed:", info);
-      });
+  // Hàm xử lý khi submit form chỉnh sửa
+  const handleEditSubmit = (values) => {
+    console.log("Edited values:", values);
+    setIsModalEditOpen(false);
+  };
+
+  const handleAddSubmit = (values) => {
+    console.log("Added values:", values);
+    setIsModalAddOpen(false);
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalEditOpen(false);
+    setIsModalAddOpen(false);
+    form.resetFields();
   };
-
 
   return (
     <>
       <Card
-        title={<span className="text-xl font-bold">Mangement Cinema</span>}
+        title={<span className="text-xl font-bold">Movie Management</span>}
         extra={
           <Space>
-            <Button icon={<FilterOutlined />}>Lọc</Button>
-            <Button type="primary" icon={<PlusOutlined />}>
-              Thêm rạp mới
+            <Button icon={<FilterOutlined />}>Filter</Button>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setIsModalAddOpen(true)}
+            >
+              Add new movie
             </Button>
           </Space>
         }
@@ -291,6 +322,8 @@ const Movies = () => {
         styles={{ header: { borderBottom: "none" } }}
         style={{ boxShadow: "none" }}
       >
+        <MovieStatistics data={initData} />
+
         <Table
           columns={columns(handleEdit)}
           dataSource={initData}
@@ -304,12 +337,20 @@ const Movies = () => {
           <span>Total: {initData.length} movies</span>
         </div>
       </Card>
-      <ModalMovie
-        visible={isModalOpen}
+      <ModalMovieEdit
+        visible={isModalEditOpen}
         onCancel={handleCancel}
-        onOk={handleOk}
+        onSuccess={handleEditSubmit}
         form={form}
-        initialValues={editingCinema}
+        initialValues={editingMovie}
+        loading={false}
+      />
+
+      <ModalMovieAdd
+        visible={isModalAddOpen}
+        onCancel={handleCancel}
+        onSuccess={handleAddSubmit}
+        loading={false}
       />
     </>
   );

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Table, Dropdown, Button } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
-import MovieModal from "./ModalMovie"; 
+import MovieModal from "./Modal/ModalMovieEdit"; 
 // import CinemaModal from "./CinemaModal";
-import CouponModal from "./ModalCoupon";
 // import UserModal from "./UserModal";
 // import PaymentModal from "./PaymentModal";
 

@@ -10,8 +10,9 @@ const providerItems = [
   { label: "Screens", path: "/screens", icon: <BankOutlined /> },
   { label: "Seats", path: "/seats", icon: <BankOutlined /> },
   { label: "Movies", path: "/movies", icon: <VideoCameraOutlined /> },
-  { label: "Coupon", path: "/coupon", icon: <UserOutlined /> },
-  { label: "Payment", path: "/payment", icon: <UserOutlined /> },
+  { label: "Showtime", path: "/showtimes", icon: <UserOutlined /> },
+  { label: "Coupon", path: "/coupons", icon: <UserOutlined /> },
+  { label: "Payment", path: "/payments", icon: <UserOutlined /> },
 ];
 
 const LayoutProvider = () => {

@@ -1,6 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import DynamicTable from "../../components/ui/DynamicTable";
-import { Tag, Card, Space, Button, Badge, Table, Divider, Dropdown } from "antd";
+import {
+  Tag,
+  Card,
+  Space,
+  Button,
+  Badge,
+  Table,
+  Divider,
+  Dropdown,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+} from "antd";
 import {
   FireOutlined,
   GiftOutlined,
@@ -9,10 +22,18 @@ import {
   CloseCircleOutlined,
   PlusOutlined,
   FilterOutlined,
-  EllipsisOutlined
+  EllipsisOutlined,
+  SearchOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
+import ModalCouponAdd from "../../components/ui/Modal/ModalCouponAdd";
+import ModalCouponEdit from "../../components/ui/Modal/ModalCouponEdit";
+import CouponStatistics from "../../components/ui/Card/CouponStatistics";
 
-const columns = [
+const { Search } = Input;
+const { RangePicker } = DatePicker;
+
+const columns = (handleEdit) => [
   {
     title: "Coupon Code",
     dataIndex: "code",
@@ -57,7 +78,7 @@ const columns = [
         {description || "No description provided"}
       </span>
     ),
-    width: 300,
+    width: 200,
   },
   {
     title: "Conditions",
@@ -65,7 +86,7 @@ const columns = [
     render: (_, record) => (
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <span className="text-gray-600">Min. Order:</span>
+          <span className="text-gray-600  ">Min. Order:</span>
           <span className="font-medium">
             {record.minOrderValue ? `$${record.minOrderValue}` : "None"}
           </span>
@@ -125,7 +146,7 @@ const columns = [
       return <Badge color={color} />;
     },
     align: "center",
-    width: 150,
+    width: 50,
     filters: [
       { text: "Active", value: "Active" },
       { text: "Expired", value: "Expired" },
@@ -137,13 +158,14 @@ const columns = [
     title: "Action",
     dataIndex: "action",
     key: "action",
-    render: () => (
+    render: (_, record) => (
       <Dropdown
         menu={{
           items: [
             {
               key: "edit",
               label: "Edit",
+              onClick: () => handleEdit(record),
             },
             {
               key: "delete",
@@ -153,11 +175,15 @@ const columns = [
         }}
         trigger={["click"]}
       >
-        <Button icon={<EllipsisOutlined />} shape="default" style={{padding: "0"}} />
+        <Button
+          icon={<EllipsisOutlined />}
+          shape="default"
+          style={{ padding: "0" }}
+        />
       </Dropdown>
     ),
     width: 100,
-  }
+  },
 ];
 
 const initData = [
@@ -284,52 +310,249 @@ const initData = [
 ];
 
 const Coupon = () => {
-  return (
-    <Card 
-    title={<span className="text-xl font-bold">Mangement Cinema</span>}
-    extra={
-      <Space>
-        <Button icon={<FilterOutlined />}>Lọc</Button>
-        <Button type="primary" icon={<PlusOutlined />}>
-          Thêm rạp mới
-        </Button>
-      </Space>
+  const [form] = Form.useForm();
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+  const [editingCoupon, setEditingCoupon] = useState(null);
+  const [filterParams, setFilterParams] = useState({
+    status: null,
+    discountType: null,
+    searchText: "",
+    dateRange: null,
+  });
+
+  const filteredData = initData.filter((item) => {
+    // Lọc theo trạng thái
+    if (filterParams.status && item.status !== filterParams.status)
+      return false;
+
+    // Lọc theo loại giảm giá
+    if (filterParams.discountType) {
+      if (
+        filterParams.discountType === "percentage" &&
+        !item.discount.includes("%")
+      )
+        return false;
+      if (filterParams.discountType === "fixed" && item.discount.includes("%"))
+        return false;
     }
-    variant="borderless"  
-    styles ={{ header: {borderBottom: 'none'}}}
-    style={{boxShadow: 'none'}}
-  >
-      <Table
-        columns={columns}
-        dataSource={initData}
-        pagination={{ pageSize: 4 }}
-        rowClassName={(record) =>
-          record.status === "Expired"
-            ? "bg-red-50"
-            : record.status === "Inactive"
-              ? "bg-yellow-50"
-              : ""
+
+    // Lọc theo từ khóa tìm kiếm
+    if (filterParams.searchText) {
+      const searchLower = filterParams.searchText.toLowerCase();
+      if (
+        !item.code.toLowerCase().includes(searchLower) &&
+        !item.description.toLowerCase().includes(searchLower)
+      ) {
+        return false;
+      }
+    }
+
+    // Lọc theo khoảng ngày
+    if (filterParams.dateRange) {
+      const [start, end] = filterParams.dateRange;
+      const expiryDate = dayjs(item.expiry, "DD/MM/YYYY");
+      if (start && expiryDate.isBefore(start, "day")) return false;
+      if (end && expiryDate.isAfter(end, "day")) return false;
+    }
+
+    return true;
+  });
+
+  const statusOptions = [
+    { value: "Active", label: "Active" },
+    { value: "Inactive", label: "Inactive" },
+    { value: "Expired", label: "Expired" },
+  ];
+
+  const discountTypeOptions = [
+    { value: "percentage", label: "Percentage Discount" },
+    { value: "fixed", label: "Fixed Value" },
+  ];
+
+  const handleEdit = (record) => {
+    setEditingCoupon(record);
+    form.setFieldsValue({ record });
+    setIsModalEditOpen(true);
+  };
+
+  const handleEditSubmit = (values) => {
+    console.log("Edited values:", values);
+    setIsModalEditOpen(false);
+  };
+
+  const handleAddSubmit = (values) => {
+    console.log("Added values:", values);
+    setIsModalAddOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalEditOpen(false);
+    setIsModalAddOpen(false);
+  };
+
+  return (
+    <>
+      <Card
+        title={<span className="text-xl font-bold">Mangement Cinema</span>}
+        extra={
+          <Space>
+            {/* Dropdown lọc nâng cao */}
+            <Dropdown
+              dropdownRender={() => (
+                <Card
+                  title="Filter Coupons"
+                  style={{ width: 300 }}
+                  extra={
+                    <Button
+                      type="link"
+                      size="small"
+                      onClick={() =>
+                        setFilterParams({
+                          status: null,
+                          discountType: null,
+                          searchText: "",
+                          dateRange: null,
+                        })
+                      }
+                    >
+                      Reset
+                    </Button>
+                  }
+                >
+                  <Space direction="vertical" style={{ width: "100%" }}>
+                    <div>
+                      <div className="text-sm font-medium mb-1">Status</div>
+                      <Select
+                        placeholder="Select status"
+                        options={statusOptions}
+                        style={{ width: "100%" }}
+                        value={filterParams.status}
+                        onChange={(value) =>
+                          setFilterParams({ ...filterParams, status: value })
+                        }
+                        allowClear
+                      />
+                    </div>
+
+                    <div>
+                      <div className="text-sm font-medium mb-1">
+                        Discount Type
+                      </div>
+                      <Select
+                        placeholder="Select discount type"
+                        options={discountTypeOptions}
+                        style={{ width: "100%" }}
+                        value={filterParams.discountType}
+                        onChange={(value) =>
+                          setFilterParams({
+                            ...filterParams,
+                            discountType: value,
+                          })
+                        }
+                        allowClear
+                      />
+                    </div>
+
+                    <div>
+                      <div className="text-sm font-medium mb-1">
+                        Expiry Date
+                      </div>
+                      <RangePicker
+                        style={{ width: "100%" }}
+                        format="DD/MM/YYYY"
+                        value={filterParams.dateRange}
+                        onChange={(value) =>
+                          setFilterParams({ ...filterParams, dateRange: value })
+                        }
+                      />
+                    </div>
+                  </Space>
+                </Card>
+              )}
+              trigger={["click"]}
+            >
+              <Button icon={<FilterOutlined />}>
+                <Space>
+                  Filters
+                  <DownOutlined />
+                </Space>
+              </Button>
+            </Dropdown>
+
+            {/* Thanh tìm kiếm */}
+            <Search
+              placeholder="Search coupons..."
+              allowClear
+              enterButton={<SearchOutlined />}
+              style={{ width: 250 }}
+              value={filterParams.searchText}
+              onChange={(e) =>
+                setFilterParams({ ...filterParams, searchText: e.target.value })
+              }
+              onSearch={(value) =>
+                setFilterParams({ ...filterParams, searchText: value })
+              }
+            />
+
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setIsModalAddOpen(true)}
+            >
+              Add Coupon
+            </Button>
+          </Space>
         }
+        variant="borderless"
+        styles={{ header: { borderBottom: "none" } }}
+        style={{ boxShadow: "none" }}
+      >
+        <CouponStatistics data={filteredData} />
+        <Table
+          columns={columns(handleEdit)}
+          dataSource={initData}
+          pagination={{ pageSize: 4 }}
+          rowClassName={(record) =>
+            record.status === "Expired"
+              ? "bg-red-50"
+              : record.status === "Inactive"
+                ? "bg-yellow-50"
+                : ""
+          }
+        />
+        <Divider />
+        <div className="flex justify-between text-sm text-gray-500">
+          <span>Total: {initData.length} coupons</span>
+          <span className="flex gap-4">
+            <span className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-green-500"></span>
+              Active
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
+              Inactive
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-red-500"></span>
+              Expired
+            </span>
+          </span>
+        </div>
+      </Card>
+
+      <ModalCouponAdd
+        visible={isModalAddOpen}
+        onCancel={handleCancel}
+        onSuccess={handleAddSubmit}
       />
-      <Divider />
-      <div className="flex justify-between text-sm text-gray-500">
-        <span>Total: {initData.length} coupons</span>
-        <span className="flex gap-4">
-          <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-green-500"></span>
-            Active
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
-            Inactive
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-red-500"></span>
-            Expired
-          </span>
-        </span>
-      </div>
-    </Card>
+      <ModalCouponEdit
+        visible={isModalEditOpen}
+        initialValues={editingCoupon}
+        onCancel={handleCancel}
+        onSuccess={handleEditSubmit}
+      />
+    </>
   );
 };
 
