@@ -44,16 +44,6 @@ const { Search } = Input;
 
 const columns = (handleEdit) => [
   {
-    title: "Seat ID",
-    dataIndex: "id",
-    key: "id",
-    render: (id) => (
-      <span className="font-mono font-bold text-gray-800">#{id}</span>
-    ),
-    width: 100,
-    sorter: (a, b) => a.id.localeCompare(b.id),
-  },
-  {
     title: "Seat Info",
     key: "info",
     render: (_, record) => (
@@ -79,8 +69,8 @@ const columns = (handleEdit) => [
           {record.row}
         </Avatar>
         <div>
-          <div className="font-bold text-base">Seat {record.number}</div>
-          <div className="text-gray-500 text-xs">Row {record.row}</div>
+          <div className="font-bold text-base text-blue-600">{record.id}</div>
+          <div className="text-gray-500 text-xs">Seat {record.number} - Row {record.row}</div>
         </div>
       </div>
     ),
