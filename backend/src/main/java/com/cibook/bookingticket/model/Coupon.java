@@ -19,13 +19,13 @@ public class Coupon {
     @Indexed(unique = true)
     private String couponCode;
 
-    private double discountValue;
-    private double minOrderValue;
+    private Double discountValue;
+    private Double minOrderValue;
 
     @CreatedDate
     private Date startDate;
     private Date expiryDate;
-    private int usageLimit;
+    private Integer usageLimit;
     private String description;
 
 }

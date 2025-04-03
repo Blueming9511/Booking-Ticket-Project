@@ -1,0 +1,53 @@
+package com.cibook.bookingticket.controller;
+
+import com.cibook.bookingticket.model.Payment;
+import com.cibook.bookingticket.service.PaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/payments")
+public class PaymentController implements IController<Payment, String>{
+    private final PaymentService paymentService;
+    @Autowired
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+    @Override
+    public ResponseEntity<Payment> add(Payment entity) {
+        return ResponseEntity.ok().body(paymentService.add(entity));
+    }
+
+    @Override
+    public ResponseEntity<List<Payment>> getAll() {
+        return ResponseEntity.ok().body(paymentService.findAll());
+    }
+
+    @Override
+    public ResponseEntity<Payment> getById(String id) {
+        return paymentService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @Override
+    public ResponseEntity<Map<String, String>> getAllNames() {
+       return ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public ResponseEntity<Payment> update(String id, Payment entity) {
+        if (!paymentService.existsById(id)) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(paymentService.update(id, entity));
+    }
+
+    @Override
+    public ResponseEntity<Void> delete(String id) {
+        if (!paymentService.existsById(id)) return ResponseEntity.notFound().build();
+        paymentService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+}

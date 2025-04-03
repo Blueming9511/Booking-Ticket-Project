@@ -25,23 +25,23 @@ public class Movie {
 
     private Integer releaseYear;
     private String director;
-    private Float rating;
+    private Double rating;
     private Integer duration;
     private String language;
-    private Float budget;
-    private Float boxOffice;
+    private Double budget;
+    private Double boxOffice;
     private String[] casts;
     private String releasedBy;
     private String releaseDate;
     private String endDate;
     private String trailer;
     private String description;
-    private MovieStatus status;
+    private String status;
 
-    public enum MovieStatus {
-        INCOMING,
-        NOW_SHOWING,
-        CLOSED,
-        POSTPONE
-    }
+//    public enum MovieStatus {
+//        COMMING_SOOM,
+//        NOW_SHOWING,
+//        CLOSED,
+//        POSTPONE
+//    }
 }

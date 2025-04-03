@@ -15,13 +15,11 @@ public class Seat {
 
     @Indexed
     private String seatCode;
-    private String seatNumber;
-    private String seatType;
+    private String number;
+    private String type;
     private String row;
-    @DBRef
-    private Screen screen;
-    @DBRef
-    private Cinema cinema;
+    private String screenCode;
+    private String cinemaCode;
     private double multiplier;
     private SeatStatus status;
 
