@@ -1,91 +1,35 @@
-import React, { useState } from 'react';
-import {
-  Avatar,
-  Card,
-  Row,
-  Col,
-  Divider,
-  Tabs,
-  Button,
-  Form,
-  Input,
-  Upload,
-  message,
-  Modal,
-  Table,
-  Tag,
-  Radio
+// UserProfile.js
+import React, { useState,  useEffect } from 'react';
+import { 
+  Card, 
+  Row, 
+  Col, 
+  Divider, 
+  Tabs, 
+  message, 
+  Form,  
 } from 'antd';
-import {
-  UserOutlined,
-  EditOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  CalendarOutlined,
-  UploadOutlined,
-  LockOutlined,
-  SaveOutlined
+import { 
+  UserOutlined, 
+  HistoryOutlined 
 } from '@ant-design/icons';
+import { useLocation } from 'react-router-dom';  // Make sure this import is correct
 
-const { Password } = Input;
+import ProfileAvatar from '../../components/ProfileAvatar';
+import UserInfo from '../../components/UserInfo';
+import ProfileForm from '../../components/ProfileForm';
+import TicketTable from '../../components/TicketTable';
+import ChangePasswordModal from '../../components/ChangePasswordModal';
 
-// Mock user data
 const userData = {
   name: 'John Doe',
-  email: 'john.doeexample.com',
+  email: 'john.doe@example.com',
   phone: '0928988254',
   DOB: '2004-02-05',
   gender: 'male',
   avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
 };
 
-const UserProfile = () => {
-  const [form] = Form.useForm();
-  const [activeTab, setActiveTab] = useState('profile');
-  const [changePwdOpen, setChangePwdOpen] = useState(false);
-  const [pwdForm] = Form.useForm();
-  const [isEditing, setIsEditing] = useState(false);
-
-  const uploadProps = {
-    name: 'avatar',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text'
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    }
-  };
-
-  const onFinish = values => {
-    console.log('Received values:', values);
-    message.success('Profile updated successfully!');
-    setIsEditing(false);
-  };
-
-  const onPwdChangeFinish = values => {
-    console.log('Password change values:', values);
-    setChangePwdOpen(false);
-    message.success('Password changed successfully!');
-    pwdForm.resetFields();
-  };
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleSaveClick = () => {
-    form.submit();
-  };
-
-  // Add this to your existing mock data
 const ticketData = [
   {
     key: '1',
@@ -113,77 +57,233 @@ const ticketData = [
     seats: ['C4', 'C5'],
     price: '$20.00',
     status: 'Upcoming'
+  },
+  {
+    key: '4',
+    movie: 'Inception',
+    date: '2023-08-01',
+    time: '18:00',
+    seats: ['D1'],
+    price: '$15.00',
+    status: 'Cancelled'
+  },
+  {
+    key: '5',
+    movie: 'Interstellar',
+    date: '2023-09-15',
+    time: '20:00',
+    seats: ['E2', 'E3'],
+    price: '$22.00',
+    status: 'Completed'
+  },
+  {
+    key: '6',
+    movie: 'Dune',
+    date: '2023-10-05',
+    time: '14:30',
+    seats: ['F7', 'F8', 'F9'],
+    price: '$36.00',
+    status: 'Upcoming'
+  },
+  {
+    key: '7',
+    movie: 'Black Panther: Wakanda Forever',
+    date: '2023-11-11',
+    time: '17:15',
+    seats: ['G12'],
+    price: '$14.50',
+    status: 'Completed'
+  },
+  {
+    key: '8',
+    movie: 'Top Gun: Maverick',
+    date: '2023-12-25',
+    time: '13:00',
+    seats: ['H4', 'H5'],
+    price: '$28.00',
+    status: 'Cancelled'
+  },
+  {
+    key: '9',
+    movie: 'Avatar: The Way of Water',
+    date: '2024-01-07',
+    time: '19:45',
+    seats: ['J10', 'J11', 'J12'],
+    price: '$42.00',
+    status: 'Upcoming'
+  },
+  {
+    key: '10',
+    movie: 'Jurassic World Dominion',
+    date: '2024-02-14',
+    time: '20:30',
+    seats: ['K6'],
+    price: '$16.00',
+    status: 'Upcoming'
+  },
+  {
+    key: '11',
+    movie: 'The Super Mario Bros. Movie',
+    date: '2024-03-10',
+    time: '11:00',
+    seats: ['L3', 'L4'],
+    price: '$24.00',
+    status: 'Completed'
+  },
+  {
+    key: '12',
+    movie: 'Oppenheimer',
+    date: '2024-04-22',
+    time: '21:15',
+    seats: ['M8', 'M9'],
+    price: '$30.00',
+    status: 'Upcoming'
+  },
+  {
+    key: '13',
+    movie: 'Barbie',
+    date: '2024-05-30',
+    time: '16:20',
+    seats: ['N1', 'N2', 'N3', 'N4'],
+    price: '$48.00',
+    status: 'Cancelled'
+  },
+  {
+    key: '14',
+    movie: 'Mission: Impossible - Dead Reckoning',
+    date: '2024-06-18',
+    time: '18:45',
+    seats: ['O7'],
+    price: '$18.00',
+    status: 'Upcoming'
+  },
+  {
+    key: '15',
+    movie: 'Guardians of the Galaxy Vol. 3',
+    date: '2024-07-05',
+    time: '14:00',
+    seats: ['P5', 'P6'],
+    price: '$26.00',
+    status: 'Completed'
+  },
+  {
+    key: '16',
+    movie: 'Fast X',
+    date: '2024-08-12',
+    time: '20:00',
+    seats: ['Q9', 'Q10'],
+    price: '$32.00',
+    status: 'Upcoming'
+  },
+  {
+    key: '17',
+    movie: 'The Little Mermaid',
+    date: '2024-09-09',
+    time: '15:30',
+    seats: ['R2'],
+    price: '$14.00',
+    status: 'Cancelled'
+  },
+  {
+    key: '18',
+    movie: 'Indiana Jones and the Dial of Destiny',
+    date: '2024-10-28',
+    time: '19:00',
+    seats: ['S4', 'S5', 'S6'],
+    price: '$36.00',
+    status: 'Upcoming'
+  },
+  {
+    key: '19',
+    movie: 'Elemental',
+    date: '2024-11-15',
+    time: '12:45',
+    seats: ['T8'],
+    price: '$12.00',
+    status: 'Completed'
+  },
+  {
+    key: '20',
+    movie: 'The Marvels',
+    date: '2024-12-20',
+    time: '22:00',
+    seats: ['U3', 'U4'],
+    price: '$28.00',
+    status: 'Upcoming'
   }
 ];
 
-// Add this to your component
-const handleCancelTicket = (ticketId) => {
-  message.success(`Ticket ${ticketId} cancelled successfully!`);
-  // In a real app, you would call an API here to cancel the ticket
-};
+const UserProfile = () => {
+  const location = useLocation(); // Get current location
+  const [form] = Form.useForm();
+  const [activeTab, setActiveTab] = useState('profile');
+  const [changePwdOpen, setChangePwdOpen] = useState(false);
+  const [pwdForm] = Form.useForm();
+  const [isEditing, setIsEditing] = useState(false);
 
-const ticketColumns = [
-  {
-    title: 'Movie',
-    dataIndex: 'movie',
-    key: 'movie',
-  },
-  {
-    title: 'Date',
-    dataIndex: 'date',
-    key: 'date',
-  },
-  {
-    title: 'Time',
-    dataIndex: 'time',
-    key: 'time',
-  },
-  {
-    title: 'Seats',
-    dataIndex: 'seats',
-    key: 'seats',
-    render: (seats) => (
-      <>
-        {seats.map(seat => (
-          <Tag color="blue" key={seat}>{seat}</Tag>
-        ))}
-      </>
-    ),
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-    key: 'price',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    key: 'status',
-    render: (status) => {
-      let color = status === 'Completed' ? 'green' : 'orange';
-      return (
-        <Tag color={color} key={status}>
-          {status.toUpperCase()}
-        </Tag>
-      );
+  const uploadProps = {
+    name: 'avatar',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    headers: {
+      authorization: 'authorization-text'
     },
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      record.status === 'Upcoming' ? (
-        <Button 
-          type="link" 
-          danger 
-          onClick={() => handleCancelTicket(record.key)}
-        >
-          Cancel
-        </Button>
-      ) : null
-    ),
-  },
-];
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    }
+  };
+
+    useEffect(() => {
+    if (location.pathname === '/my-ticket') {
+      setActiveTab('tickets');
+    }
+    
+    if (location.pathname === '/my-history') {
+      setActiveTab('history');
+    }
+    
+  }, [location.pathname]);
+
+  const onFinish = values => {
+    console.log('Received values:', values);
+    message.success('Profile updated successfully!');
+    setIsEditing(false);
+  };
+
+  const onPwdChangeFinish = values => {
+    console.log('Password change values:', values);
+    setChangePwdOpen(false);
+    message.success('Password changed successfully!');
+    pwdForm.resetFields();
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    form.submit();
+  };
+
+  const handleCancelTicket = ticketId => {
+    message.success(`Ticket ${ticketId} cancelled successfully!`);
+  };
+
+  // Filter tickets for My Tickets tab (excluding Completed and Cancelled)
+  const activeTickets = ticketData.filter(
+    ticket => ticket.status !== 'Completed' && ticket.status !== 'Cancelled'
+  );
+
+  // Filter tickets for History tab (Completed and Cancelled only)
+  const historyTickets = ticketData.filter(
+    ticket => ticket.status === 'Completed' || ticket.status === 'Cancelled'
+  );
 
   const items = [
     {
@@ -195,125 +295,39 @@ const ticketColumns = [
         </span>
       ),
       children: (
-        <Form
+        <ProfileForm
           form={form}
-          layout="vertical"
-          initialValues={userData}
+          isEditing={isEditing}
           onFinish={onFinish}
-        >
-          <Row gutter={16}>
-            <Col xs={24} md={12}>
-              <Form.Item
-                name="name"
-                label="Full Name"
-                rules={[{ required: true, message: 'Please enter your name' }]}
-              >
-                <Input prefix={<UserOutlined />} disabled={!isEditing} />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item name="email" label="Email">
-                <Input prefix={<MailOutlined />} disabled />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col xs={24} md={12}>
-              <Form.Item
-                name="phone"
-                label="Phone Number"
-                rules={[
-                  { required: true, message: 'Please enter your phone number' },
-                  { pattern: /^[0-9]+$/, message: 'Please enter valid phone number' }
-                ]}
-              >
-                <Input prefix={<PhoneOutlined />} disabled={!isEditing} />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item
-                name="DOB"
-                label="Date of Birth"
-                rules={[{ required: true, message: 'Please enter your date of birth' }]}
-              >
-                <Input type="date" disabled={!isEditing} />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col xs={24} md={12}>
-              <Form.Item
-                name="gender"
-                label="Gender"
-                rules={[{ required: true, message: 'Please select your gender' }]}
-              >
-                <Radio.Group disabled={!isEditing}>
-                  <Radio value="male">Male</Radio>
-                  <Radio value="female">Female</Radio>
-                  <Radio value="other">Other</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Password">
-                <div className="flex items-center">
-                  <Password
-                    placeholder="••••••••"
-                    disabled
-                    className="w-full mr-2"
-                    autoComplete="current-password"
-                  />
-                  <Button
-                    type="primary"
-                    icon={<LockOutlined />}
-                    onClick={() => setChangePwdOpen(true)}
-                    disabled={!isEditing}
-                  >
-                    Change
-                  </Button>
-                </div>
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item>
-            {!isEditing ? (
-              <Button
-                type="primary"
-                icon={<EditOutlined />}
-                onClick={handleEditClick}
-                style={{ width: '100%' }}
-              >
-                Update Profile
-              </Button>
-            ) : (
-              <Button
-                type="primary"
-                icon={<SaveOutlined />}
-                onClick={handleSaveClick}
-                style={{ width: '100%' }}
-              >
-                Save Changes
-              </Button>
-            )}
-          </Form.Item>
-        </Form>
+          onEditClick={handleEditClick}
+          onSaveClick={handleSaveClick}
+          onChangePasswordClick={() => setChangePwdOpen(true)}
+          userData={userData}  // Add this prop
+        />
       )
     },
     {
       key: 'tickets',
+      label: <span>My Tickets</span>,
+      children: (
+        <TicketTable 
+          data={activeTickets} 
+          onCancelTicket={handleCancelTicket} 
+        />
+      )
+    },
+    {
+      key: 'history',
       label: (
         <span>
-          My Tickets
+          <HistoryOutlined />
+          History
         </span>
       ),
       children: (
-        <Table 
-          columns={ticketColumns} 
-          dataSource={ticketData} 
-          pagination={{ pageSize: 5 }}
+        <TicketTable 
+          data={historyTickets} 
+          onCancelTicket={handleCancelTicket} 
         />
       )
     }
@@ -326,171 +340,31 @@ const ticketColumns = [
       <Row gutter={[24, 24]}>
         <Col xs={24} md={8}>
           <Card className="text-center">
-            <div className="mb-4 flex flex-col gap-2 justify-center items-center">
-              <Avatar
-                size={128}
-                src={userData.avatar}
-                icon={<UserOutlined />}
-                className="mb-3"
-              />
-              <Upload {...uploadProps}>
-                <Button icon={<UploadOutlined />}>Change Avatar</Button>
-              </Upload>
-            </div>
+            <ProfileAvatar 
+              avatar={userData.avatar} 
+              uploadProps={uploadProps} 
+            />
             <h2 className="text-xl font-semibold">{userData.name}</h2>
             <Divider />
-            <div className="text-left space-y-3">
-              <div className="flex items-center">
-                <MailOutlined className="mr-2 text-gray-500" />
-                <span>{userData.email}</span>
-              </div>
-              <div className="flex items-center">
-                <CalendarOutlined className="mr-2 text-gray-500" />
-                <span>{userData.DOB}</span>
-              </div>
-              <div className="flex items-center">
-                <PhoneOutlined className="mr-2 text-gray-500" />
-                <span>{userData.phone}</span>
-              </div>
-            </div>
+            <UserInfo user={userData} />
           </Card>
         </Col>
 
         <Col xs={24} md={16}>
           <Card>
-            <Tabs
-              activeKey={activeTab}
-              onChange={setActiveTab}
-              items={items}
-            />
+            <Tabs activeKey={activeTab} onChange={setActiveTab} items={items} />
           </Card>
         </Col>
       </Row>
 
-      {/* Change Password Modal */}
-      <Modal
-        title="Change Password"
-        open={changePwdOpen}
+      <ChangePasswordModal
+        visible={changePwdOpen}
         onCancel={() => setChangePwdOpen(false)}
-        footer={null}
-      >
-        <Form form={pwdForm} layout="vertical" onFinish={onPwdChangeFinish}>
-          <Form.Item
-            name="currentPassword"
-            label="Current Password"
-            rules={[{ required: true, message: 'Please enter your current password' }]}
-          >
-            <Password 
-              prefix={<LockOutlined />} 
-              autoComplete="current-password" 
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="newPassword"
-            label="New Password"
-            rules={[{ required: true, message: 'Please enter your new password' }]}
-          >
-            <Password 
-              prefix={<LockOutlined />} 
-              autoComplete="new-password" 
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Change Password
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+        onFinish={onPwdChangeFinish}
+        form={pwdForm}
+      />
     </div>
   );
 };
 
 export default UserProfile;
-// import { useEffect, useState } from 'react'
-
-// function UserProfile() {
-//   const [user, setUser] = useState(null)
-//   const [error, setError] = useState(null)
-//   const [loading, setLoading] = useState(true)
-
-//   useEffect(() => {
-//     const fetchUser = async () => {
-//       try {
-//         const response = await fetch('http://localhost:8080/api/user', {
-//           credentials: 'include', // Send cookies if needed
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//         })
-
-//         if (!response.ok) {
-//           if (response.status === 401) {
-//             throw new Error('Unauthorized: Please log in.')
-//           }
-//           throw new Error(`Error ${response.status}: ${response.statusText}`)
-//         }
-
-//         const data = await response.json()
-//         setUser(data)
-//       } catch (err) {
-//         setError(err.message)
-//       } finally {
-//         setLoading(false)
-//       }
-//     }
-
-//     fetchUser()
-//   }, [])
-
-//   if (loading) {
-//     return <div>Loading...</div>
-//   }
-
-//   if (error) {
-//     return <div className="text-red-500">Error: {error}</div>
-//   }
-
-//   return (
-//     <div className="container flex flex-col mx-auto p-4">
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//       <div className="mt-4">
-//         <p>
-//       <h1 className="text-3xl font-bold">User Profile</h1>
-//           <strong>Name:</strong> {user?.name || 'N/A'}
-//         </p>
-//         <p>
-//           <strong>Email:</strong> {user?.email || 'N/A'}
-//         </p>
-//         <p>
-//           <strong>Provider:</strong> {user?.provider || 'N/A'}
-//         </p>
-//         {user?.picture && (
-//           <img
-//             src={user.picture}
-//             alt="Profile"
-//             className="w-24 h-24 rounded-full mt-2"
-//           />
-//         )}
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default UserProfile

@@ -4,15 +4,15 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), require('@tailwindcss/line-clamp')],
   server: {
     port: 5173,
     proxy: {
       '/api': {
         target: 'http://localhost:8080', // Backend port
         changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
+        secure: false
+      }
+    }
+  }
 })

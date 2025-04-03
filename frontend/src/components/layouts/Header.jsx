@@ -13,6 +13,9 @@ const AppHeader = () => {
       <Menu.Item key='settings'>
         <Link to='/my-ticket'>My Ticket</Link>
       </Menu.Item>
+      <Menu.Item key='settings'>
+        <Link to='/my-history'>History</Link>
+      </Menu.Item>
       <Menu.Item key='logout'>
         <a href='/login'>Logout</a>
       </Menu.Item>

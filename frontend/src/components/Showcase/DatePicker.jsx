@@ -37,8 +37,8 @@ const DatePicker = () => {
                       transition-all p-2
                       ${
                         selectedDate === dayNumber
-                          ? 'bg-primary text-white' // Selected state (Blue)
-                          : ' text-primary' // Default state (Light Blue)
+                          ? 'bg-primary text-white border-red-700' // Selected state (Blue)
+                          : ' text-black' // Default state (Light Blue)
                       }`}
           onClick={() => setSelectedDate(dayNumber)}
         >

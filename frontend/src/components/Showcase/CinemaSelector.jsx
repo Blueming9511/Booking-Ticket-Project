@@ -31,12 +31,12 @@ const CinemaSelector = () => {
   return (
     <div className='flex gap-5 overflow-x-auto justify-center sm:justify-start'>
       {cinemas.map(cinema => (
-        <Tooltip key={cinema.id} title={cinema.name} className='flex flex-col justify-center items-center'>
+        <Tooltip key={cinema.id} title={cinema.name} className='flex flex-col justify-start items-center'>
           <button
-            className={`cursor-pointer p-2 rounded-lg border transition-all duration-300
+            className={`cursor-pointer w-[50px] h-[50px] flex justify-center items-center p-2 rounded-lg border transition-all duration-300
             ${
               selectedCinema === cinema.id
-                ? 'border-blue-800  shadow-md'
+                ? 'border-red-800  shadow-md'
                 : 'border-gray-300'
             }`}
             onClick={() => handleSelect(cinema.id)}
@@ -48,8 +48,8 @@ const CinemaSelector = () => {
             />
           </button>
           <span
-            className={`text-[10px] sm:text-xs font-bold mt-1 ${
-              selectedCinema === cinema.id ? 'text-blue-800' : 'text-gray-500'
+            className={`text-[10px] sm:text-xs font-bold  mt-1  ${
+              selectedCinema === cinema.id ? 'text-red-800' : 'text-gray-500'
             }`}
           >
             {truncateText(cinema.name, 8)}

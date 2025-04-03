@@ -5,6 +5,7 @@ import Layout from '../components/layouts/Layout'
 import HomePage from '../pages/user/HomePage'
 import ErrorPage from '../pages/user/ErrorPage'
 import BookingPage from '../pages/user/BookingPage'
+import MovieDetails from '../pages/user/MovieDetails'
 
 const MainRoutes = () => {
   return (
@@ -18,6 +19,8 @@ const MainRoutes = () => {
         <Route path='/booking' element={<BookingPage />} />
         <Route path='/profile' element={<UserProfile />} />
         <Route path='/my-ticket' element={<UserProfile />} />
+        <Route path='/my-history' element={<UserProfile />} />
+        <Route path='/movie/:movieID' element={<MovieDetails />} />
         <Route path='/*' element={<ErrorPage />} />
       </Route>
     </Routes>
