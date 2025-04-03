@@ -4,19 +4,18 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.Collection;
 
 @Data
-@Document (collection = "users")
-public class
-User {
+@Document(collection = "screens")
+public class Screen {
     @Id
     private String id;
 
     @Indexed(unique = true)
-    private String Username;
-    private String email;
-    private String password;
-    private String avatar;
-    private String role;
+    private String screenCode;
+
+    private String type;
+    private int capacity;
+    private String status;
+    private String cinemaId;
 }

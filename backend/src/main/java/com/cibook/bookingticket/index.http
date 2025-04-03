@@ -1,0 +1,30 @@
+GET http://localhost:8080/api/cinemas
+
+###
+
+POST http://localhost:8080/api/cinemas
+Content-Type: application/json
+{
+    "cinemaName": "CGV NVL",
+    "location": "1058 Nguyễn Văn Linh, Tân Phong, Quận 7, TP.HCM",
+    "numberOfScreens": 20,
+    "owner": "CGV",
+    "status": "OPEN"
+}
+
+###
+GET http://localhost:8080/api/cinemas/67ec2caee21d8829e5c0d28f
+
+###
+PUT http://localhost:8080/api/cinemas/67ec2caee21d8829e5c0d28f
+Content-Type: application/json
+{
+    "cinemaName": CGV,
+    "location": "1058 Nguyễn Văn Linh, Tân Phong, Quận 7, TP.HCM",
+    "numberOfScreens": 200,
+    "owner": CGV,
+    "status": "OPEN"
+}
+
+###
+DELETE http://localhost:8080/api/cinemas/67ec2caee21d8829e5c0d28f
