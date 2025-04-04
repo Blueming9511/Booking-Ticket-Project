@@ -7,8 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.sql.Time;
 import java.time.Instant;
@@ -41,15 +39,13 @@ public class Showtime {
 
 
 
-    private double price;
+    private Double price;
     @DBRef
     private Movie movie;
 
-    @DBRef
-    private Screen screen;
-
-    @DBRef
-    private Cinema cinema;
+    private String movieCode;
+    private String screenCode;
+    private String cinemaCode;
 
     private ShowTimeStatus status;
 

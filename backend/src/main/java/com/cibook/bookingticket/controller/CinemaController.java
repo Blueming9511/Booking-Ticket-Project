@@ -55,4 +55,11 @@ public class CinemaController implements IController<Cinema, String> {
         cinemaService.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/code/{id}")
+    public ResponseEntity<Cinema> getByCode(@PathVariable("id") String id) {
+       return cinemaService.findByCode(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+
 }
