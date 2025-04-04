@@ -25,7 +25,9 @@ public class Coupon {
     @CreatedDate
     private Date startDate;
     private Date expiryDate;
-    private int usageLimit;
+    private Integer usageLimit;
     private String description;
 
 }
+
+
