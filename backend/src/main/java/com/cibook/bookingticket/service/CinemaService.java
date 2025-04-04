@@ -53,6 +53,7 @@ public class CinemaService implements IService<Cinema, String> {
     @Override
     public Map<String, String> findAllNamesWithID() {
         return cinemaRepository.findAll().stream()
+                .filter(cinema -> cinema.getCinemaCode() != null &&  cinema.getCinemaCode() !=null)
                 .collect(Collectors.toMap(
                         Cinema::getCinemaCode,
                         Cinema::getCinemaName,
