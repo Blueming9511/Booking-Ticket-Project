@@ -1,10 +1,12 @@
 package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.Seat;
-import com.cibook.bookingticket.repository.SeatRepository;
 import com.cibook.bookingticket.service.SeatService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,6 +53,17 @@ public class SeatController implements IController<Seat, String> {
         if (!seatService.existsById(id))
             return ResponseEntity.notFound().build();
         seatService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/all")
+    public ResponseEntity<List<Seat>> addAll(@RequestBody List<Seat> seats) {
+        List<Seat> savedSeats = seatService.addAll(seats);
+        return ResponseEntity.ok(savedSeats);
+    }
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAll() {
+        seatService.deleteAll();
         return ResponseEntity.ok().build();
     }
 }

@@ -67,4 +67,13 @@ public class SeatService implements  IService<Seat, String>{
     public boolean existsById(String id) {
         return seatRepository.existsById(id);
     }
+
+    public List<Seat> addAll(List<Seat> seats) {
+        seats.forEach(seat -> seat.setSeatCode(codeGenerator.generateSeatCode(seat.getScreenCode(), seat.getCinemaCode())));
+        return seatRepository.saveAll(seats);
+    }
+
+    public void deleteAll() {
+        seatRepository.deleteAll();
+    }
 }

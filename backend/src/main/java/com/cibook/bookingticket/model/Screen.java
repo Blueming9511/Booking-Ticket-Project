@@ -14,6 +14,7 @@ public class Screen {
     @Indexed
     private String screenCode;
 
+    @Indexed
     private String type;
     private int capacity;
     private String status;

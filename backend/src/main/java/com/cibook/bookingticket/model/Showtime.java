@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Document(collection = "showtimes")
@@ -23,15 +24,11 @@ public class Showtime {
     private Date date;
     private Time startTime;
     private Time endTime;
-    private double price;
-    @DBRef
-    private Movie movie;
+    private Double price;
 
-    @DBRef
-    private Screen screen;
-
-    @DBRef
-    private Cinema cinema;
+    private String movieCode;
+    private String screenCode;
+    private String cinemaCode;
 
     private ShowTimeStatus status;
 

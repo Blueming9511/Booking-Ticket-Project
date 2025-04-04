@@ -6,9 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -45,6 +43,11 @@ public class ScreenController implements IController<Screen, String> {
         return ResponseEntity.ok(screenService.findAllNamesWithID());
     }
 
+    @GetMapping("/v2/names")
+    public ResponseEntity<Map<String, List<String>>> getAllNamesWithIDs() {
+        return ResponseEntity.ok(screenService.findAllNamesWithIDs());
+    }
+
     @Override
     public ResponseEntity<Screen> update(String id, Screen entity) {
         return ResponseEntity.ok(screenService.update(id, entity));
@@ -55,6 +58,22 @@ public class ScreenController implements IController<Screen, String> {
         if (!screenService.existsById(id))
             return ResponseEntity.notFound().build();
         screenService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/types")
+    public ResponseEntity<List<String>> getAllTypes() {
+        return ResponseEntity.ok(screenService.findAllTypes());
+    }
+
+    @PostMapping("/many")
+    public ResponseEntity<List<Screen>> addMany(@RequestBody List<Screen> entity) {
+        return ResponseEntity.ok(screenService.addMany(entity));
+    }
+
+    @DeleteMapping("/many")
+    public ResponseEntity<Void> deleteMany() {
+        screenService.deleteAll();
         return ResponseEntity.ok().build();
     }
 }

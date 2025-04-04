@@ -26,6 +26,6 @@ public class Seat {
     public enum SeatStatus {
         BOOKED,
         AVAILABLE,
-        MAINTAINED
+        MAINTENACE,
     }
 }
