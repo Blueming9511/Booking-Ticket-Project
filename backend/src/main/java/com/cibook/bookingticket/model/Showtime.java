@@ -39,13 +39,15 @@ public class Showtime {
 
 
 
-    private Double price;
+    private double price;
     @DBRef
     private Movie movie;
 
-    private String movieCode;
-    private String screenCode;
-    private String cinemaCode;
+    @DBRef
+    private Screen screen;
+
+    @DBRef
+    private Cinema cinema;
 
     private ShowTimeStatus status;
 
@@ -53,6 +55,4 @@ public class Showtime {
         AVAILABLE,
         FULL,
     }
-
-
 }
