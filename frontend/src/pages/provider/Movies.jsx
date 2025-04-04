@@ -1,356 +1,177 @@
-import React, { useState } from "react";
-import {
-  Tag,
-  Card,
-  Space,
-  Button,
-  Badge,
-  Table,
-  Divider,
-  Dropdown,
-  Image,
-  Rate,
-  Form,
-  Tooltip,
-} from "antd";
-import {
-  ClockCircleOutlined,
-  DollarOutlined,
-  StarFilled,
-  FilterOutlined,
-  PlusOutlined,
-  EllipsisOutlined,
-} from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { Card, Space, Button, message, Input } from "antd";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-import ModalMovieEdit from "../../components/ui/Modal/ModalMovieEdit";
-import ModalMovieAdd from "../../components/ui/Modal/ModalMovieAdd";
-import MovieStatistics from "../../components/ui/Card/MovieStatistics";
-
-const columns = (handleEdit) => [
-  {
-    title: "Poster",
-    dataIndex: "thumbnail",
-    key: "thumbnail",
-    render: (src) => (
-      <Image
-        width={100}
-        src={src}
-        className="rounded-lg shadow-md hover:shadow-lg transition-all"
-      />
-    ),
-    width: 150,
-  },
-  {
-    title: "Movie Information",
-    key: "info",
-    render: (_, record) => (
-      <div className="flex flex-col">
-        <div className="flex items-start gap-3">
-          <div className="flex-1">
-            <h3 className="text-lg font-bold mb-1">{record.title}</h3>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <Tag color="blue">{record.genre}</Tag>
-              <Tag color="purple">{record.releaseYear}</Tag>
-              <Tag icon={<ClockCircleOutlined />}>{record.duration} mins</Tag>
-            </div>
-            <div className="flex items-center gap-2">
-              <Rate
-                disabled
-                allowHalf
-                defaultValue={record.rating / 2}
-                character={<StarFilled />}
-                className="text-sm"
-              />
-              <span className="text-gray-600">{record.rating}/10</span>
-            </div>
-          </div>
-          <Tooltip title="Box Office">
-            <Badge
-              count={record.boxOffice}
-              className="bg-green-100 text-green-800 px-2 py-1 rounded-full"
-            />
-          </Tooltip>
-        </div>
-        <div className="mt-2">
-          <p className="text-gray-600 text-sm">
-            <span className="font-medium">Director:</span> {record.director}
-          </p>
-          <p className="text-gray-600 text-sm">
-            <span className="font-medium">Distributor:</span>{" "}
-            {record.releasedBy}
-          </p>
-        </div>
-      </div>
-    ),
-    width: 400,
-  },
-  {
-    title: "Financials",
-    key: "financials",
-    render: (_, record) => (
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <DollarOutlined className="text-green-500" />
-          <span>Budget: {record.budget}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <DollarOutlined className="text-green-500" />
-          <span>Revenue: {record.boxOffice}</span>
-        </div>
-        <div className="mt-2">
-          <p className="text-sm text-gray-500">
-            Released: {record.releaseDate}
-          </p>
-          <p className="text-sm text-gray-500">Ended: {record.endDate}</p>
-        </div>
-      </div>
-    ),
-    width: 200,
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-    width: 300,
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
-    render: (status) => (
-      <Tag
-        color={status === "Ended" ? "red" : "green"}
-        className="flex items-center gap-1"
-      >
-        {status === "Ended" ? (
-          <>
-            <span className="w-2 h-2 rounded-full bg-red-500"></span>
-            Ended
-          </>
-        ) : (
-          <>
-            <span className="w-2 h-2 rounded-full bg-green-500"></span>
-            Now Showing
-          </>
-        )}
-      </Tag>
-    ),
-    align: "center",
-    width: 200,
-  },
-  {
-    title: "Actions",
-    dataIndex: "action",
-    key: "action",
-    render: (_, record) => (
-      <Dropdown
-        menu={{
-          items: [
-            {
-              key: "edit",
-              label: "Edit",
-              onClick: () => handleEdit(record),
-            },
-            {
-              key: "delete",
-              label: "Delete",
-            },
-          ],
-        }}
-        trigger={["click"]}
-      >
-        <Button
-          icon={<EllipsisOutlined />}
-          shape="default"
-          style={{ padding: "0" }}
-        />
-      </Dropdown>
-    ),
-    width: 100,
-  },
-];
-
-const initData = [
-  {
-    key: "1",
-    thumbnail:
-      "https://image.tmdb.org/t/p/w200/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
-    title: "Avatar: The Way of Water",
-    genre: "Sci-Fi",
-    releaseYear: "2022",
-    director: "James Cameron",
-    rating: "7.8",
-    duration: "192",
-    language: "English",
-    budget: "$250M",
-    boxOffice: "$2.320B",
-    casts: ["Sam Worthington", "Zoe Saldana", "Sigourney Weaver"],
-    releasedBy: "CGV",
-    releaseDate: "2022-12-16",
-    endDate: "2023-03-15",
-    status: "Ended",
-  },
-  {
-    key: "2",
-    thumbnail:
-      "https://image.tmdb.org/t/p/w200/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
-    title: "Titanic",
-    genre: "Romance",
-    releaseYear: "1997",
-    director: "James Cameron",
-    rating: "7.9",
-    duration: "195",
-    language: "English",
-    budget: "$200M",
-    boxOffice: "$2.202B",
-    casts: ["Leonardo DiCaprio", "Kate Winslet", "Billy Zane"],
-    releasedBy: "Cinestar",
-    releaseDate: "1997-12-19",
-    endDate: "1998-04-20",
-    status: "Ended",
-  },
-  {
-    key: "3",
-    thumbnail:
-      "https://image.tmdb.org/t/p/w200/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-    title: "Avengers: Endgame",
-    genre: "Action",
-    releaseYear: "2019",
-    director: "Anthony & Joe Russo",
-    rating: "8.4",
-    duration: "181",
-    language: "English",
-    budget: "$356M",
-    boxOffice: "$2.798B",
-    casts: ["Robert Downey Jr.", "Chris Evans", "Scarlett Johansson"],
-    releasedBy: "BHD",
-    releaseDate: "2019-04-26",
-    endDate: "2019-09-10",
-    status: "Ended",
-  },
-  {
-    key: "4",
-    thumbnail:
-      "https://image.tmdb.org/t/p/w200/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-    title: "Joker",
-    genre: "Drama",
-    releaseYear: "2019",
-    director: "Todd Phillips",
-    rating: "8.4",
-    duration: "122",
-    language: "English",
-    budget: "$55M",
-    boxOffice: "$1.074B",
-    casts: ["Joaquin Phoenix", "Robert De Niro", "Zazie Beetz"],
-    releasedBy: "Lotte Cinema",
-    releaseDate: "2019-10-04",
-    endDate: "2020-01-15",
-    status: "Ended",
-  },
-  {
-    key: "5",
-    thumbnail:
-      "https://image.tmdb.org/t/p/w200/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
-    title: "The Shawshank Redemption",
-    genre: "Drama",
-    releaseYear: "1994",
-    director: "Frank Darabont",
-    rating: "9.3",
-    duration: "142",
-    language: "English",
-    budget: "$25M",
-    boxOffice: "$73.3M",
-    casts: ["Tim Robbins", "Morgan Freeman", "Bob Gunton"],
-    releasedBy: "Galaxy Cinema",
-    releaseDate: "1994-09-23",
-    endDate: "1995-01-10",
-    status: "Ended",
-  },
-];
+import ModalMovieEdit from "../../components/ProviderManagement/Movie/ModalMovieEdit";
+import ModalMovieAdd from "../../components/ProviderManagement/Movie/ModalMovieAdd";
+import MovieStatistics from "../../components/ProviderManagement/Movie/MovieStatistics";
+import MovieTable from "../../components/ProviderManagement/Movie/MovieTable";
+import axios from "axios";
+import ModalDelete from "../../components/ui/Modal/ModalDelete";
 
 const Movies = () => {
-  const [form] = Form.useForm();
-  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
-  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
-  const [editingMovie, setEditingMovie] = useState(null);
+  const [messageApi, contextHolder] = message.useMessage();
+  const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [currentMovie, setCurrentMovie] = useState(null);
+  const [modalState, setModalState] = useState({
+    edit: false,
+    add: false,
+    delete: false
+  });
 
-  const handleEdit = (record) => {
-    setEditingMovie(record);
-    form.setFieldsValue({
-      ...record,
-      // Chuyển đổi ngày tháng nếu cần
-      releaseDate: record.releaseDate ? dayjs(record.releaseDate) : null,
-      endDate: record.endDate ? dayjs(record.endDate) : null,
-    });
-    setIsModalEditOpen(true);
+  // Fetch movies data
+  const fetchMovies = async () => {
+    try {
+      setLoading(true);
+      messageApi.loading("Fetching movies...", 0);
+      const response = await axios.get("http://localhost:8080/api/movies", {
+        withCredentials: true,
+      });
+      setMovies(response.data);
+      setFilteredMovies(response.data);
+      messageApi.destroy();
+      messageApi.success("Movies fetched successfully");
+    } catch (error) {
+      messageApi.destroy();
+      messageApi.error("Failed to fetch movies");
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Hàm xử lý khi submit form chỉnh sửa
-  const handleEditSubmit = (values) => {
-    console.log("Edited values:", values);
-    setIsModalEditOpen(false);
+  // Filter movies based on search text
+  useEffect(() => {
+    if (searchText.trim() === "") {
+      setFilteredMovies(movies);
+    } else {
+      const filtered = movies.filter(movie =>
+        movie.title.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredMovies(filtered);
+    }
+  }, [searchText, movies]);
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
+  const toggleModal = (modalName, isOpen, movie = null) => {
+    setModalState(prev => ({ ...prev, [modalName]: isOpen }));
+    setCurrentMovie(isOpen ? movie : null);
   };
 
-  const handleAddSubmit = (values) => {
-    console.log("Added values:", values);
-    setIsModalAddOpen(false);
-  };
+  const handleOperation = async (operation, values = null) => {
+    try {
+      setLoading(true);
+      let response;
 
-  const handleCancel = () => {
-    setIsModalEditOpen(false);
-    setIsModalAddOpen(false);
-    form.resetFields();
+      switch (operation) {
+        case 'add':
+          response = await axios.post("http://localhost:8080/api/movies", values, {
+            withCredentials: true,
+          });
+          break;
+        case 'edit':
+          response = await axios.put(
+            `http://localhost:8080/api/movies/${currentMovie.id}`,
+            values
+          );
+          break;
+        case 'delete':
+          response = await axios.delete(
+            `http://localhost:8080/api/movies/${currentMovie.id}`,
+            { withCredentials: true }
+          );
+          break;
+        default:
+          throw new Error("Invalid operation");
+      }
+
+      if (response.status === 200) {
+        messageApi.success(`Movie ${operation === 'delete' ? 'deleted' : operation === 'add' ? 'added' : 'updated'} successfully`);
+        await fetchMovies();
+        toggleModal(operation, false);
+      }
+    } catch (error) {
+      messageApi.error(`Failed to ${operation} movie`);
+      console.error(`${operation} error:`, error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
+      {contextHolder}
       <Card
         title={<span className="text-xl font-bold">Movie Management</span>}
         extra={
           <Space>
-            <Button icon={<FilterOutlined />}>Filter</Button>
+            <Input
+              placeholder="Search by movie title"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              prefix={<SearchOutlined />}
+              style={{ width: 200 }}
+              disabled={loading}
+            />
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => setIsModalAddOpen(true)}
+              onClick={() => toggleModal('add', true)}
+              loading={loading}
+              disabled={loading}
             >
               Add new movie
             </Button>
           </Space>
         }
-        variant="borderless"
-        styles={{ header: { borderBottom: "none" } }}
-        style={{ boxShadow: "none" }}
+        bordered={false}
+        className="shadow-none"
       >
-        <MovieStatistics data={initData} />
-
-        <Table
-          columns={columns(handleEdit)}
-          dataSource={initData}
-          pagination={{ pageSize: 5 }}
-          borderless
-          className="rounded-lg"
-          rowClassName="hover:bg-gray-50 cursor-pointer"
+        <MovieStatistics data={filteredMovies} loading={loading} />
+        <MovieTable
+          data={filteredMovies}
+          onEdit={(movie) => toggleModal('edit', true, movie)}
+          onDelete={(movie) => toggleModal('delete', true, movie)}
+          loading={loading}
         />
-        <Divider />
-        <div className="flex justify-between text-sm text-gray-500">
-          <span>Total: {initData.length} movies</span>
-        </div>
       </Card>
+
+      {/* Edit Modal */}
       <ModalMovieEdit
-        visible={isModalEditOpen}
-        onCancel={handleCancel}
-        onSuccess={handleEditSubmit}
-        form={form}
-        initialValues={editingMovie}
-        loading={false}
+        visible={modalState.edit}
+        onCancel={() => toggleModal('edit', false)}
+        onSuccess={(values) => handleOperation('edit', values)}
+        initialValues={{
+          ...currentMovie,
+          releaseDate: currentMovie?.releaseDate ? dayjs(currentMovie.releaseDate) : null,
+          endDate: currentMovie?.endDate ? dayjs(currentMovie.endDate) : null
+        }}
+        loading={loading}
       />
 
+      {/* Add Modal */}
       <ModalMovieAdd
-        visible={isModalAddOpen}
-        onCancel={handleCancel}
-        onSuccess={handleAddSubmit}
-        loading={false}
+        visible={modalState.add}
+        onCancel={() => toggleModal('add', false)}
+        onSuccess={(values) => handleOperation('add', values)}
+        loading={loading}
+      />
+
+      {/* Delete Modal */}
+      <ModalDelete
+        title={currentMovie?.title}
+        visible={modalState.delete}
+        onSuccess={() => handleOperation('delete')}
+        onCancel={() => toggleModal('delete', false)}
+        loading={loading}
+        extra={<p>Are you sure you want to delete {currentMovie?.title}?</p>}
       />
     </>
   );

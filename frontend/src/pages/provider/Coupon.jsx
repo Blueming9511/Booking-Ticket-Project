@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import DynamicTable from "../../components/ui/DynamicTable";
 import {
-  Tag,
   Card,
   Space,
   Button,

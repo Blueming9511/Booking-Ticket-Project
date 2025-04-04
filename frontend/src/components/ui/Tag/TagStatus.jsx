@@ -11,24 +11,24 @@ import {
 const TagStatus = ({ status, config, showText = true, size = "default" }) => {
   // Config mặc định
   const defaultConfig = {
-    Active: { icon: <CheckCircleOutlined />, color: "success", text: "Active" },
+    ACTIVE: { icon: <CheckCircleOutlined />, color: "success", text: "Active" },
     Available: {
       icon: <CheckCircleOutlined />,
       color: "success",
       text: "Available",
     },
-    Booked: { icon: <CloseCircleOutlined />, color: "error", text: "Booked" },
+    BOOKED: { icon: <CloseCircleOutlined />, color: "error", text: "Booked" },
     Maintenance: {
       icon: <ExclamationCircleOutlined />,
       color: "warning",
       text: "Maintenance",
     },
-    Reserved: {
+    RESERVED: {
       icon: <InfoCircleOutlined />,
       color: "reminder",
       text: "Reserved",
     },
-    Closed: { icon: <CloseCircleOutlined />, color: "error", text: "Closed" },
+    CLOSED: { icon: <CloseCircleOutlined />, color: "error", text: "Closed" },
     Renovating: {
       icon: <SyncOutlined />,
       color: "warning",

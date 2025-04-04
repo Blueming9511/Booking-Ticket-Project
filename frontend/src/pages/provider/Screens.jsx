@@ -1,433 +1,250 @@
-import React, { useState, useEffect } from "react";
-import {
-  Tag,
-  Divider,
-  Badge,
-  Table,
-  Card,
-  Button,
-  Space,
-  Dropdown,
-  Form,
-  Input,
-  Select,
-  Avatar
-} from "antd";
-import {
-  EllipsisOutlined,
-  PlusOutlined,
-  FilterOutlined,
-  SearchOutlined,
-  EnvironmentOutlined
-} from "@ant-design/icons";
-import ModalScreenAdd from "../../components/ui/Modal/ModalScreenAdd";
-import ModalScreenEdit from "../../components/ui/Modal/ModalScreenEdit";
-import ScreenStatistics from "../../components/ui/Card/ScreenStatistics";
-import TagStatus from "../../components/ui/Tag/TagStatus";
+import React, { useState, useEffect, useCallback } from "react";
+import { Card, Button, Space, Input, Select, message } from "antd";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import ModalScreenAdd from "../../components/ProviderManagement/Screen/ModalScreenAdd";
+import ModalScreenEdit from "../../components/ProviderManagement/Screen/ModalScreenEdit";
+import ScreenStatistics from "../../components/ProviderManagement/Screen/ScreenStatistics";
+import ScreenTable from "../../components/ProviderManagement/Screen/ScreenTable";
+import ModalDelete from "../../components/ui/Modal/ModalDelete";
+import axios from "axios";
 
-const { Search } = Input;
-
-const ScreenTable = () => {
-  const [form] = Form.useForm();
+const Screen = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [state, setState] = useState({
-    filteredData: [],
-    searchText: "",
-    statusFilter: null,
-    typeFilter: null,
-    cinemaFilter: null,
-    isModalEditOpen: false,
-    isModalAddOpen: false,
-    editingScreen: null
+    screens: [],
+    filteredScreens: [],
+    filters: {
+      search: "",
+      status: null,
+      type: null,
+      cinema: null,
+      cinemaOptions: {},
+      typeOptions: [],
+      statusOptions: [
+        { value: "ACTIVE", label: "Active" },
+        { value: "INACTIVE", label: "Inactive" },
+        { value: "MAINTENANCE", label: "Maintenance" },
+      ],
+    },
+    modals: {
+      add: false,
+      edit: false,
+      delete: false,
+    },
+    selectedScreen: null,
+    loading: false,
   });
 
-  const INIT_DATA = [
-    {
-      id: "R001",
-      type: "Standard",
-      capacity: 120,
-      status: "Active",
-      cinema: "CGV Vincom Mega Mall",
-      location: "Q. Bình Thạnh, TP.HCM",
-      key: "1",
-    },
-    {
-      id: "R002",
-      type: "VIP",
-      capacity: 50,
-      status: "Active",
-      cinema: "CGV Vincom Mega Mall",
-      location: "Q. Bình Thạnh, TP.HCM",
-      key: "2",
-    },
-    {
-      id: "R003",
-      type: "IMAX",
-      capacity: 200,
-      status: "Inactive",
-      cinema: "CGV Vincom Mega Mall",
-      location: "Q. Bình Thạnh, TP.HCM",
-      key: "3",
-    },
-    {
-      id: "R004",
-      type: "4DX",
-      capacity: 80,
-      status: "Active",
-      cinema: "CGV Vincom Plaza",
-      location: "Q.1, TP.HCM",
-      key: "4",
-    },
-    {
-      id: "R005",
-      type: "Deluxe",
-      capacity: 100,
-      status: "Renovating",
-      cinema: "CGV Vincom Plaza",
-      location: "Q.1, TP.HCM",
-      key: "5",
-    },
-    {
-      id: "R006",
-      type: "Standard",
-      capacity: 150,
-      status: "Active",
-      cinema: "CGV Vincom Center",
-      location: "Q.1, TP.HCM",
-      key: "6",
-    },
-    {
-      id: "R007",
-      type: "VIP",
-      capacity: 40,
-      status: "Inactive",
-      cinema: "CGV Vincom Center",
-      location: "Q.1, TP.HCM",
-      key: "7",
-    },
-    {
-      id: "R008",
-      type: "Premium",
-      capacity: 75,
-      status: "Active",
-      cinema: "CGV Vincom Landmark",
-      location: "Q.7, TP.HCM",
-      key: "8",
-    },
-    {
-      id: "R009",
-      type: "Standard",
-      capacity: 110,
-      status: "Closed",
-      cinema: "CGV Vincom Landmark",
-      location: "Q.7, TP.HCM",
-      key: "9",
-    },
-    {
-      id: "R010",
-      type: "3D",
-      capacity: 180,
-      status: "Active",
-      cinema: "CGV Vincom Mega Mall",
-      location: "Q. Bình Thạnh, TP.HCM",
-      key: "10",
-    },
-  ];
+  const fetchData = useCallback(async (showSucess=true) => {
+    try {
+      setState(prev => ({ ...prev, loading: true }));
+      showSucess && messageApi.loading("Fetching data...");
+      
+      const [screensRes, cinemaRes, typeRes, cinemas] = await Promise.all([
+        axios.get("http://localhost:8080/api/screens", { withCredentials: true }),
+        axios.get("http://localhost:8080/api/cinemas/names", { withCredentials: true }),
+        axios.get("http://localhost:8080/api/screens/types", { withCredentials: true }),
+        axios.get("http://localhost:8080/api/cinemas", { withCredentials: true }),
+      ]);
 
-  const STATUS_OPTIONS = [
-    { value: "Active", label: "Active" },
-    { value: "Closed", label: "Closed" },
-    { value: "Renovating", label: "Renovating" },
-    { value: "Inactive", label: "Inactive" }
-  ];
-
-  const TYPE_OPTIONS = [
-    { value: "Standard", label: "Standard" },
-    { value: "VIP", label: "VIP" },
-    { value: "IMAX", label: "IMAX" },
-    { value: "4DX", label: "4DX" },
-    { value: "Deluxe", label: "Deluxe" },
-    { value: "Premium", label: "Premium" },
-    { value: "3D", label: "3D" }
-  ];
-
-  const CINEMA_OPTIONS = [
-    { value: "CGV Vincom Mega Mall", label: "CGV Vincom Mega Mall" },
-    { value: "CGV Vincom Plaza", label: "CGV Vincom Plaza" },
-    { value: "CGV Vincom Center", label: "CGV Vincom Center" },
-    { value: "CGV Vincom Landmark", label: "CGV Vincom Landmark" }
-  ];
+      setState(prev => ({
+        ...prev,
+        screens: screensRes.data,
+        filteredScreens: screensRes.data,
+        filters: {
+          ...prev.filters,
+          cinemaOptions: Object.entries(cinemaRes.data).map(([value, label]) => ({ value, label })),
+          typeOptions: Object.entries(typeRes.data).map(([value, label]) => ({ value, label })),
+        },
+        cinemas: cinemas.data
+      }));
+      showSucess && messageApi.destroy();
+      showSucess && messageApi.success("Data fetched successfully", 2);
+    } catch (error) {
+      showSucess && messageApi.error("Failed to fetch data", 2);
+      console.error("Fetch error:", error);
+    } finally {
+      setState(prev => ({ ...prev, loading: false }));
+    }
+  }, [messageApi]);
 
   useEffect(() => {
-    updateFilteredData();
-  }, [state.searchText, state.statusFilter, state.typeFilter, state.cinemaFilter]);
+    fetchData();
+  }, [fetchData]);
 
-  const updateFilteredData = () => {
-    let data = [...INIT_DATA];
-    
-    if (state.searchText) {
-      const lowerSearch = state.searchText.toLowerCase();
-      data = data.filter(item =>
-        item.id.toLowerCase().includes(lowerSearch) ||
-        item.cinema.toLowerCase().includes(lowerSearch) ||
-        item.location.toLowerCase().includes(lowerSearch))
-    }
-    
-    if (state.statusFilter) {
-      data = data.filter(item => item.status === state.statusFilter);
-    }
-    
-    if (state.typeFilter) {
-      data = data.filter(item => item.type === state.typeFilter);
-    }
-    
-    if (state.cinemaFilter) {
-      data = data.filter(item => item.cinema === state.cinemaFilter);
-    }
-    
-    setState(prev => ({ ...prev, filteredData: data }));
-  };
+  useEffect(() => {
+    const { search, status, type, cinema } = state.filters;
+    let result = [...state.screens];
 
-  const handleEdit = (record) => {
+    if (search) {
+      const searchLower = search.toLowerCase();
+      result = result.filter(
+        screen =>
+            screen.id.toLowerCase().includes(searchLower) ||
+            screen.cinema.toLowerCase().includes(searchLower) ||
+            screen.location.toLowerCase().includes(searchLower)
+      );
+    }
+    if (status) result = result.filter(screen => screen.status === status);
+    if (type) {
+      const selectedType = filters.typeOptions.find(opt => opt.value === type);
+      result = result.filter(screen => screen.type === selectedType?.label);
+    }
+    if (cinema) {
+      result = result.filter(screen => screen.cinemaId === cinema);
+    }
+
+    setState(prev => ({ ...prev, filteredScreens: result }));
+  }, [state.filters, state.screens]);
+
+  const handleFilterChange = (field, value) => {
     setState(prev => ({
       ...prev,
-      editingScreen: record,
-      isModalEditOpen: true
+      filters: { ...prev.filters, [field]: value },
     }));
   };
 
-  const handleStatusFilter = (value) => {
-    setState(prev => ({ ...prev, statusFilter: value }));
+  const toggleModal = (modalName, isOpen, screen = null) => {
+    setState(prev => ({
+      ...prev,
+      modals: { ...prev.modals, [modalName]: isOpen },
+      selectedScreen: isOpen ? screen : null,
+    }));
   };
 
-  const handleTypeFilter = (value) => {
-    setState(prev => ({ ...prev, typeFilter: value }));
+  const handleSubmit = async (action, values = null) => {
+     console.log(state.selectedScreen);
+    const config = {
+      add: {
+        method: "post",
+        url: "http://localhost:8080/api/screens",
+        data: values,
+      },
+      edit: {
+        method: "put",
+        url: `http://localhost:8080/api/screens/${state.selectedScreen?.id}`,
+        data: values,
+      },
+      delete: {
+        method: "delete",
+        url: `http://localhost:8080/api/screens/${state.selectedScreen}`,
+      },
+    };
+
+    try {
+      setState(prev => ({ ...prev, loading: true }));
+      await axios({ ...config[action], withCredentials: true });
+      messageApi.success(`Screen ${action}ed successfully`, 2);
+      await fetchData(false);
+      toggleModal(action, false);
+    } catch (error) {
+      messageApi.error(`Failed to ${action} screen`, 2);
+      console.error(`${action} error:`, error);
+    } finally {
+      setState(prev => ({ ...prev, loading: false }));
+    }
   };
 
-  const handleCinemaFilter = (value) => {
-    setState(prev => ({ ...prev, cinemaFilter: value }));
-  };
-
-  const handleSearch = (value) => {
-    setState(prev => ({ ...prev, searchText: value }));
-  };
-
-  const handleModalToggle = (modalType, isOpen) => {
-    setState(prev => ({ ...prev, [`is${modalType}Open`]: isOpen }));
-  };
-
-  const handleAddSubmit = (values) => {
-    console.log("Added screen:", values);
-    handleModalToggle("ModalAdd", false);
-  };
-
-  const handleEditSubmit = (values) => {
-    console.log("Edited screen:", values);
-    handleModalToggle("ModalEdit", false);
-  };
-
-  const columns = [
-    {
-      title: "Screen Info",
-      key: "info",
-      render: (_, record) => (
-        <div className="flex items-center gap-3">
-          <Avatar 
-            size="large" 
-            style={{ 
-              backgroundColor: record.type === "IMAX" ? '#13c2c2' : 
-                            record.type === "VIP" ? '#fa8c16' : 
-                            record.type === "4DX" ? '#722ed1' : 
-                            record.type === "Premium" ? '#eb2f96' : '#1890ff',
-              color: '#fff'
-            }}
-          >
-            {record.type.charAt(0)}
-          </Avatar>
-          <div>
-            <div className="font-bold text-blue-600">{record.id}</div>
-            <div className="flex items-center text-xs text-gray-500">
-              <EnvironmentOutlined className="mr-1" />
-              {record.cinema}
-            </div>
-          </div>
-        </div>
-      ),
-      width: 200,
-    },
-    {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      render: (type) => (
-        <Tag 
-          color={
-            type === "IMAX" ? 'cyan' : 
-            type === "VIP" ? 'volcano' : 
-            type === "4DX" ? 'geekblue' : 
-            type === "Premium" ? 'magenta' : 'blue'
-          }
-        >
-          {type}
-        </Tag>
-      ),
-      width: 150,
-    },
-    {
-      title: "Capacity",
-      dataIndex: "capacity",
-      key: "capacity",
-      render: (capacity) => (
-        <Badge
-          count={`${capacity} seats`}
-          className="bg-gray-100 text-gray-800"
-          style={{ padding: "0 8px" }}
-        />
-      ),
-      sorter: (a, b) => a.capacity - b.capacity,
-      width: 150,
-    },
-    {
-      title: "Location",
-      dataIndex: "location",
-      key: "location",
-      render: (location) => <span className="text-gray-600">{location}</span>,
-      width: 200,
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => <TagStatus status={status} />,
-      width: 150,
-    },
-    {
-      title: "Actions",
-      key: "action",
-      render: (_, record) => (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: "edit",
-                label: "Edit",
-                onClick: () => handleEdit(record),
-              },
-              {
-                key: "delete",
-                label: "Delete",
-                danger: true,
-              },
-            ],
-          }}
-          trigger={["click"]}
-        >
-          <Button
-            icon={<EllipsisOutlined />}
-            shape="default"
-          />
-        </Dropdown>
-      ),
-      width: 100,
-      align: 'center',
-    },
-  ];
+  const {
+    filteredScreens,
+    filters,
+    modals,
+    selectedScreen,
+    loading
+  } = state;
 
   return (
     <>
+      {contextHolder}
       <Card
-        title={<span className="text-2xl font-bold">Screen Management</span>}
+        title="Screen Management"
+        variant="borderless"
+        styles = {{header: {borderBottom: 'none'}}}
         extra={
-          <Space>
+          <Space wrap>
             <Select
-              placeholder="Filter by Status"
-              value={state.statusFilter}
-              onChange={handleStatusFilter}
+              placeholder="Status"
+              value={filters.status}
+              onChange={v => handleFilterChange("status", v)}
               style={{ width: 150 }}
               allowClear
-              options={STATUS_OPTIONS}
+              options={filters.statusOptions}
+              disabled={loading}
             />
-            
             <Select
-              placeholder="Filter by Type"
-              value={state.typeFilter}
-              onChange={handleTypeFilter}
+              placeholder="Type"
+              value={filters.type}
+              onChange={v => handleFilterChange("type", v)}
               style={{ width: 150 }}
               allowClear
-              options={TYPE_OPTIONS}
+              options={filters.typeOptions}
+              disabled={loading}
             />
-            
             <Select
-              placeholder="Filter by Cinema"
-              value={state.cinemaFilter}
-              onChange={handleCinemaFilter}
+              placeholder="Cinema"
+              value={filters.cinema}
+              onChange={v => handleFilterChange("cinema", v)}
               style={{ width: 200 }}
               allowClear
-              options={CINEMA_OPTIONS}
+              options={filters.cinemaOptions}
+              disabled={loading}
             />
-            
-            <Search
+            <Input.Search
               placeholder="Search screens..."
               allowClear
               enterButton={<SearchOutlined />}
-              onSearch={handleSearch}
+              onSearch={v => handleFilterChange("search", v)}
               style={{ width: 250 }}
+              disabled={loading}
             />
-            
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => handleModalToggle("ModalAdd", true)}
+              onClick={() => toggleModal("add", true)}
+              loading={loading}
+              disabled={loading}
             >
               Add Screen
             </Button>
           </Space>
         }
-        variant="borderless"
-        style={{boxShadow: 'none'}}
-        styles={{header: {borderBottom: 'none'}}}
       >
-        <ScreenStatistics data={state.filteredData.length > 0 ? state.filteredData : INIT_DATA} />
-        
-        <Table
-          columns={columns}
-          dataSource={state.filteredData.length > 0 ? state.filteredData : INIT_DATA}
-          pagination={{ 
-            pageSize: 5,
-            showSizeChanger: true,
-            pageSizeOptions: ['5', '10', '20', '50']
-          }}
-          rowClassName={record => {
-            if (record.status === "Closed") return "bg-red-50 hover:bg-red-100";
-            if (record.status === "Renovating") return "bg-orange-50 hover:bg-orange-100";
-            if (record.status === "Inactive") return "bg-gray-50 hover:bg-gray-100";
-            return "hover:bg-blue-50";
-          }}
-          scroll={{ x: 1000 }}
-          rowKey="key"
+        <ScreenStatistics data={filteredScreens} loading={loading} />
+        {console.log(state.cinemas)}
+        <ScreenTable
+          data={filteredScreens}
+          onEdit={screen => toggleModal("edit", true, screen)}
+          onDelete={screen => toggleModal("delete", true, screen)}
+          loading={loading}
+          cinemas={state.cinemas || []}
         />
-        
-        <Divider />
-        
-        <div className="flex justify-between items-center text-sm text-gray-500">
-          <span>Showing {state.filteredData.length > 0 ? state.filteredData.length : INIT_DATA.length} screens</span>
-          <span>Last updated: {new Date().toLocaleString()}</span>
-        </div>
       </Card>
-      
+
       <ModalScreenAdd
-        visible={state.isModalAddOpen}
-        onCancel={() => handleModalToggle("ModalAdd", false)}
-        onSuccess={handleAddSubmit}
+        visible={modals.add}
+        onCancel={() => toggleModal("add", false)}
+        onSuccess={values => handleSubmit("add", values)}
+        cinemas={state.cinemas || []}
+        loading={loading}
       />
-      
       <ModalScreenEdit
-        visible={state.isModalEditOpen}
-        onCancel={() => handleModalToggle("ModalEdit", false)}
-        onSuccess={handleEditSubmit}
-        initialValues={state.editingScreen}
+        visible={modals.edit}
+        onCancel={() => toggleModal("edit", false)}
+        onSuccess={values => handleSubmit("edit", values)}
+        cinemas={state.cinemas || []}
+        initialValues={selectedScreen}
+        loading={loading}
+      />
+      <ModalDelete
+        visible={modals.delete}
+        onCancel={() => toggleModal("delete", false)}
+        onSuccess={() => handleSubmit("delete")}
+        initialValues={selectedScreen}
+        loading={loading}
+        extra={<p>Are you sure you want to delete this screen</p>}
       />
     </>
   );
 };
 
-export default ScreenTable;
+export default Screen;
