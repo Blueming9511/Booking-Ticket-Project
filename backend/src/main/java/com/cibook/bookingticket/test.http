@@ -500,7 +500,6 @@ DELETE {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
 
 ###
 ### [C] CREATE Showtime
-# Creates a new showtime. Copy the 'id' from response to @showtimeId variable.
 # !! Adjust JSON based on ACTUAL required fields and unique constraints (e.g., showTimeCode) !!
 # !! Sending 'date' in ISO format might fail. Sending 'startTime'/'endTime' with date part will fail. !!
 POST {{baseUrl}}/showtimes
@@ -508,10 +507,10 @@ Content-Type: {{contentType}}
 Accept: {{accept}}
 
 {
-  "date": "2024-10-26T00:00:00Z",
-  "startTime": "14:30:00",
-  "endTime": "16:45:00",
-  "price": 15.50,
+  "date": "2025-04-04",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
   "movie": {
     "id": "{{movieId}}"
   },
@@ -532,7 +531,7 @@ GET {{baseUrl}}/showtimes
 Accept: {{accept}}
 
 ### [R] READ Showtime by ID
-GET {{baseUrl}}/showtimes/{{showtimeId}}
+GET {{baseUrl}}/showtimes/67efaf1186ad412329851d97
 Accept: {{accept}}
 
 ### [R] READ ALL Showtime Names (Endpoint currently returns 404)
@@ -541,25 +540,25 @@ Accept: {{accept}}
 
 
 ### [U] UPDATE Showtime
-PUT {{baseUrl}}/showtimes/{{showtimeId}}
+PUT {{baseUrl}}/showtimes/67efaf1186ad412329851d97
 Content-Type: {{contentType}}
 Accept: {{accept}}
 
 {
-  "date": "2024-10-27T00:00:00Z",    # Trying ISO format - LIKELY TO FAIL
-  "startTime": "15:00:00",            # MUST be "HH:mm:ss" format ONLY
-  "endTime": "17:15:00",              # MUST be "HH:mm:ss" format ONLY
-  "price": 16.00,                      # Example: Updated price
+  "date": "2025-04-04T09:00:00+07:00",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 16.00,
   "movie": {
-    "id": "{{movieId}}"            # Usually keep references the same
+    "id": "{{movieId}}"
   },
   "screen": {
-    "id": "{{screenId}}"           # Usually keep references the same
+    "id": "{{screenId}}"
   },
   "cinema": {
-    "id": "{{cinemaId}}"           # Usually keep references the same
+    "id": "{{cinemaId}}"
   },
-  "status": "FULL"                     # Example: Updated status
+  "status": "FULL"
 }
 
 ### [D] DELETE Showtime
