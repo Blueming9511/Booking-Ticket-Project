@@ -9,14 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+
 @RestController
 @RequestMapping("/api/coupons")
-public class CouponController implements IController<Coupon, String> {
+public class CouponController implements IController<Coupon, String>{
     private final CouponService couponService;
+
     @Autowired
     public CouponController(CouponService couponService) {
         this.couponService = couponService;
     }
+
     @Override
     public ResponseEntity<Coupon> add(Coupon entity) {
         return ResponseEntity.ok(couponService.add(entity));
@@ -34,20 +37,19 @@ public class CouponController implements IController<Coupon, String> {
 
     @Override
     public ResponseEntity<Map<String, String>> getAllNames() {
-        return null;
+        return ResponseEntity.ok(couponService.findAllNamesWithID());
     }
 
     @Override
     public ResponseEntity<Coupon> update(String id, Coupon entity) {
-        if (!couponService.existsById(id))
-            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(couponService.update(id, entity));
     }
 
     @Override
     public ResponseEntity<Void> delete(String id) {
-        if (!couponService.existsById(id))
+        if(!couponService.existsById(id)){
             return ResponseEntity.notFound().build();
+        }
         couponService.deleteById(id);
         return ResponseEntity.ok().build();
     }

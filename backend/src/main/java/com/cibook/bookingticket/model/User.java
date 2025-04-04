@@ -14,7 +14,7 @@ User {
     private String id;
 
     @Indexed(unique = true)
-    private String Username;
+    private String username;
     private String email;
     private String password;
     private String avatar;

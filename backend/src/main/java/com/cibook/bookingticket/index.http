@@ -4,31 +4,171 @@ GET http://localhost:8080/api/cinemas
 
 POST http://localhost:8080/api/cinemas
 Content-Type: application/json
+
 {
-    "cinemaName": "CGV NVL",
-    "location": "1058 Nguyễn Văn Linh, Tân Phong, Quận 7, TP.HCM",
-    "numberOfScreens": 20,
-    "owner": "CGV",
-    "status": "OPEN"
+  "cinemaName": "CGV Lam Son",
+  "location": "Him Son, TP.VT",
+  "numberOfScreens": 20,
+  "owner": "CGV",
+  "status": "OPEN"
 }
 
 ###
 GET http://localhost:8080/api/cinemas/67ec2caee21d8829e5c0d28f
 
 ###
-PUT http://localhost:8080/api/cinemas/67ec2caee21d8829e5c0d28f
+PUT http://localhost:8080/api/cinemas/67eeaf1cbecc5d38ceee9ea1
 Content-Type: application/json
+
 {
-    "cinemaName": CGV,
-    "location": "1058 Nguyễn Văn Linh, Tân Phong, Quận 7, TP.HCM",
-    "numberOfScreens": 200,
-    "owner": CGV,
+    "cinemaName": "CGV Lam Sơn Square",
+    "location": "Lam Sơn Square, 9 Lê Lợi, Phường 1, Vũng Tàu, Bà Rịa - Vũng Tàu",
+    "numberOfScreens": 10,
+    "owner": "CGV",
     "status": "OPEN"
 }
 
 ###
 DELETE http://localhost:8080/api/cinemas/67ec2caee21d8829e5c0d28f
 
+<<<<<<< HEAD
+### get all coupons
+
+GET http://localhost:8080/api/coupons
+
+### Add a new Coupon
+POST http://localhost:8080/api/coupons
+Content-Type: application/json
+
+{
+  "couponCode": "GIAM100K",
+  "discountValue": 100000,
+  "minOrderValue": 0,
+  "startDate":"2024-12-31T16:59:59.000Z",
+  "expiryDate": "2024-12-31T16:59:59.000Z",
+  "usageLimit": 100,
+  "description": "Discount 100k"
+}
+
+
+
+### Get Coupon by ID
+# Note: Replace {couponId} with an actual ID from a created coupon
+GET http://localhost:8080/api/coupons/67eec3664eda503274171247
+Accept: application/json
+
+
+### Update an existing Coupon
+# Note: Replace {couponIdToUpdate} with an actual ID from a created coupon
+# The ID in the URL determines which coupon is updated.
+# The couponCode in the body will likely be ignored/preserved by the service logic.
+PUT http://localhost:8080/api/coupons/67eec3664eda503274171247
+Content-Type: application/json
+
+{
+  "couponCode": "YOLOOOOOOOOOO",
+  "discountValue": 12.0,
+  "minOrderValue": 55.0,
+  "startDate": "2024-12-15T12:00:00.000Z",
+  "expiryDate": "2025-01-15T12:00:00.000Z",
+  "usageLimit": 90,
+  "description": "HEleo"
+}
+
+
+### Delete a Coupon
+DELETE http://localhost:8080/api/coupons/67eec3664eda503274171247
+
+
+### (Optional) Get All Names/Descriptions with Codes
+# This endpoint corresponds to getAllNames() in the controller
+# It returns a Map<String, String> (Code -> Description based on service implementation)
+GET http://localhost:8080/api/coupons/names
+Accept: application/json
+
+
+### Get all users
+GET http://localhost:8080/api/users
+
+### Get user by ID
+GET http://localhost:8080/api/users/{{userId}}
+
+### Get all user names with IDs
+GET http://localhost:8080/api/users/names
+
+### Create a new user
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "myhoa",
+  "email": ",myhoa@example.com",
+  "password": "123456",
+  "avatar": "https://example.com/avatar.jpg",
+  "role": "admin"
+}
+
+### Update a user
+PUT http://localhost:8080/api/users/67ef3c10b50a606c784293b8
+Content-Type: application/json
+
+{
+  "username": "chanhhy",
+  "email": "updated@example.com",
+  "avatar": "https://example.com/new-avatar.jpg",
+  "role": "admin"
+}
+
+### Delete a user
+DELETE http://localhost:8080/api/users/{{userId}}
+
+
+### Create a new booking
+POST http://localhost:8080/api/bookings
+Content-Type: application/json
+
+{
+  "totalPrice": 150.0,
+  "createdAt": "2025-04-04T10:00:00",
+  "expiredAt": "2025-04-05T10:00:00",
+  "cancelledAt": null
+}
+
+
+### Get all bookings
+GET http://localhost:8080/api/bookings
+
+### Get booking by ID
+GET http://localhost:8080/api/bookings/67ef47786954627740371e7a
+
+### Get all booking names (ID + Code)
+GET http://localhost:8080/api/bookings/names
+
+### Update a booking
+PUT http://localhost:8080/api/bookings/67ef47786954627740371e7a
+Content-Type: application/json
+
+{
+  "totalPrice": 200.0,
+  "createdAt": "2025-04-04T10:00:00",
+  "expiredAt": "2025-04-06T10:00:00",
+  "cancelledAt": null
+}
+
+### Create a new booking
+POST http://localhost:8080/api/bookings
+Content-Type: application/json
+
+{
+  "totalPrice": 150.0,
+  "createdAt": "2025-04-04T10:00:00",
+  "expiredAt": "2025-04-05T10:00:00",
+  "cancelledAt": null
+}
+
+### Delete a booking
+DELETE http://localhost:8080/api/bookings/67ef47786954627740371e7a
+=======
 ###
 GET http://localhost:8080/api/cinemas/names
 
@@ -343,3 +483,4 @@ GET http://localhost:8080/api/movies/code/MOV001
 
 ###Coupon
 GET http://localhost:8080/api/coupons
+>>>>>>> a2d6ae2c8d503f29ccff4d522e069cd74043ef11
