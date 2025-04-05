@@ -68,6 +68,7 @@
             <artifactId>jquery</artifactId>
             <version>3.4.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
@@ -92,6 +93,11 @@
 
 
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.16.0</version>
+        </dependency>
     </dependencies>
 
     <build>

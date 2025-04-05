@@ -13,14 +13,14 @@
 # !! and paste it into the corresponding variable below.
 @cinemaId     = 67ef4c4de21d8829e5c0d4e9
 @screenId     = 67ef4ec5e21d8829e5c0d4f8
-@seatId       = 67eead2837c02c5cd1371caf
+@seatId       = 67effa70426dee0a01eb867a
 @movieId      = 67eeb346e21d8829e5c0d4a6
 @movieCode    = MOV010
 @couponId     = 67ef2a5b3433dd4a7bab353b
 @userId       = 67ef3c96b50a606c784293ba
 @bookingId    = 67ef47786954627740371e7a
-@screenCodeRef= SCR001
-@cinemaCodeRef= CI001
+@screenCodeRef= SCR002
+@cinemaCodeRef= CIN002
 @showtimeId = 67ef5bca8225673361871d13
 
 ###
@@ -131,8 +131,8 @@ Accept: {{accept}}
   "number": "A1",
   "type": "Standard",
   "row": "A",
-  "screenCode": "{{screenCodeRef}}", # Uses variable for screen code
-  "cinemaCode": "{{cinemaCodeRef}}", # Uses variable for cinema code
+  "screenCode": "{{screenCodeRef}}",
+  "cinemaCode": "{{cinemaCodeRef}}",
   "multiplier": 1.0,
   "status": "AVAILABLE"
 }
@@ -151,18 +151,37 @@ Content-Type: {{contentType}}
 Accept: {{accept}}
 
 {
-  "number": "A1",
-  "type": "VIP",              # Example update
+  "number": "E1",
+  "type": "VIP",
   "row": "A",
   "screenCode": "{{screenCodeRef}}",
   "cinemaCode": "{{cinemaCodeRef}}",
-  "multiplier": 1.5,          # Example update
-  "status": "BOOKED"          # Example update
+  "multiplier": 1.5,
+  "status": "BOOKED"
 }
 
 ### [D] DELETE Seat
 DELETE {{baseUrl}}/seats/{{seatId}}
 
+### [C] CREATE Multiple Seats
+# Path: POST /api/seats/all
+# Creates multiple seats provided in the list. Backend generates seatCodes/IDs.
+# Expects HTTP 200 OK with a JSON array of the created Seat objects.
+POST {{baseUrl}}/seats/all
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+[
+  {
+    "number": "D1", "type": "Standard", "row": "D", "screenCode": "{{screenCodeRef}}", "cinemaCode": "{{cinemaCodeRef}}", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "D2", "type": "Standard", "row": "D", "screenCode": "{{screenCodeRef}}", "cinemaCode": "{{cinemaCodeRef}}", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "D3", "type": "Couple", "row": "D", "screenCode": "{{screenCodeRef}}", "cinemaCode": "{{cinemaCodeRef}}", "multiplier": 1.0, "status": "AVAILABLE"
+  }
+]
 
 ###
 # ==========================================
@@ -500,7 +519,6 @@ DELETE {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
 
 ###
 ### [C] CREATE Showtime
-# Creates a new showtime. Copy the 'id' from response to @showtimeId variable.
 # !! Adjust JSON based on ACTUAL required fields and unique constraints (e.g., showTimeCode) !!
 # !! Sending 'date' in ISO format might fail. Sending 'startTime'/'endTime' with date part will fail. !!
 POST {{baseUrl}}/showtimes
@@ -508,10 +526,10 @@ Content-Type: {{contentType}}
 Accept: {{accept}}
 
 {
-  "date": "2024-10-26T00:00:00Z",
-  "startTime": "14:30:00",
-  "endTime": "16:45:00",
-  "price": 15.50,
+  "date": "2025-04-04",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
   "movie": {
     "id": "{{movieId}}"
   },
@@ -532,7 +550,7 @@ GET {{baseUrl}}/showtimes
 Accept: {{accept}}
 
 ### [R] READ Showtime by ID
-GET {{baseUrl}}/showtimes/{{showtimeId}}
+GET {{baseUrl}}/showtimes/67efaf1186ad412329851d97
 Accept: {{accept}}
 
 ### [R] READ ALL Showtime Names (Endpoint currently returns 404)
@@ -541,25 +559,25 @@ Accept: {{accept}}
 
 
 ### [U] UPDATE Showtime
-PUT {{baseUrl}}/showtimes/{{showtimeId}}
+PUT {{baseUrl}}/showtimes/67efaf1186ad412329851d97
 Content-Type: {{contentType}}
 Accept: {{accept}}
 
 {
-  "date": "2024-10-27T00:00:00Z",    # Trying ISO format - LIKELY TO FAIL
-  "startTime": "15:00:00",            # MUST be "HH:mm:ss" format ONLY
-  "endTime": "17:15:00",              # MUST be "HH:mm:ss" format ONLY
-  "price": 16.00,                      # Example: Updated price
+  "date": "2025-04-04T09:00:00+07:00",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 16.00,
   "movie": {
-    "id": "{{movieId}}"            # Usually keep references the same
+    "id": "{{movieId}}"
   },
   "screen": {
-    "id": "{{screenId}}"           # Usually keep references the same
+    "id": "{{screenId}}"
   },
   "cinema": {
-    "id": "{{cinemaId}}"           # Usually keep references the same
+    "id": "{{cinemaId}}"
   },
-  "status": "FULL"                     # Example: Updated status
+  "status": "FULL"
 }
 
 ### [D] DELETE Showtime
