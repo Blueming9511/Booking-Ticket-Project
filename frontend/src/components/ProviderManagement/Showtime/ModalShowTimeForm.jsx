@@ -20,15 +20,16 @@ const ModalShowTimeForm = ({
   roomOptions,
   movieOptions,
 }) => {
-  const statusOptions = ["Active", "Inactive"];
+  const statusOptions = ["AVAILABLE", "FULL"];
 
   const handleFinish = (values) => {
     const formattedValues = {
       ...values,
-      date: values.date.format("YYYY-MM-DD"),
-      startTime: values.timeRange[0].format("HH:mm"),
-      endTime: values.timeRange[1].format("HH:mm"),
+      date: values.date ? values.date.format("YYYY-MM-DD") : null,
+      startTime: values.timeRange ? values.timeRange[0].format("HH:mm") : null,
+      endTime: values.timeRange ? values.timeRange[1].format("HH:mm") : null,
     };
+    delete formattedValues.timeRange;
     onFinish(formattedValues);
   };
 
@@ -52,7 +53,7 @@ const ModalShowTimeForm = ({
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item
-            name="movie"
+            name="movieCode"
             label="Movie"
             rules={[{ required: true, message: "Please select a movie!" }]}
           >
@@ -62,8 +63,8 @@ const ModalShowTimeForm = ({
               optionFilterProp="children"
             >
               {movieOptions?.map((movie) => (
-                <Option key={movie.id} value={movie.title}>
-                  {movie.title}
+                <Option key={movie.value} value={movie.value}>
+                  {movie.label}
                 </Option>
               ))}
             </Select>
@@ -71,13 +72,13 @@ const ModalShowTimeForm = ({
         </Col>
         <Col span={12}>
           <Form.Item
-            name="cinema"
+            name="cinemaCode"
             label="Cinema"
             rules={[{ required: true, message: "Please select a cinema!" }]}
           >
             <Select placeholder="Select cinema">
               {cinemaOptions.map((cinema) => (
-                <Option key={cinema.key} value={cinema.label}>
+                <Option key={cinema.value} value={cinema.value}>
                   {cinema.label}
                 </Option>
               ))}
@@ -89,13 +90,13 @@ const ModalShowTimeForm = ({
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item
-            name="room"
-            label="Room"
+            name="screenCode"
+            label="Screen"
             rules={[{ required: true, message: "Please select a room!" }]}
           >
             <Select placeholder="Select room">
               {roomOptions.map((room) => (
-                <Option key={room.key} value={room.label}>
+                <Option key={room.value} value={room.label}>
                   {room.label}
                 </Option>
               ))}

@@ -1,0 +1,27 @@
+{
+  "id": "67eeb346e21d8829e5c0d49d",
+  "movieCode": "MOV001",
+  "thumbnail": "https://image.tmdb.org/t/p/w200/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+  "title": "Avatar: The Way of Water",
+  "genre": [
+    "Sci-Fi"
+  ],
+  "releaseYear": null,
+  "director": "James Cameron",
+  "rating": 7.800000190734863,
+  "duration": 192,
+  "language": null,
+  "budget": 2.5E8,
+  "boxOffice": 2.32E9,
+  "casts": [
+    "Sam Worthington",
+    "Zoe Saldana",
+    "Sigourney Weaver"
+  ],
+  "releasedBy": "CGV",
+  "releaseDate": "2022-12-16",
+  "endDate": "2023-03-15",
+  "trailer": "demo",
+  "description": "Hyyyy",
+  "status": "ENDED"
+}

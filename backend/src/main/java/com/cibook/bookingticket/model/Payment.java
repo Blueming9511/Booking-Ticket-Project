@@ -18,8 +18,8 @@ public class Payment {
     private String paymentCode;
 
     private PaymentMethod method;
-    private double amount;
-    private Date date;
+    private Double amount;
+    private String date;
     private String UserID;
 
     private PaymentStatus status;
@@ -31,12 +31,9 @@ public class Payment {
     }
 
     public enum PaymentMethod {
-        VNPAY,
+        BANK,
         MOMO,
-        VISA,
-        BANK
+        VISA
     }
-
-
 
 }

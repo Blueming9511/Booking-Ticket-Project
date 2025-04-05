@@ -1,0 +1,1492 @@
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Content-Length: 7108
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  { "seatCode": "S001", "number": "1", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S002", "number": "2", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "BOOKED" },
+  { "seatCode": "S003", "number": "3", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S004", "number": "4", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "MAINTENANCE" },
+  { "seatCode": "S005", "number": "5", "type": "VIP", "row": "E", "screenCode": "SCR001", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S006", "number": "6", "type": "Standard", "row": "F", "screenCode": "SCR002", "cinemaCode": "CIN001", "status": "BOOKED" },
+  { "seatCode": "S007", "number": "7", "type": "VIP", "row": "G", "screenCode": "SCR003", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S008", "number": "8", "type": "Couple", "row": "H", "screenCode": "SCR004", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S009", "number": "9", "type": "Standard", "row": "I", "screenCode": "SCR001", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S010", "number": "10", "type": "VIP", "row": "J", "screenCode": "SCR002", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S011", "number": "11", "type": "Standard", "row": "A", "screenCode": "SCR003", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S012", "number": "12", "type": "VIP", "row": "B", "screenCode": "SCR004", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "seatCode": "S013", "number": "13", "type": "Couple", "row": "C", "screenCode": "SCR001", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S014", "number": "14", "type": "Standard", "row": "D", "screenCode": "SCR002", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S015", "number": "15", "type": "VIP", "row": "E", "screenCode": "SCR003", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S016", "number": "16", "type": "Standard", "row": "F", "screenCode": "SCR004", "cinemaCode": "CIN001", "status": "MAINTENANCE" },
+  { "seatCode": "S017", "number": "17", "type": "VIP", "row": "G", "screenCode": "SCR001", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S018", "number": "18", "type": "Couple", "row": "H", "screenCode": "SCR002", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S019", "number": "19", "type": "Standard", "row": "I", "screenCode": "SCR003", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S020", "number": "20", "type": "VIP", "row": "J", "screenCode": "SCR004", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S021", "number": "21", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S022", "number": "22", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "seatCode": "S023", "number": "23", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S024", "number": "24", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S025", "number": "25", "type": "VIP", "row": "E", "screenCode": "SCR001", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S026", "number": "26", "type": "Standard", "row": "F", "screenCode": "SCR002", "cinemaCode": "CIN001", "status": "MAINTENANCE" },
+  { "seatCode": "S027", "number": "27", "type": "VIP", "row": "G", "screenCode": "SCR003", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S028", "number": "28", "type": "Couple", "row": "H", "screenCode": "SCR004", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S029", "number": "29", "type": "Standard", "row": "I", "screenCode": "SCR001", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S030", "number": "30", "type": "VIP", "row": "J", "screenCode": "SCR002", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S031", "number": "31", "type": "Standard", "row": "A", "screenCode": "SCR003", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S032", "number": "32", "type": "VIP", "row": "B", "screenCode": "SCR004", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "seatCode": "S033", "number": "33", "type": "Couple", "row": "C", "screenCode": "SCR001", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S034", "number": "34", "type": "Standard", "row": "D", "screenCode": "SCR002", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S035", "number": "35", "type": "VIP", "row": "E", "screenCode": "SCR003", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S036", "number": "36", "type": "Standard", "row": "F", "screenCode": "SCR004", "cinemaCode": "CIN001", "status": "MAINTENANCE" },
+  { "seatCode": "S037", "number": "37", "type": "VIP", "row": "G", "screenCode": "SCR001", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S038", "number": "38", "type": "Couple", "row": "H", "screenCode": "SCR002", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S039", "number": "39", "type": "Standard", "row": "I", "screenCode": "SCR003", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S040", "number": "40", "type": "VIP", "row": "J", "screenCode": "SCR004", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S041", "number": "41", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S042", "number": "42", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "seatCode": "S043", "number": "43", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S044", "number": "44", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S045", "number": "45", "type": "VIP", "row": "E", "screenCode": "SCR001", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S046", "number": "46", "type": "Standard", "row": "F", "screenCode": "SCR002", "cinemaCode": "CIN001", "status": "MAINTENANCE" },
+  { "seatCode": "S047", "number": "47", "type": "VIP", "row": "G", "screenCode": "SCR003", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S048", "number": "48", "type": "Couple", "row": "H", "screenCode": "SCR004", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S049", "number": "49", "type": "Standard", "row": "I", "screenCode": "SCR001", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S050", "number": "50", "type": "VIP", "row": "J", "screenCode": "SCR002", "cinemaCode": "CIN005", "status": "AVAILABLE" }
+]
+
+<> 2025-04-04T202358.500.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Content-Length: 7108
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  { "seatCode": "S001", "number": "1", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S002", "number": "2", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "BOOKED" },
+  { "seatCode": "S003", "number": "3", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S004", "number": "4", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "MAINTENANCE" },
+  { "seatCode": "S005", "number": "5", "type": "VIP", "row": "E", "screenCode": "SCR001", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S006", "number": "6", "type": "Standard", "row": "F", "screenCode": "SCR002", "cinemaCode": "CIN001", "status": "BOOKED" },
+  { "seatCode": "S007", "number": "7", "type": "VIP", "row": "G", "screenCode": "SCR003", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S008", "number": "8", "type": "Couple", "row": "H", "screenCode": "SCR004", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S009", "number": "9", "type": "Standard", "row": "I", "screenCode": "SCR001", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S010", "number": "10", "type": "VIP", "row": "J", "screenCode": "SCR002", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S011", "number": "11", "type": "Standard", "row": "A", "screenCode": "SCR003", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S012", "number": "12", "type": "VIP", "row": "B", "screenCode": "SCR004", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "seatCode": "S013", "number": "13", "type": "Couple", "row": "C", "screenCode": "SCR001", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S014", "number": "14", "type": "Standard", "row": "D", "screenCode": "SCR002", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S015", "number": "15", "type": "VIP", "row": "E", "screenCode": "SCR003", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S016", "number": "16", "type": "Standard", "row": "F", "screenCode": "SCR004", "cinemaCode": "CIN001", "status": "MAINTENANCE" },
+  { "seatCode": "S017", "number": "17", "type": "VIP", "row": "G", "screenCode": "SCR001", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S018", "number": "18", "type": "Couple", "row": "H", "screenCode": "SCR002", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S019", "number": "19", "type": "Standard", "row": "I", "screenCode": "SCR003", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S020", "number": "20", "type": "VIP", "row": "J", "screenCode": "SCR004", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S021", "number": "21", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S022", "number": "22", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "seatCode": "S023", "number": "23", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S024", "number": "24", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S025", "number": "25", "type": "VIP", "row": "E", "screenCode": "SCR001", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S026", "number": "26", "type": "Standard", "row": "F", "screenCode": "SCR002", "cinemaCode": "CIN001", "status": "MAINTENANCE" },
+  { "seatCode": "S027", "number": "27", "type": "VIP", "row": "G", "screenCode": "SCR003", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S028", "number": "28", "type": "Couple", "row": "H", "screenCode": "SCR004", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S029", "number": "29", "type": "Standard", "row": "I", "screenCode": "SCR001", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S030", "number": "30", "type": "VIP", "row": "J", "screenCode": "SCR002", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S031", "number": "31", "type": "Standard", "row": "A", "screenCode": "SCR003", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S032", "number": "32", "type": "VIP", "row": "B", "screenCode": "SCR004", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "seatCode": "S033", "number": "33", "type": "Couple", "row": "C", "screenCode": "SCR001", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S034", "number": "34", "type": "Standard", "row": "D", "screenCode": "SCR002", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S035", "number": "35", "type": "VIP", "row": "E", "screenCode": "SCR003", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S036", "number": "36", "type": "Standard", "row": "F", "screenCode": "SCR004", "cinemaCode": "CIN001", "status": "MAINTENANCE" },
+  { "seatCode": "S037", "number": "37", "type": "VIP", "row": "G", "screenCode": "SCR001", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S038", "number": "38", "type": "Couple", "row": "H", "screenCode": "SCR002", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S039", "number": "39", "type": "Standard", "row": "I", "screenCode": "SCR003", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S040", "number": "40", "type": "VIP", "row": "J", "screenCode": "SCR004", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S041", "number": "41", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "seatCode": "S042", "number": "42", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "seatCode": "S043", "number": "43", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S044", "number": "44", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S045", "number": "45", "type": "VIP", "row": "E", "screenCode": "SCR001", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "seatCode": "S046", "number": "46", "type": "Standard", "row": "F", "screenCode": "SCR002", "cinemaCode": "CIN001", "status": "MAINTENANCE" },
+  { "seatCode": "S047", "number": "47", "type": "VIP", "row": "G", "screenCode": "SCR003", "cinemaCode": "CIN002", "status": "AVAILABLE" },
+  { "seatCode": "S048", "number": "48", "type": "Couple", "row": "H", "screenCode": "SCR004", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "seatCode": "S049", "number": "49", "type": "Standard", "row": "I", "screenCode": "SCR001", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "seatCode": "S050", "number": "50", "type": "VIP", "row": "J", "screenCode": "SCR002", "cinemaCode": "CIN005", "status": "AVAILABLE" }
+]
+
+<> 2025-04-04T201303.500.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Content-Length: 6108
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  { "number": "1", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "2", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "BOOKED" },
+  { "number": "3", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "4", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "MAINTENANCE" },
+  { "number": "5", "type": "VIP", "row": "E", "screenCode": "SCR005", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "6", "type": "Standard", "row": "F", "screenCode": "SCR006", "cinemaCode": "CIN006", "status": "BOOKED" },
+  { "number": "7", "type": "VIP", "row": "G", "screenCode": "SCR007", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "8", "type": "Couple", "row": "H", "screenCode": "SCR008", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "9", "type": "Standard", "row": "I", "screenCode": "SCR009", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "10", "type": "VIP", "row": "J", "screenCode": "SCR010", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "11", "type": "Standard", "row": "A", "screenCode": "SCR011", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "12", "type": "VIP", "row": "B", "screenCode": "SCR012", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "13", "type": "Couple", "row": "C", "screenCode": "SCR013", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "14", "type": "Standard", "row": "D", "screenCode": "SCR014", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "15", "type": "VIP", "row": "E", "screenCode": "SCR015", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "16", "type": "Standard", "row": "F", "screenCode": "SCR016", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "17", "type": "VIP", "row": "G", "screenCode": "SCR017", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "18", "type": "Couple", "row": "H", "screenCode": "SCR018", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "19", "type": "Standard", "row": "I", "screenCode": "SCR019", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "20", "type": "VIP", "row": "J", "screenCode": "SCR020", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "21", "type": "Standard", "row": "A", "screenCode": "SCR021", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "22", "type": "VIP", "row": "B", "screenCode": "SCR022", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "23", "type": "Couple", "row": "C", "screenCode": "SCR023", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "24", "type": "Standard", "row": "D", "screenCode": "SCR024", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "25", "type": "VIP", "row": "E", "screenCode": "SCR025", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "26", "type": "Standard", "row": "F", "screenCode": "SCR026", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "27", "type": "VIP", "row": "G", "screenCode": "SCR027", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "28", "type": "Couple", "row": "H", "screenCode": "SCR028", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "29", "type": "Standard", "row": "I", "screenCode": "SCR029", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "30", "type": "VIP", "row": "J", "screenCode": "SCR030", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "31", "type": "Standard", "row": "A", "screenCode": "SCR031", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "32", "type": "VIP", "row": "B", "screenCode": "SCR032", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "33", "type": "Couple", "row": "C", "screenCode": "SCR033", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "34", "type": "Standard", "row": "D", "screenCode": "SCR034", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "35", "type": "VIP", "row": "E", "screenCode": "SCR035", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "36", "type": "Standard", "row": "F", "screenCode": "SCR036", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "37", "type": "VIP", "row": "G", "screenCode": "SCR037", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "38", "type": "Couple", "row": "H", "screenCode": "SCR038", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "39", "type": "Standard", "row": "I", "screenCode": "SCR039", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "40", "type": "VIP", "row": "J", "screenCode": "SCR040", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "41", "type": "Standard", "row": "A", "screenCode": "SCR041", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "42", "type": "VIP", "row": "B", "screenCode": "SCR042", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "43", "type": "Couple", "row": "C", "screenCode": "SCR043", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "44", "type": "Standard", "row": "D", "screenCode": "SCR044", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "45", "type": "VIP", "row": "E", "screenCode": "SCR045", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "46", "type": "Standard", "row": "F", "screenCode": "SCR046", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "47", "type": "VIP", "row": "G", "screenCode": "SCR047", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "48", "type": "Couple", "row": "H", "screenCode": "SCR048", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "49", "type": "Standard", "row": "I", "screenCode": "SCR049", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "50", "type": "VIP", "row": "J", "screenCode": "SCR050", "cinemaCode": "CIN010", "status": "AVAILABLE" }
+]
+
+<> 2025-04-04T200340.500.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Content-Length: 6108
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  { "number": "1", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "2", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "BOOKED" },
+  { "number": "3", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "4", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "MAINTENANCE" },
+  { "number": "5", "type": "VIP", "row": "E", "screenCode": "SCR005", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "6", "type": "Standard", "row": "F", "screenCode": "SCR006", "cinemaCode": "CIN006", "status": "BOOKED" },
+  { "number": "7", "type": "VIP", "row": "G", "screenCode": "SCR007", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "8", "type": "Couple", "row": "H", "screenCode": "SCR008", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "9", "type": "Standard", "row": "I", "screenCode": "SCR009", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "10", "type": "VIP", "row": "J", "screenCode": "SCR010", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "11", "type": "Standard", "row": "A", "screenCode": "SCR011", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "12", "type": "VIP", "row": "B", "screenCode": "SCR012", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "13", "type": "Couple", "row": "C", "screenCode": "SCR013", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "14", "type": "Standard", "row": "D", "screenCode": "SCR014", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "15", "type": "VIP", "row": "E", "screenCode": "SCR015", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "16", "type": "Standard", "row": "F", "screenCode": "SCR016", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "17", "type": "VIP", "row": "G", "screenCode": "SCR017", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "18", "type": "Couple", "row": "H", "screenCode": "SCR018", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "19", "type": "Standard", "row": "I", "screenCode": "SCR019", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "20", "type": "VIP", "row": "J", "screenCode": "SCR020", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "21", "type": "Standard", "row": "A", "screenCode": "SCR021", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "22", "type": "VIP", "row": "B", "screenCode": "SCR022", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "23", "type": "Couple", "row": "C", "screenCode": "SCR023", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "24", "type": "Standard", "row": "D", "screenCode": "SCR024", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "25", "type": "VIP", "row": "E", "screenCode": "SCR025", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "26", "type": "Standard", "row": "F", "screenCode": "SCR026", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "27", "type": "VIP", "row": "G", "screenCode": "SCR027", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "28", "type": "Couple", "row": "H", "screenCode": "SCR028", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "29", "type": "Standard", "row": "I", "screenCode": "SCR029", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "30", "type": "VIP", "row": "J", "screenCode": "SCR030", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "31", "type": "Standard", "row": "A", "screenCode": "SCR031", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "32", "type": "VIP", "row": "B", "screenCode": "SCR032", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "33", "type": "Couple", "row": "C", "screenCode": "SCR033", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "34", "type": "Standard", "row": "D", "screenCode": "SCR034", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "35", "type": "VIP", "row": "E", "screenCode": "SCR035", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "36", "type": "Standard", "row": "F", "screenCode": "SCR036", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "37", "type": "VIP", "row": "G", "screenCode": "SCR037", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "38", "type": "Couple", "row": "H", "screenCode": "SCR038", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "39", "type": "Standard", "row": "I", "screenCode": "SCR039", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "40", "type": "VIP", "row": "J", "screenCode": "SCR040", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "41", "type": "Standard", "row": "A", "screenCode": "SCR041", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "42", "type": "VIP", "row": "B", "screenCode": "SCR042", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "43", "type": "Couple", "row": "C", "screenCode": "SCR043", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "44", "type": "Standard", "row": "D", "screenCode": "SCR044", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "45", "type": "VIP", "row": "E", "screenCode": "SCR045", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "46", "type": "Standard", "row": "F", "screenCode": "SCR046", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "47", "type": "VIP", "row": "G", "screenCode": "SCR047", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "48", "type": "Couple", "row": "H", "screenCode": "SCR048", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "49", "type": "Standard", "row": "I", "screenCode": "SCR049", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "50", "type": "VIP", "row": "J", "screenCode": "SCR050", "cinemaCode": "CIN010", "status": "AVAILABLE" }
+]
+
+<> 2025-04-04T200315.500.json
+
+###
+
+DELETE http://localhost:8080/api/seats/all
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+DELETE http://localhost:8080/api/seats/all
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Content-Length: 6108
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  { "number": "1", "type": "Standard", "row": "A", "screenCode": "SCR001", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "2", "type": "VIP", "row": "B", "screenCode": "SCR002", "cinemaCode": "CIN002", "status": "BOOKED" },
+  { "number": "3", "type": "Couple", "row": "C", "screenCode": "SCR003", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "4", "type": "Standard", "row": "D", "screenCode": "SCR004", "cinemaCode": "CIN004", "status": "MAINTENANCE" },
+  { "number": "5", "type": "VIP", "row": "E", "screenCode": "SCR005", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "6", "type": "Standard", "row": "F", "screenCode": "SCR006", "cinemaCode": "CIN006", "status": "BOOKED" },
+  { "number": "7", "type": "VIP", "row": "G", "screenCode": "SCR007", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "8", "type": "Couple", "row": "H", "screenCode": "SCR008", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "9", "type": "Standard", "row": "I", "screenCode": "SCR009", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "10", "type": "VIP", "row": "J", "screenCode": "SCR010", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "11", "type": "Standard", "row": "A", "screenCode": "SCR011", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "12", "type": "VIP", "row": "B", "screenCode": "SCR012", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "13", "type": "Couple", "row": "C", "screenCode": "SCR013", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "14", "type": "Standard", "row": "D", "screenCode": "SCR014", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "15", "type": "VIP", "row": "E", "screenCode": "SCR015", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "16", "type": "Standard", "row": "F", "screenCode": "SCR016", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "17", "type": "VIP", "row": "G", "screenCode": "SCR017", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "18", "type": "Couple", "row": "H", "screenCode": "SCR018", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "19", "type": "Standard", "row": "I", "screenCode": "SCR019", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "20", "type": "VIP", "row": "J", "screenCode": "SCR020", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "21", "type": "Standard", "row": "A", "screenCode": "SCR021", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "22", "type": "VIP", "row": "B", "screenCode": "SCR022", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "23", "type": "Couple", "row": "C", "screenCode": "SCR023", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "24", "type": "Standard", "row": "D", "screenCode": "SCR024", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "25", "type": "VIP", "row": "E", "screenCode": "SCR025", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "26", "type": "Standard", "row": "F", "screenCode": "SCR026", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "27", "type": "VIP", "row": "G", "screenCode": "SCR027", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "28", "type": "Couple", "row": "H", "screenCode": "SCR028", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "29", "type": "Standard", "row": "I", "screenCode": "SCR029", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "30", "type": "VIP", "row": "J", "screenCode": "SCR030", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "31", "type": "Standard", "row": "A", "screenCode": "SCR031", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "32", "type": "VIP", "row": "B", "screenCode": "SCR032", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "33", "type": "Couple", "row": "C", "screenCode": "SCR033", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "34", "type": "Standard", "row": "D", "screenCode": "SCR034", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "35", "type": "VIP", "row": "E", "screenCode": "SCR035", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "36", "type": "Standard", "row": "F", "screenCode": "SCR036", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "37", "type": "VIP", "row": "G", "screenCode": "SCR037", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "38", "type": "Couple", "row": "H", "screenCode": "SCR038", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "39", "type": "Standard", "row": "I", "screenCode": "SCR039", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "40", "type": "VIP", "row": "J", "screenCode": "SCR040", "cinemaCode": "CIN010", "status": "AVAILABLE" },
+  { "number": "41", "type": "Standard", "row": "A", "screenCode": "SCR041", "cinemaCode": "CIN001", "status": "AVAILABLE" },
+  { "number": "42", "type": "VIP", "row": "B", "screenCode": "SCR042", "cinemaCode": "CIN002", "status": "MAINTENANCE" },
+  { "number": "43", "type": "Couple", "row": "C", "screenCode": "SCR043", "cinemaCode": "CIN003", "status": "AVAILABLE" },
+  { "number": "44", "type": "Standard", "row": "D", "screenCode": "SCR044", "cinemaCode": "CIN004", "status": "BOOKED" },
+  { "number": "45", "type": "VIP", "row": "E", "screenCode": "SCR045", "cinemaCode": "CIN005", "status": "AVAILABLE" },
+  { "number": "46", "type": "Standard", "row": "F", "screenCode": "SCR046", "cinemaCode": "CIN006", "status": "MAINTENANCE" },
+  { "number": "47", "type": "VIP", "row": "G", "screenCode": "SCR047", "cinemaCode": "CIN007", "status": "AVAILABLE" },
+  { "number": "48", "type": "Couple", "row": "H", "screenCode": "SCR048", "cinemaCode": "CIN008", "status": "AVAILABLE" },
+  { "number": "49", "type": "Standard", "row": "I", "screenCode": "SCR049", "cinemaCode": "CIN009", "status": "BOOKED" },
+  { "number": "50", "type": "VIP", "row": "J", "screenCode": "SCR050", "cinemaCode": "CIN010", "status": "AVAILABLE" }
+]
+
+<> 2025-04-04T200125.500.json
+
+###
+
+DELETE http://localhost:8080/api/seats/all
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:8080/api/screens/many
+Content-Type: application/json
+Content-Length: 2005
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  {
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "Inactive",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "Standard",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Standard",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "VIP",
+    "capacity": 60,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "4DX",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 220,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 130,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "Standard",
+    "capacity": 140,
+    "status": "INACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "VIP",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "3D",
+    "capacity": 160,
+    "status": "UNDER_MAINTENANCE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 110,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "Standard",
+    "capacity": 150,
+    "status": "INACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "4DX",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "VIP",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "3D",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  }
+]
+
+<> 2025-04-04T184736.200.json
+
+###
+
+DELETE http://localhost:8080/api/screens/many
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:8080/api/screens/many
+Content-Type: application/json
+Content-Length: 2005
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  {
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "Inactive",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "Standard",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Standard",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "VIP",
+    "capacity": 60,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "4DX",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 220,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 130,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "Standard",
+    "capacity": 140,
+    "status": "INACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "VIP",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "3D",
+    "capacity": 160,
+    "status": "UNDER_MAINTENANCE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 110,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "Standard",
+    "capacity": 150,
+    "status": "INACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "4DX",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "VIP",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "3D",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  }
+]
+
+<> 2025-04-04T184430.200.json
+
+###
+
+DELETE http://localhost:8080/api/screens/many
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:8080/api/screens/many
+Content-Type: application/json
+Content-Length: 2005
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  {
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "Inactive",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "Standard",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Standard",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "VIP",
+    "capacity": 60,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "4DX",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 220,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 130,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "type": "Standard",
+    "capacity": 140,
+    "status": "INACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "VIP",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "3D",
+    "capacity": 160,
+    "status": "UNDER_MAINTENANCE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "type": "Deluxe",
+    "capacity": 110,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "Standard",
+    "capacity": 150,
+    "status": "INACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "type": "4DX",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "VIP",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "type": "IMAX",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "type": "3D",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  }
+]
+
+<> 2025-04-04T184313.200.json
+
+###
+
+DELETE http://localhost:8080/api/screens/many
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:8080/api/screens/many
+Content-Type: application/json
+Content-Length: 2565
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  {
+    "screenCode": "SCR001",
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "Inactive",
+    "cinemaId": "CIN001"
+  },
+  {
+    "screenCode": "SCR002",
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "screenCode": "SCR003",
+    "type": "Standard",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "screenCode": "SCR004",
+    "type": "Deluxe",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "screenCode": "SCR005",
+    "type": "Standard",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "screenCode": "SCR006",
+    "type": "VIP",
+    "capacity": 60,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "screenCode": "SCR007",
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "screenCode": "SCR008",
+    "type": "4DX",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "screenCode": "SCR009",
+    "type": "IMAX",
+    "capacity": 220,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "screenCode": "SCR010",
+    "type": "Deluxe",
+    "capacity": 130,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "screenCode": "SCR011",
+    "type": "Standard",
+    "capacity": 140,
+    "status": "INACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "screenCode": "SCR012",
+    "type": "VIP",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "screenCode": "SCR013",
+    "type": "3D",
+    "capacity": 160,
+    "status": "UNDER_MAINTENANCE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "screenCode": "SCR014",
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "screenCode": "SCR015",
+    "type": "Deluxe",
+    "capacity": 110,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "screenCode": "SCR016",
+    "type": "Standard",
+    "capacity": 150,
+    "status": "INACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "screenCode": "SCR017",
+    "type": "4DX",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "screenCode": "SCR018",
+    "type": "VIP",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "screenCode": "SCR019",
+    "type": "IMAX",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "screenCode": "SCR020",
+    "type": "3D",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  }
+]
+
+<> 2025-04-04T184012.200.json
+
+###
+
+POST http://localhost:8080/api/screens/many
+Content-Type: application/json
+Content-Length: 2565
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+[
+  {
+    "screenCode": "SCR001",
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "Inactive",
+    "cinemaId": "CIN001"
+  },
+  {
+    "screenCode": "SCR002",
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "screenCode": "SCR003",
+    "type": "Standard",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "screenCode": "SCR004",
+    "type": "Deluxe",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "screenCode": "SCR005",
+    "type": "Standard",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "screenCode": "SCR006",
+    "type": "VIP",
+    "capacity": 60,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "screenCode": "SCR007",
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "screenCode": "SCR008",
+    "type": "4DX",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "screenCode": "SCR009",
+    "type": "IMAX",
+    "capacity": 220,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "screenCode": "SCR010",
+    "type": "Deluxe",
+    "capacity": 130,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "screenCode": "SCR011",
+    "type": "Standard",
+    "capacity": 140,
+    "status": "INACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "screenCode": "SCR012",
+    "type": "VIP",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "screenCode": "SCR013",
+    "type": "3D",
+    "capacity": 160,
+    "status": "UNDER_MAINTENANCE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "screenCode": "SCR014",
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "screenCode": "SCR015",
+    "type": "Deluxe",
+    "capacity": 110,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "screenCode": "SCR016",
+    "type": "Standard",
+    "capacity": 150,
+    "status": "INACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "screenCode": "SCR017",
+    "type": "4DX",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "screenCode": "SCR018",
+    "type": "VIP",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "screenCode": "SCR019",
+    "type": "IMAX",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "screenCode": "SCR020",
+    "type": "3D",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  }
+]
+
+<> 2025-04-04T184009.200.json
+
+###
+
+GET http://localhost:8080/api/coupons
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T235105.200.json
+
+###
+
+GET http://localhost:8080/api/coupons
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T234850.500.json
+
+###
+
+GET http://localhost:8080/api/coupons
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T234507.500.json
+
+###
+
+GET http://localhost:8080/api/movies/code/MOV001
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T232529.200.json
+
+###
+
+GET http://localhost:8080/api/movies/code/MOV0002
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+###
+
+GET http://localhost:8080/api/movies/code/MOV001
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T232448.200.json
+
+###
+
+GET http://localhost:8080/api/movies/MOV001
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T232301.500.json
+
+###
+
+GET http://localhost:8080/api/movies/MOV0001
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T232254.500.json
+
+###
+
+GET http://localhost:8080/api/movies/MOV0001
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T232250.500.json
+
+###
+
+GET http://localhost:8080/api/movies/names
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T232046.200.json
+
+###
+
+GET http://localhost:8080/api/cinemas/names
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T232039.200.json
+
+###
+
+GET http://localhost:8080/api/cinemas/names
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T232016.200.json
+
+###
+
+PUT http://localhost:8080/api/movies/67eeb346e21d8829e5c0d4a6
+Content-Type: application/json
+Content-Length: 589
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "movieCode": "MOV010",
+  "thumbnail": "https://image.tmdb.org/t/p/w200/8pjWz2lt29KyVGoq1mXYu6Br7dE.jpg",
+  "title": "Dune: Part Two",
+  "genre": [
+    "Sci-Fi"
+  ],
+  "releaseYear": 2024,
+  "director": "Denis Villeneuve",
+  "rating": 2.0,
+  "duration": 165,
+  "language": "English",
+  "budget": 1.9E8,
+  "boxOffice": null,
+  "casts": [
+    "Timothée Chalamet",
+    "Zendaya",
+    "Rebecca Ferguson"
+  ],
+  "releasedBy": "Galaxy Cinema",
+  "releaseDate": "2024-03-15T00:00:00Z",
+  "endDate": "2024-06-20T00:00:00Z",
+  "trailer": "hiii",
+  "description": "",
+  "status": "COMING_SOON"
+}
+
+<> 2025-04-03T231738.200.json
+
+###
+
+PUT http://localhost:8080/api/movies/67eeb346e21d8829e5c0d4a6
+Content-Type: application/json
+Content-Length: 587
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "movieCode": "MOV010",
+  "thumbnail": "https://image.tmdb.org/t/p/w200/8pjWz2lt29KyVGoq1mXYu6Br7dE.jpg",
+  "title": "Dune: Part Two",
+  "genre": [
+    "Sci-Fi"
+  ],
+  "releaseYear": 2024,
+  "director": "Denis Villeneuve",
+  "rating": 2.0,
+  "duration": 165,
+  "language": "English",
+  "budget": 1.9E8,
+  "boxOffice": null,
+  "casts": [
+    "Timothée Chalamet",
+    "Zendaya",
+    "Rebecca Ferguson"
+  ],
+  "releasedBy": "Galaxy Cinema",
+  "releaseDate": "2024-03-15T00:00:00Z",
+  "endDate": "2024-06-20T00:00:00Z",
+  "trailer": null,
+  "description": "",
+  "status": "COMING_SOON"
+}
+
+<> 2025-04-03T231723.200.json
+
+###
+
+PUT http://localhost:8080/api/movies/67eeb346e21d8829e5c0d4a6
+Content-Type: application/json
+Content-Length: 585
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "movieCode": "MOV010",
+  "thumbnail": "https://image.tmdb.org/t/p/w200/8pjWz2lt29KyVGoq1mXYu6Br7dE.jpg",
+  "title": "Dune: Part Two",
+  "genre": [
+    "Sci-Fi"
+  ],
+  "releaseYear": 2024,
+  "director": "Denis Villeneuve",
+  "rating": 1,
+  "duration": 165,
+  "language": "English",
+  "budget": 1.9E8,
+  "boxOffice": null,
+  "casts": [
+    "Timothée Chalamet",
+    "Zendaya",
+    "Rebecca Ferguson"
+  ],
+  "releasedBy": "Galaxy Cinema",
+  "releaseDate": "2024-03-15T00:00:00Z",
+  "endDate": "2024-06-20T00:00:00Z",
+  "trailer": null,
+  "description": "",
+  "status": "COMING_SOON"
+}
+
+<> 2025-04-03T231502.200.json
+
+###
+
+GET http://localhost:8080/api/movies/67eeb346e21d8829e5c0d4a6
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T231238.200.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T231204.200.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T230703.200.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T230557.200.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T230550.200.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T230058.200.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T225833.500.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T225831.500.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T225829.500.json
+
+###
+
+GET http://localhost:8080/api/movies
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T225827.500.json
+
+###
+
+GET http://localhost:8080/api/seats/names
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+###
+
+PUT http://localhost:8080/api/seats/67eead2837c02c5cd1371caf
+Content-Type: application/json
+Content-Length: 172
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "seatCode": "A02",
+  "number": "02",
+  "type": "Couple",
+  "row": "H",
+  "screenCode": "SCR001",
+  "cinemaCode": "CI001",
+  "multiplier": 2.0,
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-03T224655.200.json
+
+###
+
+GET http://localhost:8080/api/seats/67eead2837c02c5cd1371caf
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T224619.200.json
+
+###
+
+GET http://localhost:8080/api/seats
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T224552.200.json
+
+###
+
+POST http://localhost:8080/api/seats
+Content-Type: application/json
+Content-Length: 151
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "number": "01",
+  "type": "Couple",
+  "row": "H",
+  "screenCode": "SCR001",
+  "cinemaCode": "CI001",
+  "multiplier": 1.0,
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-03T224544.200.json
+
+###
+
+GET http://localhost:8080/api/seats
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T224439.200.json
+
+###
+
+GET http://localhost:8080/api/seats
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T224132.200.json
+
+###
+
+GET http://localhost:8080/api/seats
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T223856.500.json
+
+###
+
+GET http://localhost:8080/api/seats
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-04-03T222849.500.json
+
+###
+

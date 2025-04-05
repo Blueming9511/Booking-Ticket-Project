@@ -9,9 +9,10 @@ const ModalPaymentAdd = ({ visible, onCancel, onSuccess }) => {
     // Format transactionDate to ISO string
     const formattedValues = {
       ...values,
-      transactionDate: values.transactionDate.toISOString(),
+      date: values.date.toISOString(),
     };
     onSuccess(formattedValues);
+    form.resetFields();
   };
 
   return (

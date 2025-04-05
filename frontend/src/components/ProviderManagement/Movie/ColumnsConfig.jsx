@@ -43,7 +43,7 @@ export const columns = (handleEdit, handleDelete) => [
                 character={<StarFilled />}
                 className="text-sm"
               />
-              <span className="text-gray-600">{record.rating.toFixed(1)}/10</span>
+              <span className="text-gray-600">{record.rating?.toFixed(1)}/10</span>
             </div>
           </div>
           <Tooltip title="Box Office">

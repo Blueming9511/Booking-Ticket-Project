@@ -1,4 +1,4 @@
-import CardStatistics from "./CardStatistics";
+import CardStatistics from "../../ui/Card/CardStatistics";
 import { CreditCardOutlined, CheckCircleOutlined, DollarOutlined, ClockCircleOutlined } from "@ant-design/icons";
 
 const PaymentStatistics = ({ data }) => {

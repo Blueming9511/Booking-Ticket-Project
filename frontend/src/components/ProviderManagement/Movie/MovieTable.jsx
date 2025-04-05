@@ -1,4 +1,3 @@
-// components/MovieManagement/MovieTable/MovieTable.jsx
 import { Table, Divider } from "antd";
 import { columns } from "./ColumnsConfig";
 

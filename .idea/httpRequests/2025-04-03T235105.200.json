@@ -1,0 +1,202 @@
+[
+  {
+    "id": "67eebbe6e21d8829e5c0d4a7",
+    "couponCode": "DISCOUNT10",
+    "discountValue": 10.0,
+    "minOrderValue": 50.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2027-06-05T17:00:00.000+00:00",
+    "usageLimit": 1000,
+    "description": "10% off on orders above $50"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4a8",
+    "couponCode": "FREETICKET",
+    "discountValue": 0.0,
+    "minOrderValue": 30.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2026-03-04T17:00:00.000+00:00",
+    "usageLimit": 500,
+    "description": "Free ticket for VIP members"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4a9",
+    "couponCode": "WELCOME20",
+    "discountValue": 20.0,
+    "minOrderValue": 0.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2027-07-11T17:00:00.000+00:00",
+    "usageLimit": null,
+    "description": "New member exclusive"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4aa",
+    "couponCode": "MOVIEDEAL",
+    "discountValue": 15.0,
+    "minOrderValue": 20.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2025-10-07T17:00:00.000+00:00",
+    "usageLimit": 200,
+    "description": "Movie ticket discount"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4ab",
+    "couponCode": "SUMMER25",
+    "discountValue": 25.0,
+    "minOrderValue": 100.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2026-08-06T17:00:00.000+00:00",
+    "usageLimit": 300,
+    "description": "Summer special"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4ac",
+    "couponCode": "CGVVIP",
+    "discountValue": 30.0,
+    "minOrderValue": 75.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2027-06-08T17:00:00.000+00:00",
+    "usageLimit": 100,
+    "description": "VIP exclusive"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4ad",
+    "couponCode": "EARLYBIRD",
+    "discountValue": 12.0,
+    "minOrderValue": 40.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2026-03-03T17:00:00.000+00:00",
+    "usageLimit": 150,
+    "description": "Early bird special"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4ae",
+    "couponCode": "POPCORN",
+    "discountValue": 0.0,
+    "minOrderValue": 25.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2027-07-09T17:00:00.000+00:00",
+    "usageLimit": null,
+    "description": "Free medium popcorn"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4af",
+    "couponCode": "FAMILY10",
+    "discountValue": 10.0,
+    "minOrderValue": 80.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2027-06-04T17:00:00.000+00:00",
+    "usageLimit": 50,
+    "description": "Family package"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b0",
+    "couponCode": "WEEKEND15",
+    "discountValue": 15.0,
+    "minOrderValue": 0.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2027-06-10T17:00:00.000+00:00",
+    "usageLimit": 400,
+    "description": "Weekend special"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b1",
+    "couponCode": "HOLIDAY30",
+    "discountValue": 30.0,
+    "minOrderValue": 150.0,
+    "startDate": "2025-01-05T17:00:00.000+00:00",
+    "expiryDate": "2027-07-11T17:00:00.000+00:00",
+    "usageLimit": 250,
+    "description": "Holiday sale"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b2",
+    "couponCode": "FREEMOVIE",
+    "discountValue": 0.0,
+    "minOrderValue": 50.0,
+    "startDate": "2025-01-02T17:00:00.000+00:00",
+    "expiryDate": "2027-06-05T17:00:00.000+00:00",
+    "usageLimit": 100,
+    "description": "Get a free movie ticket with purchases over $50"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b3",
+    "couponCode": "STUDENT15",
+    "discountValue": 15.0,
+    "minOrderValue": 20.0,
+    "startDate": "2024-12-31T17:00:00.000+00:00",
+    "expiryDate": "2027-06-08T17:00:00.000+00:00",
+    "usageLimit": 1000,
+    "description": "Discount for students"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b4",
+    "couponCode": "VIP20",
+    "discountValue": 20.0,
+    "minOrderValue": 100.0,
+    "startDate": "2025-01-04T17:00:00.000+00:00",
+    "expiryDate": "2027-07-11T17:00:00.000+00:00",
+    "usageLimit": 500,
+    "description": "VIP member discount"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b5",
+    "couponCode": "NIGHTDEAL",
+    "discountValue": 10.0,
+    "minOrderValue": 10.0,
+    "startDate": "2025-01-05T17:00:00.000+00:00",
+    "expiryDate": "2027-06-05T17:00:00.000+00:00",
+    "usageLimit": 300,
+    "description": "Night special deal"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b6",
+    "couponCode": "SUMMER50",
+    "discountValue": 50.0,
+    "minOrderValue": 200.0,
+    "startDate": "2025-01-05T17:00:00.000+00:00",
+    "expiryDate": "2027-07-07T17:00:00.000+00:00",
+    "usageLimit": 100,
+    "description": "Summer extravaganza"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b7",
+    "couponCode": "NEWYEAR20",
+    "discountValue": 20.0,
+    "minOrderValue": 0.0,
+    "startDate": "2025-01-11T17:00:00.000+00:00",
+    "expiryDate": "2027-07-11T17:00:00.000+00:00",
+    "usageLimit": 1000,
+    "description": "New Year special"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b8",
+    "couponCode": "EARLYBIRD20",
+    "discountValue": 20.0,
+    "minOrderValue": 60.0,
+    "startDate": "2025-01-01T17:00:00.000+00:00",
+    "expiryDate": "2027-04-01T17:00:00.000+00:00",
+    "usageLimit": 200,
+    "description": "Early bird offer"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4b9",
+    "couponCode": "FREEDELIVERY",
+    "discountValue": 0.0,
+    "minOrderValue": 40.0,
+    "startDate": "2025-01-02T17:00:00.000+00:00",
+    "expiryDate": "2027-06-05T17:00:00.000+00:00",
+    "usageLimit": 1000,
+    "description": "Free delivery on all orders over $40"
+  },
+  {
+    "id": "67eebbe6e21d8829e5c0d4ba",
+    "couponCode": "MOVIEFAN25",
+    "discountValue": 25.0,
+    "minOrderValue": 50.0,
+    "startDate": "2025-01-03T17:00:00.000+00:00",
+    "expiryDate": "2027-06-08T17:00:00.000+00:00",
+    "usageLimit": 100,
+    "description": "Movie fan special"
+  }
+]

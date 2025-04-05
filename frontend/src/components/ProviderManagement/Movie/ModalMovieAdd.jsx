@@ -1,5 +1,5 @@
 import { Modal, Form } from "antd";
-import ModalMovie from "../../ui/Modal/ModalMovie";
+import ModalMovie from "./ModalMovie";
 import dayjs from "dayjs";
 import { isString } from "antd/es/button";
 

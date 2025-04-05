@@ -6,15 +6,15 @@ const { Option } = Select;
 
 const ModalPaymentForm = ({ form, onFinish, initialValues }) => {
   const paymentMethods = [
-    { value: "Credit Card", label: "Credit Card" },
-    { value: "E-Wallet", label: "E-Wallet" },
-    { value: "Bank Transfer", label: "Bank Transfer" },
+    { value: "MOMO", label: "Momo" },
+    { value: "VISA", label: "Visa" },
+    { value: "BANK", label: "Bank" },
   ];
 
   const statusOptions = [
-    { value: "Completed", label: "Completed" },
-    { value: "Pending", label: "Pending" },
-    { value: "Failed", label: "Failed" },
+    { value: "APPROVED", label: "Approved" },
+    { value: "PENDING", label: "Pending" },
+    { value: "REJECTED", label: "Rejected" },
   ];
 
   return (
@@ -24,19 +24,27 @@ const ModalPaymentForm = ({ form, onFinish, initialValues }) => {
       onFinish={onFinish}
       initialValues={{
         ...initialValues,
-        transactionDate: initialValues?.transactionDate
-          ? dayjs(initialValues.transactionDate)
+        date: initialValues?.date
+          ? dayjs(initialValues.date)
           : null,
       }}
     >
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item
-            name="id"
-            label="Payment ID"
-            rules={[{ required: true, message: "Please input payment ID!" }]}
+            name="method"
+            label="Payment Method"
+            rules={[
+              { required: true, message: "Please select payment method!" },
+            ]}
           >
-            <Input disabled={!!initialValues?.id} />
+            <Select placeholder="Select payment method">
+              {paymentMethods.map((method) => (
+                <Option key={method.value} value={method.value}>
+                  {method.label}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             name="amount"
@@ -55,22 +63,7 @@ const ModalPaymentForm = ({ form, onFinish, initialValues }) => {
         </Col>
         <Col span={12}>
           <Form.Item
-            name="method"
-            label="Payment Method"
-            rules={[
-              { required: true, message: "Please select payment method!" },
-            ]}
-          >
-            <Select placeholder="Select payment method">
-              {paymentMethods.map((method) => (
-                <Option key={method.value} value={method.value}>
-                  {method.label}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="transactionDate"
+            name="date"
             label="Transaction Date"
             rules={[
               { required: true, message: "Please select transaction date!" },
@@ -85,22 +78,21 @@ const ModalPaymentForm = ({ form, onFinish, initialValues }) => {
               }
             />
           </Form.Item>
+          <Form.Item
+            name="status"
+            label="Status"
+            rules={[{ required: true, message: "Please select status!" }]}
+          >
+            <Select placeholder="Select status">
+              {statusOptions.map((status) => (
+                <Option key={status.value} value={status.value}>
+                  {status.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
         </Col>
       </Row>
-
-      <Form.Item
-        name="status"
-        label="Status"
-        rules={[{ required: true, message: "Please select status!" }]}
-      >
-        <Select placeholder="Select status">
-          {statusOptions.map((status) => (
-            <Option key={status.value} value={status.value}>
-              {status.label}
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
     </Form>
   );
 };

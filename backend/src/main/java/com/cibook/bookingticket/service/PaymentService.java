@@ -2,6 +2,7 @@ package com.cibook.bookingticket.service;
 
 import com.cibook.bookingticket.model.Payment;
 import com.cibook.bookingticket.repository.PaymentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class PaymentService implements IService<Payment, String> {
     private final PaymentRepository paymentRepository;
@@ -22,7 +24,7 @@ public class PaymentService implements IService<Payment, String> {
 
     @Override
     public Payment add(Payment entity) {
-        entity.setId(codeGenerator.generatePaymentCode());
+        entity.setPaymentCode(codeGenerator.generatePaymentCode());
         return paymentRepository.save(entity);
     }
 
@@ -62,5 +64,14 @@ public class PaymentService implements IService<Payment, String> {
     @Override
     public boolean existsById(String id) {
         return paymentRepository.existsById(id);
+    }
+
+    public List<Payment> addAll(List<Payment> payments) {
+        payments.stream().forEach(payment -> payment.setPaymentCode(codeGenerator.generatePaymentCode()));
+        return paymentRepository.saveAll(payments);
+    }
+
+    public void deleteAll() {
+        paymentRepository.deleteAll();
     }
 }

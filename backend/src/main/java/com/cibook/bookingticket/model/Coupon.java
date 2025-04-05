@@ -23,8 +23,8 @@ public class Coupon {
     private Double minOrderValue;
 
     @CreatedDate
-    private Date startDate;
-    private Date expiryDate;
+    private String startDate;
+    private String expiryDate;
     private Integer usageLimit;
     private String description;
 

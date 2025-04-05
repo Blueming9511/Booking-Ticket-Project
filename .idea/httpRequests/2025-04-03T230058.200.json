@@ -1,0 +1,272 @@
+[
+  {
+    "id": "67ecd51be21d8829e5c0d2f9",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+    "title": "Avatar: The Way of Water",
+    "genre": [
+      "Sci-Fi"
+    ],
+    "releaseYear": null,
+    "director": "James Cameron",
+    "rating": 7.8,
+    "duration": 192,
+    "language": null,
+    "budget": 2.5E8,
+    "boxOffice": 2.32E9,
+    "casts": [
+      "Sam Worthington",
+      "Zoe Saldana",
+      "Sigourney Weaver"
+    ],
+    "releasedBy": "CGV",
+    "releaseDate": "2022-12-16",
+    "endDate": "2023-03-15",
+    "trailer": "demo",
+    "description": "Hyyyy",
+    "status": "ENDED"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d2fa",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+    "title": "Spider-Man: Across the Spider-Verse",
+    "genre": [
+      "Animation"
+    ],
+    "releaseYear": 2023,
+    "director": "Joaquim Dos Santos",
+    "rating": 8.6,
+    "duration": 140,
+    "language": "English",
+    "budget": 1.0E8,
+    "boxOffice": 6.9E8,
+    "casts": [
+      "Shameik Moore",
+      "Hailee Steinfeld",
+      "Oscar Isaac"
+    ],
+    "releasedBy": "Lotte Cinema",
+    "releaseDate": "2023-06-02T00:00:00Z",
+    "endDate": "2023-09-15T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "ENDED"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d2fb",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/4HodYYKEIsGOdinkGi2Ucz6X9i0.jpg",
+    "title": "The Batman",
+    "genre": [
+      "Action"
+    ],
+    "releaseYear": 2022,
+    "director": "Matt Reeves",
+    "rating": 7.8,
+    "duration": 176,
+    "language": "English",
+    "budget": 1.85E8,
+    "boxOffice": 7.72E8,
+    "casts": [
+      "Robert Pattinson",
+      "Zoë Kravitz",
+      "Paul Dano"
+    ],
+    "releasedBy": "BHD",
+    "releaseDate": "2022-03-04T00:00:00Z",
+    "endDate": "2022-06-30T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "ENDED"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d2fc",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/1X7vow16X7CnCoexXh4H4F2yDJv.jpg",
+    "title": "Mission: Impossible - Dead Reckoning Part One",
+    "genre": [
+      "Action"
+    ],
+    "releaseYear": 2023,
+    "director": "Christopher McQuarrie",
+    "rating": 7.8,
+    "duration": 163,
+    "language": "English",
+    "budget": 2.91E8,
+    "boxOffice": 5.68E8,
+    "casts": [
+      "Tom Cruise",
+      "Hayley Atwell",
+      "Ving Rhames"
+    ],
+    "releasedBy": "CGV",
+    "releaseDate": "2023-07-12T00:00:00Z",
+    "endDate": "2023-10-20T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "Now Showing"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d2fd",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+    "title": "Barbie",
+    "genre": [
+      "Comedy"
+    ],
+    "releaseYear": 2023,
+    "director": "Greta Gerwig",
+    "rating": 7.3,
+    "duration": 114,
+    "language": "English",
+    "budget": 1.45E8,
+    "boxOffice": 1.446E9,
+    "casts": [
+      "Margot Robbie",
+      "Ryan Gosling",
+      "America Ferrera"
+    ],
+    "releasedBy": "Galaxy Cinema",
+    "releaseDate": "2023-07-21T00:00:00Z",
+    "endDate": "2023-11-05T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "Now Showing"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d2fe",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/9dTO2RygcDT0cQkawABw4QkDegN.jpg",
+    "title": "Fast X",
+    "genre": [
+      "Action"
+    ],
+    "releaseYear": 2023,
+    "director": "Louis Leterrier",
+    "rating": 7.0,
+    "duration": 141,
+    "language": "English",
+    "budget": 3.4E8,
+    "boxOffice": 7.14E8,
+    "casts": [
+      "Vin Diesel",
+      "Jason Momoa",
+      "Michelle Rodriguez"
+    ],
+    "releasedBy": "Cinestar",
+    "releaseDate": "2023-05-19T00:00:00Z",
+    "endDate": "2023-08-25T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "Now Showing"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d2ff",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg",
+    "title": "The Marvels",
+    "genre": [
+      "Superhero"
+    ],
+    "releaseYear": 2023,
+    "director": "Nia DaCosta",
+    "rating": 6.1,
+    "duration": 105,
+    "language": "English",
+    "budget": 2.74E8,
+    "boxOffice": 2.06E8,
+    "casts": [
+      "Brie Larson",
+      "Teyonah Parris",
+      "Iman Vellani"
+    ],
+    "releasedBy": "CGV",
+    "releaseDate": "2023-11-10T00:00:00Z",
+    "endDate": "2024-02-15T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "Coming Soon"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d300",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg",
+    "title": "Oppenheimer",
+    "genre": [
+      "Biography"
+    ],
+    "releaseYear": 2023,
+    "director": "Christopher Nolan",
+    "rating": 8.5,
+    "duration": 180,
+    "language": "English",
+    "budget": 1.0E8,
+    "boxOffice": 9.5E8,
+    "casts": [
+      "Cillian Murphy",
+      "Emily Blunt",
+      "Robert Downey Jr."
+    ],
+    "releasedBy": "BHD",
+    "releaseDate": "2023-07-21T00:00:00Z",
+    "endDate": "2023-11-10T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "Now Showing"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d301",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/kDp1vUBnMpe8ak4rjgl3cLELqjU.jpg",
+    "title": "Killers of the Flower Moon",
+    "genre": [
+      "Crime"
+    ],
+    "releaseYear": 2023,
+    "director": "Martin Scorsese",
+    "rating": 7.7,
+    "duration": 206,
+    "language": "English",
+    "budget": 2.0E8,
+    "boxOffice": 1.57E8,
+    "casts": [
+      "Leonardo DiCaprio",
+      "Robert De Niro",
+      "Lily Gladstone"
+    ],
+    "releasedBy": "Lotte Cinema",
+    "releaseDate": "2023-10-20T00:00:00Z",
+    "endDate": "2024-01-25T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "Coming Soon"
+  },
+  {
+    "id": "67ecd51be21d8829e5c0d302",
+    "movieCode": null,
+    "thumbnail": "https://image.tmdb.org/t/p/w200/8pjWz2lt29KyVGoq1mXYu6Br7dE.jpg",
+    "title": "Dune: Part Two",
+    "genre": [
+      "Sci-Fi"
+    ],
+    "releaseYear": 2024,
+    "director": "Denis Villeneuve",
+    "rating": null,
+    "duration": 165,
+    "language": "English",
+    "budget": 1.9E8,
+    "boxOffice": null,
+    "casts": [
+      "Timothée Chalamet",
+      "Zendaya",
+      "Rebecca Ferguson"
+    ],
+    "releasedBy": "Galaxy Cinema",
+    "releaseDate": "2024-03-15T00:00:00Z",
+    "endDate": "2024-06-20T00:00:00Z",
+    "trailer": null,
+    "description": "",
+    "status": "Coming Soon"
+  }
+]

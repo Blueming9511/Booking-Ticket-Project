@@ -8,7 +8,7 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined
 } from '@ant-design/icons';
-import CardStatistics from './CardStatistics';
+import CardStatistics from '../../ui/Card/CardStatistics';
 
 const ShowTimeStatistics = ({ data }) => {
   // Tính toán các thống kê

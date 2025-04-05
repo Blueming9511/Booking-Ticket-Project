@@ -3,9 +3,9 @@ package com.cibook.bookingticket.controller;
 import com.cibook.bookingticket.model.Payment;
 import com.cibook.bookingticket.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -48,6 +48,17 @@ public class PaymentController implements IController<Payment, String>{
     public ResponseEntity<Void> delete(String id) {
         if (!paymentService.existsById(id)) return ResponseEntity.notFound().build();
         paymentService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/all", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Payment>> getAllPayments(@RequestBody List<Payment> payments) {
+        return ResponseEntity.ok().body(paymentService.addAll(payments));
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAllPayments() {
+        paymentService.deleteAll();
         return ResponseEntity.ok().build();
     }
 }

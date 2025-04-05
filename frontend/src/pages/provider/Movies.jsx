@@ -131,7 +131,7 @@ const Movies = () => {
             </Button>
           </Space>
         }
-        bordered={false}
+        variant="borderless"
         className="shadow-none"
       >
         <MovieStatistics data={filteredMovies} loading={loading} />

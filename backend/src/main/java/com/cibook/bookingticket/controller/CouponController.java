@@ -3,9 +3,9 @@ package com.cibook.bookingticket.controller;
 import com.cibook.bookingticket.model.Coupon;
 import com.cibook.bookingticket.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -51,6 +51,17 @@ public class CouponController implements IController<Coupon, String>{
             return ResponseEntity.notFound().build();
         }
         couponService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/all", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Coupon>> addAll(@RequestBody List<Coupon> entity) {
+        return ResponseEntity.ok(couponService.addAll(entity));
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAll() {
+        couponService.deleteAll();
         return ResponseEntity.ok().build();
     }
 }

@@ -8,7 +8,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -21,9 +23,9 @@ public class Showtime {
     @Indexed(unique = true)
     private String showTimeCode;
 
-    private Date date;
-    private Time startTime;
-    private Time endTime;
+    private String date;
+    private String startTime;
+    private String endTime;
     private Double price;
 
     private String movieCode;

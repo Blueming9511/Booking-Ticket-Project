@@ -1,0 +1,112 @@
+[
+  {
+    "id": "67eeac25e21d8829e5c0d493",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "A",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 1.5,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d494",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "A",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 1.5,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d495",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "B",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 1.0,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d496",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "B",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 1.0,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d497",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "C",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 2.0,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d498",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "D",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 1.0,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d499",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "E",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 1.5,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d49a",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "F",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 1.0,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d49b",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "G",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 2.0,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67eeac25e21d8829e5c0d49c",
+    "seatCode": null,
+    "number": null,
+    "type": null,
+    "row": "H",
+    "screenCode": null,
+    "cinemaCode": null,
+    "multiplier": 1.0,
+    "status": "AVAILABLE"
+  }
+]

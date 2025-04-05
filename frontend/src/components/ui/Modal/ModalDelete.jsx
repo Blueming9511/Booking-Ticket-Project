@@ -1,10 +1,10 @@
 import { Modal } from "antd";
 import React from "react";
 
-const ModalDelete = ({ visible, onCancel, onSuccess, loading, extra }) => {
+const ModalDelete = ({ visible, onCancel, onSuccess, loading, extra, title }) => {
   return (
     <Modal
-      title="Delete Movie"
+      title={title}
       open={visible}
       onCancel={onCancel}
       onOk={onSuccess}

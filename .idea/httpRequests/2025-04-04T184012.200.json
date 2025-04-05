@@ -1,0 +1,162 @@
+[
+  {
+    "id": "67efc51c1c89072c5f6106c0",
+    "screenCode": "SCR001",
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "Inactive",
+    "cinemaId": "CIN001"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c1",
+    "screenCode": "SCR002",
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c2",
+    "screenCode": "SCR003",
+    "type": "Standard",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c3",
+    "screenCode": "SCR004",
+    "type": "Deluxe",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c4",
+    "screenCode": "SCR005",
+    "type": "Standard",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c5",
+    "screenCode": "SCR006",
+    "type": "VIP",
+    "capacity": 60,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c6",
+    "screenCode": "SCR007",
+    "type": "3D",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c7",
+    "screenCode": "SCR008",
+    "type": "4DX",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c8",
+    "screenCode": "SCR009",
+    "type": "IMAX",
+    "capacity": 220,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106c9",
+    "screenCode": "SCR010",
+    "type": "Deluxe",
+    "capacity": 130,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106ca",
+    "screenCode": "SCR011",
+    "type": "Standard",
+    "capacity": 140,
+    "status": "INACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106cb",
+    "screenCode": "SCR012",
+    "type": "VIP",
+    "capacity": 90,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106cc",
+    "screenCode": "SCR013",
+    "type": "3D",
+    "capacity": 160,
+    "status": "UNDER_MAINTENANCE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106cd",
+    "screenCode": "SCR014",
+    "type": "IMAX",
+    "capacity": 200,
+    "status": "ACTIVE",
+    "cinemaId": "CIN003"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106ce",
+    "screenCode": "SCR015",
+    "type": "Deluxe",
+    "capacity": 110,
+    "status": "ACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106cf",
+    "screenCode": "SCR016",
+    "type": "Standard",
+    "capacity": 150,
+    "status": "INACTIVE",
+    "cinemaId": "CIN004"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106d0",
+    "screenCode": "SCR017",
+    "type": "4DX",
+    "capacity": 100,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106d1",
+    "screenCode": "SCR018",
+    "type": "VIP",
+    "capacity": 120,
+    "status": "ACTIVE",
+    "cinemaId": "CIN005"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106d2",
+    "screenCode": "SCR019",
+    "type": "IMAX",
+    "capacity": 180,
+    "status": "ACTIVE",
+    "cinemaId": "CIN002"
+  },
+  {
+    "id": "67efc51c1c89072c5f6106d3",
+    "screenCode": "SCR020",
+    "type": "3D",
+    "capacity": 150,
+    "status": "ACTIVE",
+    "cinemaId": "CIN001"
+  }
+]

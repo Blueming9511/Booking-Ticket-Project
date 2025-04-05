@@ -8,7 +8,7 @@ import {
   ClockCircleOutlined,
   DollarOutlined
 } from '@ant-design/icons';
-import CardStatistics from './CardStatistics';
+import CardStatistics from '../../ui/Card/CardStatistics';
 
 const CouponStatistics = ({ data }) => {
   // Tính toán các thống kê
@@ -21,8 +21,8 @@ const CouponStatistics = ({ data }) => {
   const activeRate = totalCoupons > 0 ? (activeCoupons / totalCoupons) * 100 : 0;
   
   // Phân loại coupon theo loại giảm giá
-  const percentCoupons = data.filter(c => c.discount.includes("%")).length;
-  const fixedCoupons = data.filter(c => !c.discount.includes("%")).length;
+  const percentCoupons = 0;
+  const fixedCoupons = 0;
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-4">
