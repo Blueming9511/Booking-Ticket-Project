@@ -3,13 +3,13 @@ import { CreditCardOutlined, CheckCircleOutlined, DollarOutlined, ClockCircleOut
 
 const PaymentStatistics = ({ data }) => {
   const totalPayments = data.length;
-  const completedPayments = data.filter(p => p.status === "Completed").length;
-  const pendingPayments = data.filter(p => p.status === "Pending").length;
-  const failedPayments = data.filter(p => p.status === "Failed").length;
+  const completedPayments = data.filter(p => p.status === "APPROVED").length;
+  const pendingPayments = data.filter(p => p.status === "PENDING").length;
+  const failedPayments = data.filter(p => p.status === "REJECTED").length;
   
   const totalAmount = data.reduce((sum, payment) => sum + payment.amount, 0);
   const completedAmount = data
-    .filter(p => p.status === "Completed")
+    .filter(p => p.status === "APPROVED")
     .reduce((sum, payment) => sum + payment.amount, 0);
 
   return (

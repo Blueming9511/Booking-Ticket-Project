@@ -177,7 +177,10 @@ const Showtime = () => {
     <>
       {contextHolder}
       <Card
-        title={<span className="text-2xl font-bold">Showtime Management</span>}
+        title={<span className="text-xl font-bold">Showtime Management</span>}
+        variant="borderless"
+        style={{ boxShadow: "none" }}
+        styles={{ header: { borderBottom: "none" } }}
         extra={
           <Space>
             <Select

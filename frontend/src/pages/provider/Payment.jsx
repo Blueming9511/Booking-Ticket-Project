@@ -166,25 +166,12 @@ const Payment = () => {
     <>
       {contextHolder}
       <Card
-        title={<span className="text-xl font-bold">Payment Management</span>}
+        title={<span className="text-xl font-bold">Seat Management</span>}
+        variant="borderless"
+        style={{ boxShadow: "none" }}
+        styles={{ header: { borderBottom: "none" } }}
         extra={
           <Space>
-            <Select
-              placeholder="Status"
-              value={filters.status}
-              onChange={(v) => handleFilterChange("status", v)}
-              options={filters.statusOptions}
-              style={{ width: 150 }}
-              allowClear
-            />
-            <Select
-              placeholder="Method"
-              value={filters.method}
-              onChange={(v) => handleFilterChange("method", v)}
-              options={filters.methodOptions}
-              style={{ width: 150 }}
-              allowClear
-            />
             <RangePicker
               style={{ width: 250 }}
               format="DD/MM/YYYY"

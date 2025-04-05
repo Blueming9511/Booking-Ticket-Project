@@ -50,14 +50,18 @@ const Seat = () => {
 
       const [seatsRes, cinemasRes, screensRes] = await Promise.all([
         axios.get("http://localhost:8080/api/seats", { withCredentials: true }),
-        axios.get("http://localhost:8080/api/cinemas/names", { withCredentials: true }),
-        axios.get("http://localhost:8080/api/screens/v2/names", { withCredentials: true }),
+        axios.get("http://localhost:8080/api/cinemas/names", {
+          withCredentials: true,
+        }),
+        axios.get("http://localhost:8080/api/screens/v2/names", {
+          withCredentials: true,
+        }),
       ]);
 
       const formattedRooms = Object.fromEntries(
         Object.entries(screensRes.data).map(([cinemaId, screens]) => [
           cinemaId,
-          screens.map((screen) => ({ value: screen, label: screen }))
+          screens.map((screen) => ({ value: screen, label: screen })),
         ])
       );
 
@@ -69,9 +73,12 @@ const Seat = () => {
         rooms: formattedRooms,
         filters: {
           ...prev.filters,
-          cinemaOptions: Object.entries(cinemasRes.data).map(([value, label]) => ({
-            value, label
-          })),
+          cinemaOptions: Object.entries(cinemasRes.data).map(
+            ([value, label]) => ({
+              value,
+              label,
+            })
+          ),
           roomOptions: [],
         },
       }));
@@ -94,10 +101,12 @@ const Seat = () => {
     const { search, status, type, cinema, room } = state.filters;
     let result = [...state.seats];
 
-    if (search) result = result.filter((seat) =>
-      seat.id.toLowerCase().includes(search.toLowerCase()) ||
-      seat.row.toLowerCase().includes(search.toLowerCase())
-    );
+    if (search)
+      result = result.filter(
+        (seat) =>
+          seat.id.toLowerCase().includes(search.toLowerCase()) ||
+          seat.row.toLowerCase().includes(search.toLowerCase())
+      );
     if (status) result = result.filter((seat) => seat.status === status);
     if (type) result = result.filter((seat) => seat.type === type);
     if (room) result = result.filter((seat) => seat.screenCode === room);
@@ -128,19 +137,36 @@ const Seat = () => {
 
   const handleSubmit = async (action, values = null) => {
     const config = {
-      add: { method: "post", url: "http://localhost:8080/api/seats", data: values },
-      edit: { method: "put", url: `http://localhost:8080/api/seats/${state.selectedSeat?.id}`, data: values },
-      delete: { method: "delete", url: `http://localhost:8080/api/seats/${state.selectedSeat}` },
+      add: {
+        method: "post",
+        url: "http://localhost:8080/api/seats",
+        data: values,
+      },
+      edit: {
+        method: "put",
+        url: `http://localhost:8080/api/seats/${state.selectedSeat?.id}`,
+        data: values,
+      },
+      delete: {
+        method: "delete",
+        url: `http://localhost:8080/api/seats/${state.selectedSeat}`,
+      },
     };
 
     try {
       setState((prev) => ({ ...prev, loading: true }));
       await axios({ ...config[action], withCredentials: true });
-      messageApi.success(`Seat ${action === "add" ? "added" : action === "edit" ? "updated" : "deleted"} successfully`, 2);
+      messageApi.success(
+        `Seat ${action === "add" ? "added" : action === "edit" ? "updated" : "deleted"} successfully`,
+        2
+      );
       await fetchData(false);
       toggleModal(action, false);
     } catch (error) {
-      messageApi.error(`Failed to ${action} seat: ${error.response?.data?.message || error.message}`, 2);
+      messageApi.error(
+        `Failed to ${action} seat: ${error.response?.data?.message || error.message}`,
+        2
+      );
       console.error(`${action} error:`, error);
     } finally {
       setState((prev) => ({ ...prev, loading: false }));
@@ -153,7 +179,10 @@ const Seat = () => {
     <>
       {contextHolder}
       <Card
-        title={<span className="text-2xl font-bold">Seat Management</span>}
+        title={<span className="text-xl font-bold">Seat Management</span>}
+        variant="borderless"
+        style={{ boxShadow: "none" }}
+        styles={{ header: { borderBottom: "none" } }}
         extra={
           <Space wrap>
             <Select
@@ -225,7 +254,9 @@ const Seat = () => {
         onCancel={() => toggleModal("delete", false)}
         onSuccess={() => handleSubmit("delete")}
         loading={loading}
-        extra={<p>Deleting a seat will remove it permanently from the system.</p>}
+        extra={
+          <p>Deleting a seat will remove it permanently from the system.</p>
+        }
       />
     </>
   );

@@ -81,6 +81,9 @@ export const columns = (
                 ? "#faad14"
                 : "#52c41a"
           }
+          size={"small"}
+          strokeWidth={8}
+          style={{ width: "75%" }}
         />
       </Tooltip>
     ),
@@ -92,16 +95,14 @@ export const columns = (
     key: "location",
     render: (_, record) => {
       const cinema = cinemas[record.cinemaCode];
-      const screen = screens[record.cinemaCode]?.find(s => s.value === record.screenCode);
-      console.log(screen)
+      const screen = screens[record.cinemaCode]?.find(
+        (s) => s.value === record.screenCode
+      );
+      console.log(screen);
       return (
         <div className="flex flex-col">
-          <span className="font-medium text-base">
-            {cinema}
-          </span>
-          <span className="text-gray-500 text-xs">
-            {screen?.label}
-          </span>
+          <span className="font-medium text-sm">{cinema}</span>
+          <span className="text-gray-500 text-xs">{screen?.label}</span>
         </div>
       );
     },

@@ -8,7 +8,7 @@ const ShowtimeTable = ({ data, onEdit, onDelete, cinemas, rooms, movies }) => {
         columns={columns(onEdit, onDelete, cinemas, rooms, movies)}
         dataSource={data}
         rowKey="key"
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 5, responsive: true }}
         rowClassName={(record) => {
           if (record.status === "Failed") return "bg-red-50 hover:bg-red-100";
           if (record.status === "Pending")
@@ -16,6 +16,8 @@ const ShowtimeTable = ({ data, onEdit, onDelete, cinemas, rooms, movies }) => {
           return "hover:bg-blue-50";
         }}
         scroll={{ x: 1000 }}
+        size="middle"
+        className="rounded-lg"
       />
 
       <Divider />
