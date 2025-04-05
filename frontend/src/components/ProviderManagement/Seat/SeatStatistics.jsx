@@ -4,8 +4,8 @@ import CardStatistics from '../../ui/Card/CardStatistics';
 
 const SeatStatistics = ({ data }) => {
   const totalSeats = data.length;
-  const availableSeats = data.filter(seat => seat.status === "Available").length;
-  const bookedSeats = data.filter(seat => seat.status === "Booked").length;
+  const availableSeats = data.filter(seat => seat.status === "AVAILABLE").length;
+  const bookedSeats = data.filter(seat => seat.status === "BOOKED").length;
   const availabilityRate = totalSeats > 0 ? (availableSeats / totalSeats) * 100 : 0;
 
   return (

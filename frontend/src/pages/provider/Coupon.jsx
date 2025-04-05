@@ -97,13 +97,13 @@ const Coupon = () => {
     if (searchText)
       result = result.filter(
         (item) =>
-          item.code.toLowerCase().includes(searchText.toLowerCase()) ||
+          item.couponCode.toLowerCase().includes(searchText.toLowerCase()) ||
           item.description.toLowerCase().includes(searchText.toLowerCase())
       );
     if (dateRange) {
       const [start, end] = dateRange;
       result = result.filter((item) => {
-        const expiryDate = dayjs(item.expiry, "DD/MM/YYYY");
+        const expiryDate = dayjs(item.expiryDate, "DD/MM/YYYY");
         return (
           (!start || !expiryDate.isBefore(start, "day")) &&
           (!end || !expiryDate.isAfter(end, "day"))
@@ -171,24 +171,11 @@ const Coupon = () => {
       {contextHolder}
       <Card
         title={<span className="text-xl font-bold">Coupon Management</span>}
+        variant="borderless"
+        styles={{header: { borderBottom: "none" }}}
+        style={{boxShadow: "none"}}
         extra={
           <Space>
-            <Select
-              placeholder="Status"
-              value={filters.status}
-              onChange={(v) => handleFilterChange("status", v)}
-              options={filters.statusOptions}
-              style={{ width: 150 }}
-              allowClear
-            />
-            <Select
-              placeholder="Discount Type"
-              value={filters.discountType}
-              onChange={(v) => handleFilterChange("discountType", v)}
-              options={filters.discountTypeOptions}
-              style={{ width: 150 }}
-              allowClear
-            />
             <RangePicker
               style={{ width: 250 }}
               format="DD/MM/YYYY"

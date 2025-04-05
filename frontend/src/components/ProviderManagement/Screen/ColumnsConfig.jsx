@@ -78,6 +78,14 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
         {type}
       </Tag>
     ),
+    filters: [
+      { text: "IMAX", value: "IMAX" },
+      { text: "VIP", value: "VIP" },
+      { text: "4DX", value: "4DX" },
+      { text: "Premium", value: "Premium" },
+      { text: "Standard", value: "Standard" },
+    ],
+    onFilter: (value, record) => record.type === value,
     width: 150,
   },
   {
@@ -106,6 +114,11 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
     dataIndex: "status",
     key: "status",
     render: (status) => <TagStatus status={status} />,
+    filters: [
+      { text: "Active", value: "ACTIVE" },
+      { text: "Inactive", value: "INACTIVE" },
+    ],
+    onFilter: (value, record) => record.status === value,
     width: 150,
   },
   {

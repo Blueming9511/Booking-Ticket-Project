@@ -46,16 +46,7 @@ export const columns = (handleEdit, handleDelete) => [
     title: "Status",
     dataIndex: "status",
     key: "status",
-    render: (status) => (
-      status === "OPEN" ? (
-        <Tag color="green" className="text-xs">Open</Tag>
-      ) : 
-      status === "CLOSED" ? (
-        <Tag color="red" className="text-xs">Closed</Tag>
-      ) : (
-        <Tag color="yellow" className="text-xs">{status}</Tag>
-      )
-    ),
+    render: (status) => (<TagStatus status={status} />),
     width: 50,
   },
   {

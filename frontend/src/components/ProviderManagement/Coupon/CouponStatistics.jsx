@@ -9,20 +9,22 @@ import {
   DollarOutlined
 } from '@ant-design/icons';
 import CardStatistics from '../../ui/Card/CardStatistics';
+import dayjs from 'dayjs';
 
 const CouponStatistics = ({ data }) => {
+  const coupons = data || [];
+
   // Tính toán các thống kê
+  const now = dayjs();
+  const activeCoupons = data.filter(c => dayjs(c.expiryDate).isAfter(now)).length;
   const totalCoupons = data.length;
-  const activeCoupons = data.filter(c => c.status === "Active").length;
-  const expiredCoupons = data.filter(c => c.status === "Expired").length;
-  const inactiveCoupons = data.filter(c => c.status === "Inactive").length;
+  
   
   // Tính tỷ lệ coupon đang hoạt động
   const activeRate = totalCoupons > 0 ? (activeCoupons / totalCoupons) * 100 : 0;
   
   // Phân loại coupon theo loại giảm giá
-  const percentCoupons = 0;
-  const fixedCoupons = 0;
+  const freeCoupons = data.filter(c => c.discountValue == 0).length;
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-4">
@@ -41,8 +43,8 @@ const CouponStatistics = ({ data }) => {
       />
       
       <CardStatistics
-        title="Discount Types"
-        value={`${percentCoupons}% / ${fixedCoupons} fixed`}
+        title="Free Coupons"
+        value={`${freeCoupons}`}
         icon={<FireOutlined />}
         color="#722ed1"
       />

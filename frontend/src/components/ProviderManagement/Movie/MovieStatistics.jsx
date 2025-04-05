@@ -13,7 +13,7 @@ import { convertMoney } from '../../utils/Converter';
 const MovieStatistics = ({ data }) => {
   // Tính toán các thống kê
   const totalMovies = data.length;
-  const nowShowing = data.filter(m => m.status === "Now Showing").length;
+  const nowShowing = data.filter(m => m.status === "NOW_SHOWING").length;
   const endedMovies = data.filter(m => m.status === "Ended").length;
   
   // Tính tổng doanh thu và ngân sách

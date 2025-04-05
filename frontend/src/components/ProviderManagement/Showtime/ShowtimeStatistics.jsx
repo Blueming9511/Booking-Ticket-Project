@@ -13,8 +13,8 @@ import CardStatistics from '../../ui/Card/CardStatistics';
 const ShowTimeStatistics = ({ data }) => {
   // Tính toán các thống kê
   const totalShowTimes = data.length;
-  const activeShowTimes = data.filter(st => st.status === "Active").length;
-  const inactiveShowTimes = data.filter(st => st.status === "Inactive").length;
+  const activeShowTimes = data.filter(st => st.status === "AVAILABLE").length;
+  const inactiveShowTimes = data.filter(st => st.status === "FULL").length;
   
   // Tính tổng doanh thu ước tính (giả sử tất cả ghế đã đặt sẽ được bán)
   const totalPotentialRevenue = data.reduce((sum, showtime) => {
