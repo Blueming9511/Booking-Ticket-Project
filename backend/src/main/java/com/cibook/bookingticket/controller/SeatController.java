@@ -4,6 +4,7 @@ import com.cibook.bookingticket.model.Seat;
 import com.cibook.bookingticket.service.SeatService;
 
 // Import necessary Spring Web annotations
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +24,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/seats")
-// Removed 'implements IController<Seat, String>' to avoid annotation conflicts from interface
-public class SeatController {
+public class SeatController implements IController<Seat, String> {
     private final SeatService seatService;
 
     @Autowired
@@ -32,104 +32,49 @@ public class SeatController {
         this.seatService = seatService;
     }
 
-    // --- Explicitly Defined CRUD Endpoints ---
-
-    @PostMapping
-    // Add @RequestBody to bind JSON body to the Seat object
-    public ResponseEntity<?> add(@RequestBody Seat entity) {
-        try {
-            Seat savedSeat = seatService.add(entity);
-            // Return 201 Created for new resource
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedSeat);
-        } catch (Exception e) {
-            // Consider more specific exception handling based on what seatService.add might throw
-            // Log the error: log.error("Error adding seat: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding seat: " + e.getMessage());
-        }
+    @Override
+    public ResponseEntity<Seat> add(Seat entity) {
+        return ResponseEntity.ok(seatService.add(entity));
     }
 
-    @GetMapping
+    @Override
     public ResponseEntity<List<Seat>> getAll() {
-        // WARNING: Review seatService.findAll() logic - it currently modifies data!
-        List<Seat> seats = seatService.findAll();
-        return ResponseEntity.ok(seats);
+        return ResponseEntity.ok(seatService.findAll());
     }
 
-    @GetMapping("/{id}")
-    // Add @PathVariable to bind URL part to the id parameter
-    public ResponseEntity<Seat> getById(@PathVariable String id) {
-        return seatService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @Override
+    public ResponseEntity<Seat> getById(String id) {
+        if (!seatService.existsById(id)) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(seatService.findById(id).get());
     }
 
-    @GetMapping("/names") // Assuming this convention was intended for getAllNames
+    @Override
     public ResponseEntity<Map<String, String>> getAllNames() {
-        // Service returns null, handle it
-        Map<String, String> namesMap = seatService.findAllNamesWithID();
-        if (namesMap == null) {
-            // Return an empty map or Not Found depending on API contract
-            return ResponseEntity.ok(Collections.emptyMap());
-            // Or return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(namesMap);
+        return ResponseEntity.ok(seatService.findAllNamesWithID());
     }
 
-    @PutMapping("/{id}")
-    // Add @PathVariable for id and @RequestBody for entity
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Seat entity) {
-        // Service returns null if ID doesn't exist for update
-        Seat updatedSeat = seatService.update(id, entity);
-        if (updatedSeat == null) {
-            // ID likely not found
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedSeat);
+    @Override
+    public ResponseEntity<Seat> update(String id, Seat entity) {
+        if (!seatService.existsById(id)) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(seatService.update(id, entity));
     }
 
-    @DeleteMapping("/{id}")
-    // Add @PathVariable for id
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        // Check existence before attempting delete
-        if (!seatService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        try {
-            seatService.deleteById(id);
-            // Return 204 No Content for successful deletion (standard practice)
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            // Handle potential errors during delete (e.g., constraints)
-            // Log the error: log.error("Error deleting seat {}: {}", id, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @Override
+    public ResponseEntity<Void> delete(String id) {
+        if (!seatService.existsById(id)) return ResponseEntity.notFound().build();
+        seatService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    // --- Custom Bulk Endpoints (Keep as they were correctly annotated) ---
-
-    @PostMapping("/all")
-    public ResponseEntity<?> addAll(@RequestBody List<Seat> seats) {
-        if (seats == null || seats.isEmpty()) {
-            return ResponseEntity.badRequest().body("Seat list cannot be null or empty.");
-        }
-        try {
-            List<Seat> savedSeats = seatService.addAll(seats);
-            // Return 201 Created for bulk creation
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedSeats);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding seats: " + e.getMessage());
-        }
+    @PostMapping(value = "/all", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Seat>> addAll(@RequestBody List<Seat> seats) {
+        return ResponseEntity.ok(seatService.addAll(seats));
     }
 
     @DeleteMapping("/all")
     public ResponseEntity<Void> deleteAll() {
-        try {
-            seatService.deleteAll();
-            // Return 204 No Content for successful bulk deletion
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            // Log the error: log.error("Error deleting all seats: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        seatService.deleteAll();
+        return ResponseEntity.ok().build();
     }
+
 }

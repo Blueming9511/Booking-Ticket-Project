@@ -198,6 +198,8 @@ const Seat = () => {
           onEdit={(seat) => toggleModal("edit", true, seat)}
           onDelete={(seat) => toggleModal("delete", true, seat)}
           loading={loading}
+          cinemas={state.cinemas}
+          screens={state.rooms}
         />
       </Card>
 

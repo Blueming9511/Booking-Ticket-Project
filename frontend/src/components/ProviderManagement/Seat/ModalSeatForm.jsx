@@ -5,15 +5,15 @@ const { Option } = Select;
 
 const ModalSeatForm = ({ form, onFinish, initialValues, cinemas, rooms }) => {
   const typeOptions = [
-    { value: "Standard", label: "Standard" },
+    { value: "Standard", label: "STANDARD" },
     { value: "VIP", label: "VIP" },
-    { value: "Couple", label: "Couple" },
+    { value: "Couple", label: "COUPLE" },
   ];
 
   const statusOptions = [
-    { value: "AVAILABLE", label: "Available" },
-    { value: "BOOKED", label: "Booked" },
-    { value: "MAINTAINED", label: "Maintenance" },
+    { value: "AVAILABLE", label: "AVAILABLE" },
+    { value: "BOOKED", label: "BOOKED" },
+    { value: "MAINTAINED", label: "MAINTAINANCE" },
   ];
 
 

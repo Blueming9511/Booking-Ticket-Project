@@ -16,16 +16,22 @@
         @Indexed
         private String seatCode;
         private String number;
-        private String type;
+        private SeatType type;
         private String row;
         private String screenCode;
         private String cinemaCode;
-        private double multiplier;
+        private Double multiplier;
         private SeatStatus status;
+
+        public enum  SeatType {
+            COUPLE,
+            STANDARD,
+            VIP
+        }
 
         public enum SeatStatus {
             BOOKED,
             AVAILABLE,
-            MAINTENACE,
+            MAINTENANCE,
         }
     }
