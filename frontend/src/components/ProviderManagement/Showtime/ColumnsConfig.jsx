@@ -8,7 +8,7 @@ const statusOptions = [
   {value: "FULL", label: "Full"},
 ];
 
-export const columns = (handleEdit, handleDelete, cinemas, rooms, movies) => [
+export const columns = (handleEdit, handleDelete, cinemas, rooms, movies, bookingDetails) => [
     {
       title: "Movie",
       dataIndex: "movie",
@@ -43,26 +43,22 @@ export const columns = (handleEdit, handleDelete, cinemas, rooms, movies) => [
           </div>
         </div>)
       },
-      width: 250,
+      width: 300,
     },
     {
       title: "Cinema & Room",
       key: "cinema",
       render: (_, record) =>{ 
         const cinema = cinemas.find((cinema) => cinema.value === record.cinemaCode);
-        console.log("cinema", cinema);   
-        console.log("rooms", rooms);     
-        const room = rooms[record.cinemaCode]?.rooms.find((room) => room.label === record.screenCode);
-        console.log("rooms", room);
         return (
         <div className="flex items-center gap-2">
           <div>
             <div className="font-medium">{cinema?.label}</div>
-            <div className="text-sm text-gray-500">{room?.label}</div>
+            <div className="text-sm text-gray-500">{record.screenCode}</div>
           </div>
         </div>
       )},
-      width: 150,
+      width: 200,
     },
     {
       title: "Showtime",
@@ -86,29 +82,46 @@ export const columns = (handleEdit, handleDelete, cinemas, rooms, movies) => [
       title: "Seats",
       key: "seats",
       render: (_, record) => {
-        const seatsBooked = Math.floor(Math.random(200, 300));
-        const seatsAvailable = Math.floor(Math.random(400, 500));
+        const relatedBookings = bookingDetails.filter(
+          (item) => item.showtimeCode === record.showtimeCode
+        );
+        
+        const seatsBooked = relatedBookings.reduce((total, booking) => {
+          return total + (Array.isArray(booking.seatCode) ? booking.seatCode.length : 0);
+        }, 0);
+        
+        const seatsAvailable = rooms[record.cinemaCode]?.rooms.find(
+          (room) => room.label === record.screenCode
+        )?.capacity || 200;
+        
+        const bookedPercentage = seatsAvailable 
+          ? Math.round((seatsBooked / seatsAvailable) * 100) 
+          : 0;
+  
         return (
-        <div>
-          <div className="flex items-center gap-2">
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-green-500 h-2 rounded-full"
-                style={{
-                  width: `${(seatsBooked / seatsAvailable) * 100}%`,
-                }}
-              ></div>
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="w-24 bg-gray-200 rounded-full h-2.5">
+                <div
+                  className={`h-2.5 rounded-full ${
+                    bookedPercentage === 100 ? "bg-red-500" : "bg-green-500"
+                  }`}
+                  style={{ width: `${bookedPercentage}%` }}
+                ></div>
+              </div>
+              <span className="text-xs font-medium">
+                {seatsBooked}/{seatsAvailable}
+              </span>
             </div>
-            <span className="text-xs">
-              {seatsBooked}/{seatsAvailable}
-            </span>
+            <div className="text-xs text-gray-500 mt-1">
+              {bookedPercentage}% booked
+              {bookedPercentage === 100 && (
+                <Tag color="red" className="ml-2">Full</Tag>
+              )}
+            </div>
           </div>
-          <div className="text-xs text-gray-500 mt-1">
-            {Math.round((seatsBooked / seatsAvailable) * 100)}%
-            booked
-          </div>
-        </div>
-      )},
+        );
+      },
       width: 150,
     },
     {
@@ -129,18 +142,18 @@ export const columns = (handleEdit, handleDelete, cinemas, rooms, movies) => [
       key: "status",
       render: (status) => (
         <Tag
-          color={status === "Active" ? "green" : "red"}
+          color={status == statusOptions[0].value ? "green" : "red"}
           className="flex items-center gap-1"
         >
-          {status === "Active" ? (
+          {status === "AVAILABLE" ? (
             <>
               <span className="w-2 h-2 rounded-full bg-green-500"></span>
-              Active
+              AVAILABLE
             </>
           ) : (
             <>
               <span className="w-2 h-2 rounded-full bg-red-500"></span>
-              Inactive
+              FULL
             </>
           )}
         </Tag>

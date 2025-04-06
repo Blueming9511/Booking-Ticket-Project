@@ -1,11 +1,11 @@
 import React from "react";
 import { Table, Divider } from "antd";
 import { columns } from "./ColumnsConfig";
-const ShowtimeTable = ({ data, onEdit, onDelete, cinemas, rooms, movies }) => {
+const ShowtimeTable = ({ data, onEdit, onDelete, cinemas, rooms, movies, bookingDetails }) => {
   return (
     <>
       <Table
-        columns={columns(onEdit, onDelete, cinemas, rooms, movies)}
+        columns={columns(onEdit, onDelete, cinemas, rooms, movies, bookingDetails)}
         dataSource={data}
         rowKey="key"
         pagination={{ pageSize: 5, responsive: true }}
