@@ -1,15 +1,65 @@
 @import "tailwindcss";
 
 --var{
-  --primary-color: #3498db;
-  --secondary-color: #2ecc71;
-  --background-color: #f1c40f;
+  --primary-color: #27548A;
+  --text-primary-color: #123458;
+  --background-color: #F1EFEC;
+  --white: #F7F7F7; 
+  --black: #09122C; 
+  
+}
+:root {
+  --primary-color: #27548A;
+  --text-primary-color: #123458;
+  --secondary-color: #F1EFE;
+  --background-color: #F1EFEC;
   --white: #F7F7F7; 
   --black: #09122C; 
 }
 
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.text-primary {
+  color: var(--text-primary-color);
+}
+
+.bg-secondary {
+  background-color: var(--secondary-color);
+}
+
+.bg-background {
+  background-color: var(--background-color);
+}
+
+.bg-white {
+  background-color: var(--white);
+}
+
+.bg-black {
+  background-color: var(--black);
+}
+
+.text-secondary {
+  color: var(--secondary-color);
+}
+
+.text-background {
+  color: var(--background-color);
+}
+
+.text-white {
+  color: var(--white);
+}
+
+.text-black {
+  color: var(--black);
+}
+
+
 body {
-  /* background: #09122C; */
+  background: var(--background-color);
   overflow-x: hidden;
   margin: 0;
 }
