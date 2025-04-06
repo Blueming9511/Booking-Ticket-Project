@@ -68,7 +68,7 @@
     color: #eee;
     transform: translate(0, -50%);
     font-family: system-ui;
-    display: none;
+    display: none; /* Keep default as none */
 }
 
 /* Only show content for the active slide */
