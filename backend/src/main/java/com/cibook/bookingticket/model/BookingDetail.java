@@ -13,36 +13,19 @@ import java.util.List;
 public class BookingDetail {
     @Id
     private String id;
+    private String userCode;
+    private String showTimeCode;
+    private List<String> seatCode;
 
-    @Indexed(unique = true)
-    private String bookingDetailCode;
+    private Double subTotal;
+    private Double discountAmount;
+    private Double taxAmount;
+    private Double totalAmount;
+    private String couponCode;
+    private String paymentCode;
+    private String bookingCode;
 
-    @DBRef
-    private User user;
-
-    @DBRef
-    private Showtime showTime;
-
-    @DBRef
-    private List<Seat> seats;
-
-    private double subTotal;
-    private double discountAmount;
-    private double taxAmount;
-    private double totalAmount;
-
-    @DBRef
-    private Coupon coupon;
-
-    @DBRef
-    private Payment payment;
-
-    @DBRef
-    private Booking booking;
-
-    @Indexed
     private BookingStatus status;
-
 
     public enum BookingStatus {
         PENDING, CONFIRMED, CANCELLED, COMPLETED
