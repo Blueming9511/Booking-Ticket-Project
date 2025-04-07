@@ -14,7 +14,7 @@ const ModalSeatForm = ({
   const typeOptions = [
     { value: "STANDARD", label: "Standard" },
     { value: "VIP", label: "VIP" },
-    { value: "COU", label: "Couple" },
+    { value: "COUPON", label: "Couple" },
   ];
 
   const statusOptions = [
