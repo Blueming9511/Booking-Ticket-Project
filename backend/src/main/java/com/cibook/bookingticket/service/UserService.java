@@ -116,24 +116,10 @@ public class UserService implements IService<User, String> {
     @Override
     @Transactional
     public User update(String id, User entity) {
-        log.info("UserService: Updating user with ID {}", id);
-
-        return userRepository.findById(id)
-                .map(existingUser -> {
-                    // --- Preserve non-updatable or sensitive fields ---
-                    entity.setId(existingUser.getId());
-                    entity.setUsername(existingUser.getUsername());
-                    entity.setEmail(existingUser.getEmail());
-                    entity.setPassword(existingUser.getPassword());
-
-                    log.debug("Saving updated user: {}", entity);
-                    return userRepository.save(entity); // Save the modified entity
-
-                })
-                .orElseGet(() -> {
-                    log.warn("UserService: Update failed. User with ID {} not found.", id);
-                    return null; // Or throw a custom NotFoundException
-                });
+        if (!existsById(id)) return null;
+        User user = findById(id).orElse(null);
+        entity.setId(user.getId());
+        return userRepository.save(entity);
     }
 
     /**
