@@ -7,6 +7,7 @@ export const SeatTable = ({ data, onEdit, onDelete, loading, cinemas, screens })
       dataSource={data}
       pagination={{
         pageSize: 5,
+        responsive: true,
       }}
       rowClassName={(record) => {
         if (record.status === "INACTIVE") return "bg-gray-50 hover:bg-gray-100";
@@ -16,6 +17,7 @@ export const SeatTable = ({ data, onEdit, onDelete, loading, cinemas, screens })
       scroll={{ x: 1000 }}
       rowKey="key"
       loading={loading}
+      size="middle"
     />
   );
 };

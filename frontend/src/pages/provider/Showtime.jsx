@@ -38,7 +38,7 @@ const Showtime = () => {
         setState((prev) => ({ ...prev, loading: true }));
         showSuccess && messageApi.loading("Fetching data...");
 
-        const [showtimesRes, cinemasRes, roomsRes, moviesRes, movies] =
+        const [showtimesRes, cinemasRes, roomsRes, moviesRes, movies, bookingDetailsRes] =
           await Promise.all([
             axios.get("http://localhost:8080/api/showtimes", {
               withCredentials: true,
@@ -55,6 +55,9 @@ const Showtime = () => {
             axios.get("http://localhost:8080/api/movies", {
               withCredentials: true,
             }),
+            axios.get("http://localhost:8080/api/bookingdetails", {
+              withCredentials: true,
+            }),
           ]);
 
         setState((prev) => ({
@@ -63,6 +66,7 @@ const Showtime = () => {
           filteredShowtimes: showtimesRes.data,
           movies: movies.data,
           rooms: roomsRes.data,
+          bookingDetailsRes: bookingDetailsRes.data,
           filters: {
             ...prev.filters,
             cinemaOptions: Object.entries(cinemasRes.data).map(
@@ -177,7 +181,10 @@ const Showtime = () => {
     <>
       {contextHolder}
       <Card
-        title={<span className="text-2xl font-bold">Showtime Management</span>}
+        title={<span className="text-xl font-bold">Showtime Management</span>}
+        variant="borderless"
+        style={{ boxShadow: "none" }}
+        styles={{ header: { borderBottom: "none" } }}
         extra={
           <Space>
             <Select
@@ -214,7 +221,7 @@ const Showtime = () => {
           </Space>
         }
       >
-        <ShowTimeStatistics data={filteredShowtimes} />
+        <ShowTimeStatistics data={filteredShowtimes} bookings={state.bookingDetailsRes} />
         <ShowTimeTable
           data={filteredShowtimes}
           loading={loading}
@@ -223,6 +230,7 @@ const Showtime = () => {
           movies={state.movies}
           cinemas={filters.cinemaOptions}
           rooms={filters.roomOptions}
+          bookingDetails={state.bookingDetailsRes}
         />
       </Card>
 

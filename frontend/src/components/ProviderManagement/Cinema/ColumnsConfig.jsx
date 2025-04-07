@@ -46,7 +46,7 @@ export const columns = (handleEdit, handleDelete) => [
     title: "Status",
     dataIndex: "status",
     key: "status",
-    render: (status) => <TagStatus status={status} />,
+    render: (status) => (<TagStatus status={status} />),
     width: 50,
   },
   {

@@ -51,33 +51,36 @@ const Payment = () => {
     loading: false,
   });
 
-  const fetchData = useCallback(async () => {
-    try {
-      setState((prev) => ({ ...prev, loading: true }));
-      messageApi.loading("Fetching data...");
+  const fetchData = useCallback(
+    async (showSucces = true) => {
+      try {
+        setState((prev) => ({ ...prev, loading: true }));
+        showSucces && messageApi.loading("Fetching data...");
 
-      const paymentsRes = await axios.get(
-        "http://localhost:8080/api/payments",
-        {
-          withCredentials: true,
-        }
-      );
+        const paymentsRes = await axios.get(
+          "http://localhost:8080/api/payments",
+          {
+            withCredentials: true,
+          }
+        );
 
-      setState((prev) => ({
-        ...prev,
-        payments: paymentsRes.data,
-        filteredPayments: paymentsRes.data,
-      }));
+        setState((prev) => ({
+          ...prev,
+          payments: paymentsRes.data,
+          filteredPayments: paymentsRes.data,
+        }));
 
-      messageApi.destroy();
-      messageApi.success("Data fetched successfully", 2);
-    } catch (error) {
-      messageApi.error("Failed to fetch data", 2);
-      console.error("Fetch error:", error);
-    } finally {
-      setState((prev) => ({ ...prev, loading: false }));
-    }
-  }, [messageApi]);
+        showSucces && messageApi.destroy();
+        showSucces && messageApi.success("Data fetched successfully", 2);
+      } catch (error) {
+        messageApi.error("Failed to fetch data", 2);
+        console.error("Fetch error:", error);
+      } finally {
+        setState((prev) => ({ ...prev, loading: false }));
+      }
+    },
+    [messageApi]
+  );
 
   useEffect(() => {
     fetchData();
@@ -137,7 +140,7 @@ const Payment = () => {
       delete: {
         method: "delete",
         url: `http://localhost:8080/api/payments/${state.selectedPayment?.id}`,
-      }
+      },
     };
 
     try {
@@ -147,7 +150,7 @@ const Payment = () => {
         `Payment ${action === "add" ? "added" : "updated"} successfully`,
         2
       );
-      await fetchData();
+      await fetchData(false);
       toggleModal(action, false);
     } catch (error) {
       messageApi.error(`Failed to ${action} payment`, 2);
@@ -159,64 +162,16 @@ const Payment = () => {
 
   const { filteredPayments, filters, modals, selectedPayment, loading } = state;
 
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Method",
-      dataIndex: "method",
-      key: "method",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-    },
-    {
-      title: "Transaction Date",
-      dataIndex: "transactionDate",
-      key: "transactionDate",
-      render: (date) => dayjs(date).format("DD/MM/YYYY"),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_, record) => (
-        <Space>
-          <Button onClick={() => toggleModal("edit", true, record)}>
-            Edit
-          </Button>
-        </Space>
-      ),
-    },
-  ];
-
   return (
     <>
       {contextHolder}
       <Card
-        title={<span className="text-xl font-bold">Payment Management</span>}
+        title={<span className="text-xl font-bold">Seat Management</span>}
+        variant="borderless"
+        style={{ boxShadow: "none" }}
+        styles={{ header: { borderBottom: "none" } }}
         extra={
           <Space>
-            <Select
-              placeholder="Status"
-              value={filters.status}
-              onChange={(v) => handleFilterChange("status", v)}
-              options={filters.statusOptions}
-              style={{ width: 150 }}
-              allowClear
-            />
-            <Select
-              placeholder="Method"
-              value={filters.method}
-              onChange={(v) => handleFilterChange("method", v)}
-              options={filters.methodOptions}
-              style={{ width: 150 }}
-              allowClear
-            />
             <RangePicker
               style={{ width: 250 }}
               format="DD/MM/YYYY"
@@ -245,8 +200,8 @@ const Payment = () => {
         <PaymentStatistics data={filteredPayments} />
         <PaymentTable
           data={filteredPayments}
-          onEdit={(payment) => toggleModal('edit', true, payment)}
-          onDelete={(payment) => toggleModal('delete', true, payment)}
+          onEdit={(payment) => toggleModal("edit", true, payment)}
+          onDelete={(payment) => toggleModal("delete", true, payment)}
           loading={loading}
         />
       </Card>
@@ -264,12 +219,17 @@ const Payment = () => {
         onSuccess={(values) => handleSubmit("edit", values)}
       />
 
-      <ModalDelete 
+      <ModalDelete
         visible={modals.delete}
         onCancel={() => toggleModal("delete", false)}
         onSuccess={() => handleSubmit("delete")}
         title="Delete Payment"
-        extra={<p className="mt-2">Are you sure you want to delete payment <strong>{selectedPayment?.id}</strong>?</p>}
+        extra={
+          <p className="mt-2">
+            Are you sure you want to delete payment{" "}
+            <strong>{selectedPayment?.id}</strong>?
+          </p>
+        }
       />
     </>
   );

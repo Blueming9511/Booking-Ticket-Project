@@ -157,29 +157,12 @@ const Screen = () => {
     <>
       {contextHolder}
       <Card
-        title="Screen Management"
+        title={<span className="text-xl font-bold">Screen Management</span>}
         variant="borderless"
         styles = {{header: {borderBottom: 'none'}}}
+        style={{boxShadow: 'none'}}
         extra={
           <Space wrap>
-            <Select
-              placeholder="Status"
-              value={filters.status}
-              onChange={v => handleFilterChange("status", v)}
-              style={{ width: 150 }}
-              allowClear
-              options={filters.statusOptions}
-              disabled={loading}
-            />
-            <Select
-              placeholder="Type"
-              value={filters.type}
-              onChange={v => handleFilterChange("type", v)}
-              style={{ width: 150 }}
-              allowClear
-              options={filters.typeOptions}
-              disabled={loading}
-            />
             <Select
               placeholder="Cinema"
               value={filters.cinema}

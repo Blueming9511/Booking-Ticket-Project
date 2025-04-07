@@ -5,12 +5,12 @@ import ModalCinemaEdit from "../../components/ProviderManagement/Cinema/ModalCin
 import ModalCinemaAdd from "../../components/ProviderManagement/Cinema/ModalCinemaAdd";
 import CinemaStatistics from "../../components/ProviderManagement/Cinema/CinemaStatistics";
 import ModalDelete from "../../components/ui/Modal/ModalDelete";
-import {CinemaTable} from "../../components/ProviderManagement/Cinema/CinemaTable";
+import { CinemaTable } from "../../components/ProviderManagement/Cinema/CinemaTable";
 import axios from "axios";
 
 const { Search } = Input;
 
-const Cinemas = ({role="Admin"}) => {
+const Cinemas = ({ role = "Admin" }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [state, setState] = useState({
     cinemas: [],
@@ -33,44 +33,47 @@ const Cinemas = ({role="Admin"}) => {
     loading: false,
   });
 
-  const fetchData = useCallback(async (showSuccess = true) => {
-    try {
-      setState(prev => ({ ...prev, loading: true }));
-      showSuccess && messageApi.loading("Fetching data...");
+  const fetchData = useCallback(
+    async (showSuccess = true) => {
+      try {
+        setState((prev) => ({ ...prev, loading: true }));
+        showSuccess && messageApi.loading("Fetching data...");
 
-      const response = await axios.get("http://localhost:8080/api/cinemas", {
-        withCredentials: true,
-      });
+        const response = await axios.get("http://localhost:8080/api/cinemas", {
+          withCredentials: true,
+        });
 
-      setState(prev => ({
-        ...prev,
-        cinemas: response.data,
-        filteredCinemas: response.data,
-      }));
+        setState((prev) => ({
+          ...prev,
+          cinemas: response.data,
+          filteredCinemas: response.data,
+        }));
 
-      showSuccess && messageApi.destroy();
-      showSuccess && messageApi.success("Data fetched successfully", 2);
-    } catch (error) {
-      showSuccess && messageApi.error("Failed to fetch data", 2);
-      console.error("Fetch error:", error);
-    } finally {
-      setState(prev => ({ ...prev, loading: false }));
-    }
-  }, [messageApi]);
+        showSuccess && messageApi.destroy();
+        showSuccess && messageApi.success("Data fetched successfully", 2);
+      } catch (error) {
+        showSuccess && messageApi.error("Failed to fetch data", 2);
+        console.error("Fetch error:", error);
+      } finally {
+        setState((prev) => ({ ...prev, loading: false }));
+      }
+    },
+    [messageApi]
+  );
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   const handleFilterChange = (field, value) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       filters: { ...prev.filters, [field]: value },
     }));
   };
 
   const toggleModal = (modalName, isOpen, cinema = null) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       modals: { ...prev.modals, [modalName]: isOpen },
       selectedCinema: isOpen ? cinema : null,
@@ -96,8 +99,8 @@ const Cinemas = ({role="Admin"}) => {
     };
 
     try {
-      setState(prev => ({ ...prev, loading: true }));
-      console.log(config[action].data)
+      setState((prev) => ({ ...prev, loading: true }));
+      console.log(config[action].data);
       await axios({ ...config[action], withCredentials: true });
       messageApi.success(`Cinema ${action}ed successfully`, 2);
       await fetchData(false);
@@ -106,7 +109,7 @@ const Cinemas = ({role="Admin"}) => {
       messageApi.error(`Failed to ${action} cinema`, 2);
       console.error(`${action} error:`, error);
     } finally {
-      setState(prev => ({ ...prev, loading: false }));
+      setState((prev) => ({ ...prev, loading: false }));
     }
   };
 
@@ -116,18 +119,9 @@ const Cinemas = ({role="Admin"}) => {
     <>
       {contextHolder}
       <Card
-        title={<span className="text-2xl font-bold">Cinema Management</span>}
+        title={<span className="text-xl font-bold">Cinema Management</span>}
         extra={
           <Space>
-            <Select
-              placeholder="Filter by Status"
-              value={filters.status}
-              onChange={(value) => handleFilterChange("status", value)}
-              style={{ width: 150 }}
-              allowClear
-              options={filters.statusOptions}
-            />
-
             <Search
               placeholder="Search cinemas..."
               allowClear
@@ -150,8 +144,8 @@ const Cinemas = ({role="Admin"}) => {
         styles={{ header: { borderBottom: "none" } }}
       >
         <CinemaStatistics data={filteredCinemas} />
-        <CinemaTable 
-          data={filteredCinemas} 
+        <CinemaTable
+          data={filteredCinemas}
           onEdit={(cinema) => toggleModal("edit", true, cinema)}
           onDelete={(cinema) => toggleModal("delete", true, cinema)}
           loading={loading}
@@ -179,7 +173,12 @@ const Cinemas = ({role="Admin"}) => {
         onCancel={() => toggleModal("delete", false)}
         onSuccess={() => handleSubmit("delete")}
         loading={loading}
-        extra={<p>Deleting a cinema will also delete all screens and movies associated with it</p>}
+        extra={
+          <p>
+            Deleting a cinema will also delete all screens and movies associated
+            with it
+          </p>
+        }
       />
     </>
   );

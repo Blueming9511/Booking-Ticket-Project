@@ -6,8 +6,11 @@ const ModalSeatAdd = ({ visible, initialValues = {}, onCancel, onSuccess, cinema
   const [form] = Form.useForm();
 
   const handleFinish = (values) => {
-    console.log('New seat values:', values);
-    onSuccess(values); // Trả dữ liệu về component cha để xử lý
+    const updatedValues = {
+      ...values,
+      multiplier: values.type === 'VIP' ? 1.5 : values.type === 'COUPLE' ? 2.2 : 1,
+    }
+    onSuccess(updatedValues);
     form.resetFields();
   };
 

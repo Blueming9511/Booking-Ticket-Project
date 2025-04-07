@@ -23,7 +23,7 @@ public class SeatService implements  IService<Seat, String>{
 
     @Override
     public Seat add(Seat entity) {
-        entity.setSeatCode(codeGenerator.generateSeatCode(entity.getScreenCode(), entity.getCinemaCode()));
+        entity.setSeatCode(codeGenerator.generateSeatCode(entity.getScreenCode(), entity.getCinemaCode(), entity.getRow()));
         return seatRepository.save(entity);
     }
 
@@ -39,9 +39,7 @@ public class SeatService implements  IService<Seat, String>{
 
     @Override
     public List<Seat> findAll() {
-        List<Seat> seats = seatRepository.findAll();
-        seats.forEach(seat -> seat.setStatus(Seat.SeatStatus.valueOf("AVAILABLE")));
-        return seatRepository.saveAll(seats);
+        return seatRepository.findAll();
     }
 
     @Override
@@ -69,7 +67,7 @@ public class SeatService implements  IService<Seat, String>{
     }
 
     public List<Seat> addAll(List<Seat> seats) {
-        seats.forEach(seat -> seat.setSeatCode(codeGenerator.generateSeatCode(seat.getScreenCode(), seat.getCinemaCode())));
+        seats.forEach(seat -> seat.setSeatCode(codeGenerator.generateSeatCode(seat.getScreenCode(), seat.getCinemaCode(), seat.getRow())));
         return seatRepository.saveAll(seats);
     }
 

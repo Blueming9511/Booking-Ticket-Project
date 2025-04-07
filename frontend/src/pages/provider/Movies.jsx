@@ -110,6 +110,9 @@ const Movies = () => {
       {contextHolder}
       <Card
         title={<span className="text-xl font-bold">Movie Management</span>}
+        borderless
+        style={{boxShadow: "none"}}
+        styles={{header: {borderBottom: "none"}}}
         extra={
           <Space>
             <Input

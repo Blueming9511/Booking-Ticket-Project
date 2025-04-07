@@ -9,8 +9,7 @@ const ScreenTable = ({ data, onEdit, onDelete, loading, cinemas }) => {
         dataSource={data}
         pagination={{
           pageSize: 5,
-          showSizeChanger: true,
-          pageSizeOptions: ["5", "10", "20", "50"],
+          responsive: true,
         }}
         rowClassName={(record) => {
           if (record.status === "Closed") return "bg-red-50 hover:bg-red-100";
@@ -20,7 +19,8 @@ const ScreenTable = ({ data, onEdit, onDelete, loading, cinemas }) => {
             return "bg-gray-50 hover:bg-gray-100";
           return "hover:bg-blue-50";
         }}
-        scroll={{ x: 1000 }}
+        scroll={{ x: true }}
+        size="middle"
         rowKey="key"
         loading={loading}
       />

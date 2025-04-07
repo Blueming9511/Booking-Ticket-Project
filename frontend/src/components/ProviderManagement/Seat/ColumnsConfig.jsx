@@ -1,10 +1,19 @@
-
 import { Avatar, Tooltip, Progress, Dropdown, Button } from "antd";
-import { EditOutlined, DeleteOutlined, SyncOutlined, EllipsisOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  SyncOutlined,
+  EllipsisOutlined,
+} from "@ant-design/icons";
 import TagStatus from "../../ui/Tag/TagStatus";
 import TagType from "../../ui/Tag/TagType";
 
-export const columns = (handleEdit, handleDelete, cinemas=[], screens=[]) => [
+export const columns = (
+  handleEdit,
+  handleDelete,
+  cinemas = [],
+  screens = []
+) => [
   {
     title: "Seat Info",
     key: "info",
@@ -31,11 +40,16 @@ export const columns = (handleEdit, handleDelete, cinemas=[], screens=[]) => [
           {record.row}
         </Avatar>
         <div>
-          <div className="font-bold text-base text-blue-600">#{record.seatCode}</div>
-          <div className="text-gray-500 text-xs">Seat {record.number} - Row {record.row}</div>
+          <div className="font-bold text-base text-blue-600">
+            #{record.seatCode}
+          </div>
+          <div className="text-gray-500 text-xs">
+            Seat {record.number} - Row {record.row}
+          </div>
         </div>
       </div>
     ),
+    sorter: (a, b) => a.seatCode.localeCompare(b.seatCode),
     width: 180,
   },
   {
@@ -44,10 +58,9 @@ export const columns = (handleEdit, handleDelete, cinemas=[], screens=[]) => [
     key: "type",
     render: (type) => <TagType type={type} />,
     filters: [
-      { text: "Standard", value: "Standard" },
+      { text: "Standard", value: "STANDARD" },
       { text: "VIP", value: "VIP" },
-      { text: "Couple", value: "Couple" },
-      { text: "Disabled", value: "Disabled" },
+      { text: "Couple", value: "COUPLE" },
     ],
     onFilter: (value, record) => record.type === value,
     width: 120,
@@ -68,6 +81,9 @@ export const columns = (handleEdit, handleDelete, cinemas=[], screens=[]) => [
                 ? "#faad14"
                 : "#52c41a"
           }
+          size={"small"}
+          strokeWidth={8}
+          style={{ width: "75%" }}
         />
       </Tooltip>
     ),
@@ -77,12 +93,19 @@ export const columns = (handleEdit, handleDelete, cinemas=[], screens=[]) => [
   {
     title: "Location",
     key: "location",
-    render: (_, record) => (
-      <div className="flex flex-col">
-        <span className="font-medium text-base">{record.room}</span>
-        <span className="text-gray-500 text-xs">{record.cinema}</span>
-      </div>
-    ),
+    render: (_, record) => {
+      const cinema = cinemas[record.cinemaCode];
+      const screen = screens[record.cinemaCode]?.find(
+        (s) => s.value === record.screenCode
+      );
+      console.log(screen);
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium text-sm">{cinema}</span>
+          <span className="text-gray-500 text-xs">{screen?.label}</span>
+        </div>
+      );
+    },
     width: 200,
   },
   {
@@ -93,8 +116,7 @@ export const columns = (handleEdit, handleDelete, cinemas=[], screens=[]) => [
     filters: [
       { text: "Available", value: "AVAILABLE" },
       { text: "Booked", value: "BOOKED" },
-      { text: "Maintenance", value: "MAINTAINED" },
-      { text: "Reserved", value: "RESERVED" },
+      { text: "Maintenance", value: "MAINTAINANCE" },
     ],
     onFilter: (value, record) => record.status === value,
     width: 100,

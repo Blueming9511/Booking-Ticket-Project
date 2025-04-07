@@ -12,13 +12,18 @@ const TagStatus = ({ status, config, showText = true, size = "default" }) => {
   // Config mặc định
   const defaultConfig = {
     ACTIVE: { icon: <CheckCircleOutlined />, color: "success", text: "Active" },
-    Available: {
+    AVAILABLE: {
       icon: <CheckCircleOutlined />,
       color: "success",
       text: "Available",
     },
     BOOKED: { icon: <CloseCircleOutlined />, color: "error", text: "Booked" },
-    Maintenance: {
+    MAINTENANCE: {
+      icon: <ExclamationCircleOutlined />,
+      color: "warning",
+      text: "Maintenance",
+    },
+    MAINTAINED: {
       icon: <ExclamationCircleOutlined />,
       color: "warning",
       text: "Maintenance",
@@ -34,10 +39,20 @@ const TagStatus = ({ status, config, showText = true, size = "default" }) => {
       color: "warning",
       text: "Renovating",
     },
-    Inactive: {
+    INACTIVE: {
       icon: <CloseCircleOutlined />,
       color: "default",
       text: "Inactive",
+    },
+    OPEN: {
+      icon: <CheckCircleOutlined />,
+      color: "success",
+      text: "Open",
+    },
+    UNDER_MAINTENANCE: {
+      icon: <ExclamationCircleOutlined />,
+      color: "warning",
+      text: "Under Maintenance",
     },
   };
 

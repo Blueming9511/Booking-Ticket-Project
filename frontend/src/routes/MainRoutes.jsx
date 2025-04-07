@@ -4,6 +4,7 @@ import UserProfile from '../pages/user/UserProfile'
 import Layout from '../components/layouts/Layout'
 import HomePage from '../pages/user/HomePage'
 import ErrorPage from '../pages/user/ErrorPage'
+import BookingPage from '../pages/user/BookingPage'
 
 const MainRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const MainRoutes = () => {
       {/* Protected Routes (Wrapped inside Layout) */}
       <Route path='/' element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path='/booking' element={<BookingPage />} />
         <Route path='/user' element={<UserProfile />} />
         <Route path='/*' element={<ErrorPage />} />
       </Route>
