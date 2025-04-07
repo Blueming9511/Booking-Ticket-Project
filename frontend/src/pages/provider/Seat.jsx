@@ -142,6 +142,11 @@ const Seat = () => {
         url: "http://localhost:8080/api/seats",
         data: values,
       },
+      addAll: {
+        method: "post",
+        url: "http://localhost:8080/api/seats/all",
+        data: values,
+      },
       edit: {
         method: "put",
         url: `http://localhost:8080/api/seats/${state.selectedSeat?.id}`,
@@ -203,12 +208,6 @@ const Seat = () => {
               allowClear
               disabled={!filters.cinema || loading}
             />
-            <Input.Search
-              placeholder="Search seats..."
-              onSearch={(v) => handleFilterChange("search", v)}
-              style={{ width: 250 }}
-              disabled={loading}
-            />
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -234,8 +233,14 @@ const Seat = () => {
 
       <ModalSeatAdd
         visible={modals.add}
-        onCancel={() => toggleModal("add", false)}
-        onSuccess={(values) => handleSubmit("add", values)}
+        onCancel={() => {
+          toggleModal("add", false);
+          toggleModal("addAll", false);
+        }}
+        onSuccess={(values) => {
+          if (values.length > 1) handleSubmit("addAll", values);
+          else handleSubmit("add", values[0]);
+        }}
         cinemas={state.cinemas}
         rooms={state.rooms}
         loading={loading}

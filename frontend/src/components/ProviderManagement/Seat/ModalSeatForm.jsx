@@ -3,19 +3,25 @@ import { Form, Input, Select, Row, Col } from "antd";
 
 const { Option } = Select;
 
-const ModalSeatForm = ({ form, onFinish, initialValues, cinemas, rooms }) => {
+const ModalSeatForm = ({
+  form,
+  onFinish,
+  initialValues,
+  cinemas,
+  rooms,
+  isEdit,
+}) => {
   const typeOptions = [
-    { value: "Standard", label: "STANDARD" },
+    { value: "STANDARD", label: "Standard" },
     { value: "VIP", label: "VIP" },
-    { value: "Couple", label: "COUPLE" },
+    { value: "COU", label: "Couple" },
   ];
 
   const statusOptions = [
-    { value: "AVAILABLE", label: "AVAILABLE" },
-    { value: "BOOKED", label: "BOOKED" },
-    { value: "MAINTAINED", label: "MAINTAINANCE" },
+    { value: "AVAILABLE", label: "Available" },
+    { value: "BOOKED", label: "Booked" },
+    { value: "MAINTAINED", label: "Maintenance" },
   ];
-
 
   const getRoomsForCinema = (cinemaId) => {
     console.log(rooms[cinemaId]);
@@ -25,6 +31,7 @@ const ModalSeatForm = ({ form, onFinish, initialValues, cinemas, rooms }) => {
   const cinemaOptions = cinemas;
   const [cinemaId, setCinemaId] = useState(null);
   const [roomOptions, setRooms] = useState([]);
+
 
   const handleCinemaChange = (value) => {
     setCinemaId(value);
@@ -58,18 +65,8 @@ const ModalSeatForm = ({ form, onFinish, initialValues, cinemas, rooms }) => {
             </Select>
           </Form.Item>
 
-          <Form.Item
-            name="number"
-            label="Seat Number"
-            rules={[
-              { required: true, message: "Please input seat number!" },
-              {
-                pattern: /^\d{2}$/,
-                message: "Number must be 2 digits (e.g., 01)",
-              },
-            ]}
-          >
-            <Input placeholder="e.g. 01" />
+          <Form.Item name="number" label="Seat Number">
+            <Input placeholder="This is auto generated" disabled={!isEdit} />
           </Form.Item>
 
           <Form.Item
@@ -104,20 +101,58 @@ const ModalSeatForm = ({ form, onFinish, initialValues, cinemas, rooms }) => {
               })}
             </Select>
           </Form.Item>
-
-          <Form.Item
-            name="row"
-            label="Row"
-            rules={[
-              { required: true, message: "Please input row!" },
-              {
-                pattern: /^[A-Z]$/,
-                message: "Row must be a single uppercase letter (e.g., A)",
-              },
-            ]}
-          >
-            <Input placeholder="e.g. A" />
-          </Form.Item>
+          {isEdit ? (
+            <Form.Item
+              name="row"
+              label="Row"
+              rules={[
+                { required: true, message: "Please input row!" },
+                {
+                  pattern: /^[A-Z]$/,
+                  message: "Row must be a single uppercase letter (e.g., A)",
+                },
+              ]}
+            >
+              <Input placeholder="e.g. A" />
+            </Form.Item>
+          ) : (
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="row"
+                  label="Row"
+                  rules={[
+                    { required: true, message: "Please input row!" },
+                    {
+                      pattern: /^[A-Z]$/,
+                      message:
+                        "Row must be a single uppercase letter (e.g., A)",
+                    },
+                  ]}
+                >
+                  <Input placeholder="e.g. A" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="numbers"
+                  label="N. of Seats"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input number of seats!",
+                    },
+                    {
+                      pattern: /^[0-9]+$/,
+                      message: "Number of seats must be a number",
+                    },
+                  ]}
+                >
+                  <Input placeholder="e.g. 10" min={1} defaultValue={1} />
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
 
           <Form.Item
             name="status"

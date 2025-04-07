@@ -1,16 +1,32 @@
-import React from 'react';
-import { Modal, Button, Form } from 'antd';
-import ModalSeatForm from './ModalSeatForm';
+import React from "react";
+import { Modal, Button, Form } from "antd";
+import ModalSeatForm from "./ModalSeatForm";
 
-const ModalSeatAdd = ({ visible, initialValues = {}, onCancel, onSuccess, cinemas=[], rooms=[] }) => {
+const ModalSeatAdd = ({
+  visible,
+  initialValues = {},
+  onCancel,
+  onSuccess,
+  cinemas = [],
+  rooms = [],
+}) => {
   const [form] = Form.useForm();
 
   const handleFinish = (values) => {
-    const updatedValues = {
-      ...values,
-      multiplier: values.type === 'VIP' ? 1.5 : values.type === 'COUPLE' ? 2.2 : 1,
+    const { numbers, type, row, screenCode, cinemaCode, status } = values;
+    let datas = [];
+    for (let i = 0; i < numbers; i++) {
+      datas.push({
+        type,
+        row,
+        screenCode,
+        cinemaCode,
+        status,
+        multiplier:
+          values.type === "VIP" ? 1.5 : values.type === "COUPLE" ? 2.2 : 1,
+      });
     }
-    onSuccess(updatedValues);
+    onSuccess(datas);
     form.resetFields();
   };
 
@@ -28,7 +44,13 @@ const ModalSeatAdd = ({ visible, initialValues = {}, onCancel, onSuccess, cinema
         </Button>,
       ]}
     >
-      <ModalSeatForm form={form} onFinish={handleFinish} initialValues={initialValues} cinemas={cinemas} rooms={rooms} />
+      <ModalSeatForm
+        form={form}
+        onFinish={handleFinish}
+        initialValues={initialValues}
+        cinemas={cinemas}
+        rooms={rooms}
+      />
     </Modal>
   );
 };
