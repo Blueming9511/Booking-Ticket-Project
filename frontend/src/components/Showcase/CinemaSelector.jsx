@@ -1,63 +1,72 @@
-import React, { useState } from 'react'
-import { Tooltip } from 'antd' // Import Tooltip from Ant Design
-import cgv from '../../assets/Cinemas_Logo/CGV.jpg'
+// src/components/CinemaSelector/CinemaSelector.js
+import React from 'react';
+import { Tooltip } from 'antd';
+import cgvLogo from '../../assets/Cinemas_Logo/CGV.jpg'; // Use a specific name
+// Import other logos if you have them
+// import lotteLogo from '../../assets/Cinemas_Logo/Lotte.png';
+// import galaxyLogo from '../../assets/Cinemas_Logo/Galaxy.png';
 
-// JSON data for cinemas
-const cinemas = [
-  { id: 'all', name: 'Tất cả', logo: cgv, highlight: true },
-  { id: 'cgv', name: 'CGV', logo: cgv },
-  { id: 'lotte', name: 'Lotte Cinema', logo: cgv },
-  { id: 'galaxy', name: 'Galaxy Cinema', logo: cgv },
-  { id: 'bhd', name: 'BHD Star', logo: cgv },
-  { id: 'beta', name: 'Beta Cinemas', logo: cgv },
-  { id: 'cinestar', name: 'Cinestar', logo: cgv },
-  { id: 'mega', name: 'Mega GS', logo: cgv },
-  { id: 'dcine', name: 'DCINE', logo: cgv }
-]
+// Data for Cinema BRANDS
+const cinemaBrands = [
+  { id: 'all', name: 'Tất cả', logo: cgvLogo }, // Use a generic logo or specific ones
+  { id: 'cgv', name: 'CGV', logo: cgvLogo },
+  { id: 'lotte', name: 'Lotte Cinema', logo: cgvLogo }, // Replace with lotteLogo
+  { id: 'galaxy', name: 'Galaxy Cinema', logo: cgvLogo }, // Replace with galaxyLogo
+  // Add other brands as needed
+  // { id: 'bhd', name: 'BHD Star', logo: bhdLogo },
+];
 
-const CinemaSelector = () => {
-  const [selectedCinema, setSelectedCinema] = useState('all')
+// Function to truncate text (can be moved to utils)
+const truncateText = (text, maxLength) => {
+  if (!text) return '';
+  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+};
 
-  // Function to truncate text
-  const truncateText = (text, maxLength) => {
-    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text
-  }
+const CinemaSelector = ({ selectedBrand, onBrandChange }) => { // Accept props
 
-  // Handle selection
-  const handleSelect = cinemaId => {
-    setSelectedCinema(cinemaId)
-  }
+  // Handle selection - call the function passed via props
+  const handleSelect = brandId => {
+    onBrandChange(brandId);
+  };
 
   return (
-    <div className='flex gap-5 overflow-x-auto justify-center sm:justify-start'>
-      {cinemas.map(cinema => (
-        <Tooltip key={cinema.id} title={cinema.name} className='flex flex-col justify-center items-center'>
-          <button
-            className={`cursor-pointer p-2 rounded-lg border transition-all duration-300
-            ${
-              selectedCinema === cinema.id
-                ? 'border-blue-800  shadow-md'
-                : 'border-gray-300'
-            }`}
-            onClick={() => handleSelect(cinema.id)}
-          >
-            <img
-              src={cinema.logo}
-              alt={cinema.name}
-              className=' sm:w-10 sm:h-10 object-contain'
-            />
-          </button>
-          <span
-            className={`text-[10px] sm:text-xs font-bold mt-1 ${
-              selectedCinema === cinema.id ? 'text-blue-800' : 'text-gray-500'
-            }`}
-          >
-            {truncateText(cinema.name, 8)}
-          </span>
+    // Added pb-2 for bottom padding to prevent scrollbar overlap
+    <div className='flex gap-4 overflow-x-auto justify-start px-1 pb-2 cinema-brand-selector'>
+      {cinemaBrands.map(brand => (
+        <Tooltip key={brand.id} title={brand.name}>
+          <div className='flex flex-col justify-start items-center flex-shrink-0 w-[60px]'> {/* Fixed width container */}
+            <button
+              className={`cursor-pointer w-[50px] h-[50px] flex justify-center items-center p-1 rounded-lg border-2 transition-all duration-300
+              ${
+                selectedBrand === brand.id // Use prop for selected state
+                  ? 'border-primary shadow-md' // Use primary color variable from Tailwind
+                  : 'border-gray-300 hover:border-gray-400'
+              }`}
+              onClick={() => handleSelect(brand.id)} // Use handler
+              aria-pressed={selectedBrand === brand.id} // Accessibility
+              aria-label={`Select ${brand.name}`}
+            >
+              <img
+                src={brand.logo}
+                alt={`${brand.name} logo`}
+                className='w-full h-full object-contain rounded' // Adjusted image style
+              />
+            </button>
+            <span
+              className={`text-[10px] text-center w-full font-medium mt-1 transition-colors duration-300 ${
+                selectedBrand === brand.id // Use prop for selected state
+                  ? 'text-primary font-semibold'
+                  : 'text-gray-600'
+              }`}
+            >
+              {/* Truncate if name is too long for the fixed width */}
+              {truncateText(brand.name, 8)}
+            </span>
+          </div>
         </Tooltip>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default CinemaSelector
+export default CinemaSelector;

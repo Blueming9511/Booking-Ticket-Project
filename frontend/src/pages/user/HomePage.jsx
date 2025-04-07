@@ -8,7 +8,7 @@ const HomePage = () => {
       <SliderComponent />
 
       <div className='  pb-10'>
-        <div className='text-center m-5 font-extrabold  text-3xl text-white'>
+        <div className='text-center m-5 font-extrabold  text-3xl text-black'>
           UPCOMING
         </div>
 
