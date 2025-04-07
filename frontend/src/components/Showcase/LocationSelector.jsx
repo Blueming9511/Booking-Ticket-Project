@@ -36,14 +36,14 @@ const LocationSelector = () => {
         style={{
           width: 180,
           borderRadius: 8,
-          borderColor: !isNearby ? 'rgb(30, 58, 138)' : 'rgb(156, 163, 175)', // Active if city is selected
-          color: !isNearby ? 'rgb(37, 99, 235)' : 'black', // Text color change
+          borderColor: !isNearby ? 'red' : 'rgb(156, 163, 175)', // Active if city is selected
+          color: !isNearby ? 'red' : 'black', // Text color change
           fontWeight: !isNearby ? 'bold' : 'normal',
           transition: 'all 0.3s ease'
         }}
         suffixIcon={
           <EnvironmentOutlined
-            style={{ color: !isNearby ? 'rgb(37, 99, 235)' : 'gray' }}
+            style={{ color: !isNearby ? 'red' : 'gray' }}
           />
         }
       >
@@ -61,8 +61,8 @@ const LocationSelector = () => {
         style={{
           borderRadius: 8,
           padding: '6px 12px',
-          borderColor: isNearby ? 'rgb(30, 58, 138)' : 'rgb(156, 163, 175)', // Active if Nearby is selected
-          color: isNearby ? 'rgb(37, 99, 235)' : 'black', // Text color change
+          borderColor: isNearby ? 'red' : 'rgb(156, 163, 175)', // Active if Nearby is selected
+          color: isNearby ? 'red' : 'black', // Text color change
           fontWeight: isNearby ? 'bold' : 'normal',
           transition: 'all 0.3s ease'
         }}

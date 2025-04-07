@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 --var{
-  --primary-color: #27548A;
-  --text-primary-color: #123458;
+  --primary-color: rgba(255, 0, 0, 0.782);
+  --text-primary-color: rgba(255, 0, 0, 0.468);
   --background-color: #F1EFEC;
   --white: #F7F7F7; 
   --black: #09122C; 
   
 }
 :root {
-  --primary-color: #27548A;
+  --primary-color: #D84040;;
   --text-primary-color: #123458;
   --secondary-color: #F1EFE;
   --background-color: #F1EFEC;
