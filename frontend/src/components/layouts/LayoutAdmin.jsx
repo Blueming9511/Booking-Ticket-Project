@@ -4,10 +4,9 @@ import { Outlet } from 'react-router-dom'
 import Header from './admin/Header'
 import { DashboardOutlined, BankOutlined, VideoCameraOutlined, UserOutlined } from '@ant-design/icons'
 const adminItems = [
-  { label: "Dashboard", path: "/", icon: <DashboardOutlined /> },
-  { label: "Movies", path: "/movies", icon: <VideoCameraOutlined /> },
-  { label: "Cinemas", path: "/cinemas", icon: <BankOutlined /> },
-  { label: "Users", path: "/users", icon: <UserOutlined /> },
+  {label: "Dashboard", path: "/dashboard", icon: <DashboardOutlined />},
+  {label: "User", path: "/users", icon: <UserOutlined />},
+  {label: "Booking", path: "/bookings", icon: <UserOutlined />},
 ];
 
 const LayoutAdmin = () => {

@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Card, Space, Button, Input, message, Modal, Table, Form } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import UserStatistics from "../../components/AdminManagement/User/UserStatistics";
-import ModalUserForm from "../../components/AdminManagement/User/ModalUserForm";
-import { columns } from "../../components/AdminManagement/User/ColumnsConfig";
+import { Table, Modal, message, Form, Card, Space } from "antd";
 import axios from "axios";
+import BookingStatistics from "../../components/AdminManagement/Booking/BookingStatistics";
+import ModalBookingForm from "../../components/AdminManagement/Booking/ModalBookingForm";
+import { columns } from "../../components/AdminManagement/Booking/ColumnsConfig";
+import Search from "antd/es/transfer/search";
+import { SearchOutlined } from "@ant-design/icons";
+import Showtime from "../provider/Showtime";
 import ModalDelete from "../../components/ui/Modal/ModalDelete";
 
-const { Search } = Input;
-
-const Users = () => {
+const Booking = () => {
   const [state, setState] = useState({
+    bookings: [],
+    seats: [],
     users: [],
+    showtimes: [],
     loading: false,
-    selectedUser: null,
+    selectedBooking: null,
     modalVisible: false,
     modalAction: "add",
     searchQuery: "",
@@ -25,15 +28,22 @@ const Users = () => {
     async (showSuccess = true) => {
       try {
         setState((prev) => ({ ...prev, loading: true }));
-        showSuccess && messageApi.loading("Fetching users...");
+        showSuccess && messageApi.loading("Fetching bookings...");
 
-        const response = await axios.get("http://localhost:8080/api/users", {
-          withCredentials: true,
-        });
-
+        const [bookingDetailsRes, showtimeRes, seatsRes, usersRes] =
+          await Promise.all([
+            await axios.get("http://localhost:8080/api/bookingdetails"),
+            await axios.get("http://localhost:8080/api/showtimes"),
+            await axios.get("http://localhost:8080/api/seats"),
+            await axios.get("http://localhost:8080/api/users"),
+          ]);
+        
         setState((prev) => ({
           ...prev,
-          users: response.data,
+          bookings: bookingDetailsRes.data,
+          showtimes: showtimeRes.data,
+          seats: seatsRes.data,
+          users: usersRes.data,
         }));
 
         showSuccess && messageApi.destroy();
@@ -50,44 +60,41 @@ const Users = () => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   const toggleModal = (action, visible) => {
     setState((prev) => ({
       ...prev,
       modalVisible: visible,
       modalAction: action,
-      selectedUser: action === "edit" && visible ? prev.selectedUser : null,
+      selectedBooking:
+        action === "edit" && visible ? prev.selectedBooking : null,
     }));
     if (!visible) form.resetFields();
   };
 
-  const handleUserAction = async (action, values) => {
+  const handleBookingAction = async (action, values) => {
     const config = {
-      add: {
-        method: "post",
-        url: "http://localhost:8080/api/users",
-        data: values,
-      },
       edit: {
         method: "put",
-        url: `http://localhost:8080/api/users/${state.selectedUser?.id}`,
+        url: `http://localhost:8080/api/bookingdetails/${state.selectedBooking?.id}`,
         data: values,
       },
       delete: {
         method: "delete",
-        url: `http://localhost:8080/api/users/${state.selectedUser?.id}`,
+        url: `http://localhost:8080/api/bookingdetails/${state.selectedBooking?.id}`,
       },
     };
 
     try {
       setState((prev) => ({ ...prev, loading: true }));
+      console.log(state.selectedBooking)
       await axios({ ...config[action], withCredentials: true });
-      messageApi.success(`User ${action}ed successfully`, 2);
+      messageApi.success(`Booking ${action}ed successfully`, 2);
       await fetchData(false);
       toggleModal(action, false);
     } catch (error) {
-      messageApi.error(`Failed to ${action} user`, 2);
+      messageApi.error(`Failed to ${action} booking`, 2);
       console.error(`${action} error:`, error);
     } finally {
       setState((prev) => ({ ...prev, loading: false }));
@@ -95,57 +102,51 @@ const Users = () => {
   };
 
   const handleEdit = (record) => {
-    setState((prev) => ({ ...prev, selectedUser: record }));
+    setState((prev) => ({ ...prev, selectedBooking: record }));
     form.setFieldsValue(record);
     toggleModal("edit", true);
   };
 
   const handleDelete = (id) => {
-    setState((prev) => ({ ...prev, selectedUser: { id } }));
-    handleUserAction("delete");
+    setState((prev) => ({ ...prev, selectedBooking: { id } }));
+    handleBookingAction("delete");
   };
 
   const handleSearch = (value) => {
     setState((prev) => ({ ...prev, searchQuery: value }));
   };
 
-  const filteredUsers = state.users.filter(
-    (user) =>
-      user.username.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(state.searchQuery.toLowerCase())
+  console.log(state.bookings);
+  const filteredBookings = state.bookings?.filter(
+    (booking) =>
+      booking?.bookingCode?.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+      booking.userCode.toLowerCase().includes(state.searchQuery.toLowerCase())
   );
 
   return (
-    <>
+    <div>
       {contextHolder}
       <Card
-        title={<span className="text-xl font-bold">User Management</span>}
+        title={<span className="text-xl font-bold">Booking Management</span>}
         extra={
           <Space>
             <Search
-              placeholder="Search by username or email..."
+              placeholder="Search by booking code or user code..."
               allowClear
               enterButton={<SearchOutlined />}
               onChange={(e) => handleSearch(e.target.value)}
               style={{ width: 300 }}
             />
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => toggleModal("add", true)}
-            >
-              Add User
-            </Button>
           </Space>
         }
         variant="borderless"
         style={{ boxShadow: "none" }}
         styles={{ header: { borderBottom: "none" } }}
       >
-        <UserStatistics data={filteredUsers} />
+        <BookingStatistics data={state.bookings} />
         <Table
-          columns={columns(handleEdit, handleDelete)}
-          dataSource={filteredUsers}
+          columns={columns(handleEdit, handleDelete, state.showtimes, state.seats, state.users)}  
+          dataSource={filteredBookings}
           pagination={{ pageSize: 5, responsive: true }}
           className="rounded-lg"
           rowKey="id"
@@ -156,29 +157,28 @@ const Users = () => {
         />
       </Card>
       <Modal
-        title={state.modalAction === "add" ? "Add User" : "Edit User"}
+        title={state.modalAction === "add" ? "Add Booking" : "Edit Booking"}
         open={state.modalVisible}
         onCancel={() => toggleModal(state.modalAction, false)}
         onOk={() => form.submit()}
-        destroyOnClose
       >
-        <ModalUserForm
+        <ModalBookingForm
           form={form}
-          onFinish={(values) => handleUserAction(state.modalAction, values)}
-          initialValues={state.selectedUser}
+          onFinish={(values) => handleBookingAction(state.modalAction, values)}
+          initialValues={state.selectedBooking}
+          seats = {state.seats}
+          showtimes = {state.showtimes}
+          users = {state.users}
         />
       </Modal>
-
       <ModalDelete
-        visible={!!state.selectedUser}
+        open={state.modalVisible && state.modalAction === "delete"}
         onCancel={() => toggleModal("delete", false)}
-        onSuccess={() => handleUserAction("delete")}
+        onOk={() => handleBookingAction("delete")}
         loading={state.loading}
-        title="Delete User"
-        extra={<p>Are you sure you want to delete this user?</p>}
       />
-    </>
+    </div>
   );
 };
 
-export default Users;
+export default Booking;
