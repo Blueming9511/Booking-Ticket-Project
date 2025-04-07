@@ -83,13 +83,13 @@ const SliderComponent = () => {
               <h2 className='text-6xl font-bold'>{slide.name}</h2>
               <p className='text-lg opacity-90'>{slide.description}</p>
 
-              <Button
+              <button
                 type='default'
                 size='middle'
-                className='bg-blue-500 text-white font-semibold hover:bg-blue-600 transition'
+                className='bg-red-600 px-3 py-1 rounded-2xl flex justify-center items-center shadow-2xl text-white font-semibold hover:bg-red-700 transition'
               >
                 Book Now
-              </Button>
+              </button>
             </div>
           </div>
         ))}
