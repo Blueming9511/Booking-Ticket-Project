@@ -1,0 +1,35 @@
+[
+  {
+    "id": "67f0014853fbfc25eba5d95b",
+    "seatCode": "A05",
+    "number": "D1",
+    "type": "Standard",
+    "row": "D",
+    "screenCode": "SCR002",
+    "cinemaCode": "CIN002",
+    "multiplier": 1.0,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67f0014853fbfc25eba5d95c",
+    "seatCode": "A06",
+    "number": "D2",
+    "type": "Standard",
+    "row": "D",
+    "screenCode": "SCR002",
+    "cinemaCode": "CIN002",
+    "multiplier": 1.0,
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "67f0014853fbfc25eba5d95d",
+    "seatCode": "A07",
+    "number": "D3",
+    "type": "Couple",
+    "row": "D",
+    "screenCode": "SCR002",
+    "cinemaCode": "CIN002",
+    "multiplier": 1.0,
+    "status": "AVAILABLE"
+  }
+]
