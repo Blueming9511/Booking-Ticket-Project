@@ -130,7 +130,7 @@ const PaginatedMovieList = ({ moviesData: initialMoviesData = [], itemsPerPage =
             <Row gutter={[16, 24]} style={{ width: "100%" }}> {/* Increased vertical gutter */}
             {currentMovies.map((movie) => (
                 <Col key={movie.id} xs={12} sm={12} md={8} lg={6}>
-                    <MovieCard movie={movie} />
+                    <MovieCard movie={movie } />
                 </Col>
             ))}
             </Row>

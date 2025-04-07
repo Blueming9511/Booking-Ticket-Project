@@ -1,7 +1,5 @@
 import React from 'react'
 import MovieCarousel from '../../components/Carousel'
-import { Col, Row } from 'antd'
-import MovieCard from '../../components/MovieCard'
 import PaginatedMovieList from '../../components/PaginatedMovieList'
 // Example: src/data/movies.js
 const moviesData = [

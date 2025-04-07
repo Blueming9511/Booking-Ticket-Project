@@ -83,7 +83,7 @@ const MovieCarousel = ({ movies = [] }) => {
         {movies.map(movie => (
           <div key={movie.id} className='outline-none focus:outline-none'>
             {/* Removed px-1 */}
-            <MovieCard movie={movie} />
+            <MovieCard movie={movie} theme='dark'/>
           </div>
         ))}
       </Slider>

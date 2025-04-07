@@ -7,12 +7,14 @@ import ErrorPage from '../pages/user/ErrorPage'
 import BookingPage from '../pages/user/BookingPage'
 import MovieDetails from '../pages/user/MovieDetails'
 import MoviePage from '../pages/user/MoviePage'
+import Register from '../pages/register'
 
 const MainRoutes = () => {
   return (
     <Routes>
       {/* Public Routes (Login Page without Layout) */}
       <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
 
       {/* Protected Routes (Wrapped inside Layout) */}
       <Route path='/' element={<Layout />}>
