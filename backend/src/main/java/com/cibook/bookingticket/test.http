@@ -138,7 +138,7 @@ Content-Type: application/json
 
 
 ### 
-PUT {{baseUrl}}/seats/layout/{{cinemaCodeRef}}/{{screenCode}}
+PUT {{baseUrl}}/seats/layout/{{cinemaCodeRef}}/SCR002
 Content-Type: application/json
 
 {
