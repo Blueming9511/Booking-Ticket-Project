@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Router, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Dashboard from '../pages/admin/Dashboard'
 import Layout_admin from '../components/layouts/LayoutAdmin'
 import Cinemas from '../pages/admin/Cinemas'
@@ -9,7 +9,7 @@ import Users from '../pages/admin/Users'
 const AdminRoutes = () => {
   return (
     <Routes>
-      <Route path='/' element={<LayoutAdmin/>}>
+      <Route path='/' element={<Layout_admin/>}>
         <Route index element={<Dashboard />} />
         <Route path='/cinemas' element={<Cinemas />} />
         <Route path='/movies' element={<Movies />} />

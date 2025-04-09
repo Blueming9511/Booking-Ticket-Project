@@ -1,72 +1,121 @@
-import { Button, Modal, Table } from 'antd'
-import { React, useState } from 'react' // No {} needed for React import
+import { Button, Modal, Spin } from 'antd'
+import React, { useEffect, useState } from 'react'
 import MovieShowtimes from '../../components/MovieShowtimes'
 import ShowingMoviesList from '../../components/ShowingMoviesList'
-
-const movie = {
-  thumbnail:
-    'https://upload.wikimedia.org/wikipedia/vi/9/94/Dune_2_VN_poster.jpg?20240223020023',
-  title: 'Dune: Part Two',
-  genre: ['Sci-Fi', 'Adventure', 'Drama'],
-  releaseYear: 2024,
-  director: 'Denis Villeneuve',
-  rating: 8.7,
-  duration: 166,
-  language: 'English',
-  country: 'USA',
-  budget: 190000000,
-  boxOffice: 700000000,
-  casts: [
-    'Timothée Chalamet',
-    'Zendaya',
-    'Rebecca Ferguson',
-    'Javier Bardem',
-    'Austin Butler'
-  ],
-  releasedBy: 'CGV',
-  releaseDate: '2024-03-01T00:00:00Z',
-  endDate: '2024-06-15T00:00:00Z',
-  status: 'In Theaters',
-  description:
-    'Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the universe, he must prevent a terrible future only he can foresee.',
-  trailer: 'https://www.youtube.com/watch?v=Way9Dexny3w',
-  ageLimit: 'K',
-  showtimes: [
-    {
-      cinema: 'cgv-aeon',
-      room: 'Room E',
-      date: '2025-04-01', // Added date property
-      time: '18:30',
-      seats: {
-        total: 120,
-        types: {
-          Standard: { price: 110000, available: 60 },
-          VIP: { price: 170000, available: 40 },
-          Couple: { price: 260000, available: 20 }
-        },
-        bookedSeats: ['C2', 'C5', 'D6']
-      }
-    },
-    {
-      cinema: 'cgv-ocean-park',
-      room: 'Room F',
-      date: '2025-04-01', // Added date property
-      time: '16:30',
-      seats: {
-        total: 100,
-        types: {
-          Standard: { price: 90000, available: 50 },
-          VIP: { price: 140000, available: 50 }
-        },
-        bookedSeats: ['B4', 'B5', 'C6']
-      }
-    }
-  ]
-}
+import { useParams } from 'react-router-dom'
+import api from '../../utils/api'
 
 export default function MovieDetails () {
-  // handle modal trailer
+  const { movieID } = useParams()
+  const [movieData, setMovieData] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [movieShowtimes, setMovieShowtimes] = useState(null)
+  const [cinemasShowtimes, setCinemasShowtimes] = useState(null)
+  const [allCinemas, setAllCinemas] = useState(null)
+
+
+
+  const fallbackImage =
+    'https://i.pinimg.com/736x/c1/f6/52/c1f6526d8499d10a45e27cee47281996.jpg'
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      setIsLoading(true)
+      try {
+        const response = await api.get(`/movies/code/${movieID}`)
+        setMovieData(response.data)
+      } catch (error) {
+        console.error('Error fetching movies:', error)
+        setError(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    const fetchMovieShowtimes = async () => {
+      setIsLoading(true)
+      try {
+        const response = await api.get(
+          `/showtimes/movie/${movieData.movieCode}`
+        )
+        setMovieShowtimes(response.data)
+      } catch (error) {
+        console.error('Error fetching movies:', error)
+        setError(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    
+    const fetchAllCinemas= async () => {
+      setIsLoading(true)
+      try {
+        const response = await api.get(
+          `/cinemas`
+        )
+        setAllCinemas(response.data)
+      } catch (error) {
+        console.error('Error fetching movies:', error)
+        setError(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+
+
+    if (movieID) {
+      fetchMovies()
+    }
+
+    if(movieData?.movieCode){
+      fetchMovieShowtimes()
+    }
+
+    fetchAllCinemas()
+
+  
+
+  }, [movieID, movieData?.movieCode]) 
+
+
+
+  useEffect(() => {
+    const showtimeCinemaCodes = movieShowtimes?.map(showtime => showtime.cinemaCode);
+    const filteredCinemas = allCinemas?.filter(cinema =>
+      showtimeCinemaCodes?.includes(cinema.cinemaCode)
+    );
+    setCinemasShowtimes(filteredCinemas);
+  }, [movieShowtimes, allCinemas]);
+  
+  console.log("this is cinemas within showtimes :", cinemasShowtimes)
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh'
+        }}
+      >
+        <Spin size='large' />
+      </div>
+    )
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+
+  if (!movieData) {
+    return <div>Movie Not Found</div>
+  }
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -80,51 +129,49 @@ export default function MovieDetails () {
     setIsModalOpen(false)
   }
 
-  // --- State for Expansion ---
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  // --- Configuration for Inline Truncation ---
   const maxLength = 120 // Define max characters before truncating
-  const needsTruncation = movie.description.length > maxLength
+  const needsTruncation = movieData.description?.length > maxLength // add optional chaining
 
-  // --- Determine Text to Display ---
   const textToShow =
     !needsTruncation || isExpanded
-      ? movie.description // Show full text if not needed or expanded
-      : movie.description.substring(0, maxLength) // Show truncated text + ellipsis
+      ? movieData.description
+      : movieData.description?.substring(0, maxLength) + '...' // add optional chaining
 
-  // --- Handler to Toggle Expansion ---
   const toggleExpand = event => {
-    // Prevent click event from bubbling up if this component is nested
     event.stopPropagation()
     setIsExpanded(!isExpanded)
   }
 
-  // Extract YouTube video ID for embed
   const getYouTubeId = url => {
     const regExp =
       /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
-    const match = url.match(regExp)
-    return match && match[2].length === 11 ? match[2] : null
+    const match = url?.match(regExp) // Add optional chaining
+    return match && match[2]?.length === 11 ? match[2] : null // Add optional chaining
   }
 
-  const trailerId = getYouTubeId(movie.trailer)
+  const trailerId = getYouTubeId(movieData.trailer)
 
   return (
     <div className='w-full min-h-screen '>
-      {/* Hero Section with Background */}
       <div className='w-full h-full bg-cover bg-center relative overflow-hidden pt-20 '>
         {/* YouTube Video Background (Embed) */}
-        {trailerId && (
+        {trailerId ? (
           <div className='absolute inset-0 w-full h-full'>
             <iframe
               src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&loop=1&playlist=${trailerId}&controls=0&showinfo=0&rel=0&modestbranding=1`}
               className='w-full h-full scale-[4] md:scale-[1.5]' // Note: scale might cause overflow issues, check carefully
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
               allowFullScreen
-              title={`${movie.title} Trailer`}
+              title={`${movieData.title} Trailer`}
             ></iframe>
           </div>
+        ) : (
+          <div
+            className='absolute inset-0 w-full h-full bg-cover bg-center'
+            style={{
+              backgroundImage: `url(${fallbackImage})`
+            }}
+          ></div>
         )}
 
         {/* Dark Overlay */}
@@ -133,25 +180,25 @@ export default function MovieDetails () {
         {/* Content Layer */}
         <div className='relative z-10 h-full flex items-center py-16 justify-center  '>
           <div className='flex flex-col md:flex-row gap-8 items-center'>
-            {/* Movie Poster */}
+            {/* movieData Poster */}
             <div className='w-[250px] h-full rounded-lg overflow-hidden shadow-xl'>
               {' '}
               {/* Added fixed height/overflow */}
               <img
-                src={movie.thumbnail}
-                alt={movie.title}
+                src={movieData.thumbnail}
+                alt={movieData.title}
                 className='w-full h-full object-cover'
               />
             </div>
 
-            {/* Movie Info */}
+            {/* movieData Info */}
             <div className='text-white max-w-2xl flex flex-col gap-3 mx-3'>
               <div>
-                <h1 className='text-4xl font-bold mb-2'>{movie.title} </h1>
+                <h1 className='text-4xl font-bold mb-2'>{movieData.title} </h1>
                 <div className='flex gap-2 opacity-70'>
-                  <div>{movie.releaseDate.split('-')[0]}</div>
+                  <div>{movieData.releaseDate.split('-')[0]}</div>
                   &#183;
-                  <div>{movie.duration} minutes</div>
+                  <div>{movieData.duration} minutes</div>
                 </div>
               </div>
               <div className='flex gap-2 font-bold'>
@@ -161,7 +208,7 @@ export default function MovieDetails () {
                 >
                   IMDb
                 </div>{' '}
-                {movie.rating}
+                {movieData.rating}
               </div>
 
               {/* --- Description with INLINE Read More/Show Less --- */}
@@ -185,26 +232,26 @@ export default function MovieDetails () {
                 )}
               </p>
 
-              {/* movie information */}
+              {/* movieData information */}
               <div className='flex gap-3'>
                 <div>
                   <div className='opacity-70 text-sm'>Release Date</div>
-                  {movie.releaseDate.split('T')[0]}
+                  {movieData.releaseDate.split('T')[0]}
                 </div>
                 <div>
                   <div className='opacity-70 text-sm'>Language</div>
-                  <div>{movie.language}</div>
+                  <div>{movieData.language}</div>
                 </div>
                 <div>
                   <div className='opacity-70 text-sm'>Categories</div>
                   <div>
                     {' '}
-                    {movie.genre.map((genre, index) => (
+                    {movieData.genre.map((genre, index) => (
                       <span key={index} className='py-1 text-sm'>
                         {' '}
                         {/* Removed rounded-full for simpler inline look */}
                         {genre}
-                        {index < movie.genre.length - 1 && ','}{' '}
+                        {index < movieData.genre.length - 1 && ','}{' '}
                         {/* Add separator */}
                       </span>
                     ))}
@@ -227,7 +274,7 @@ export default function MovieDetails () {
                 </Button>
                 <Modal
                   // --- Content & Appearance ---
-                  title={`${movie.title} Trailer`} // 1. Use a specific, dynamic title
+                  title={`${movieData.title} Trailer`} // 1. Use a specific, dynamic title
                   centered // 2. Vertically center the modal on the screen
                   open={isModalOpen}
                   onCancel={handleCancel} // Close on clicking 'X' or outside
@@ -250,7 +297,7 @@ export default function MovieDetails () {
                       // Alternative inline style: style={{ width: '100%', aspectRatio: '16 / 9' }}
                       allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                       allowFullScreen
-                      title={`${movie.title} Trailer`} // Keep title for accessibility
+                      title={`${movieData.title} Trailer`} // Keep title for accessibility
                     ></iframe>
                   ) : (
                     // 9. Provide fallback content if trailer isn't available
@@ -266,12 +313,10 @@ export default function MovieDetails () {
       </div>
 
       <div className='flex flex-wrap md:flex-row justify-center items-start gap-8 md:mx-20'>
-        {/* Optional: Add width constraints if needed */}
         <div className='flex-shrink-0 w-full md:w-auto'>
-          <MovieShowtimes />
+          <MovieShowtimes movieData={movieData} showtimesData={movieShowtimes} CinemasData={cinemasShowtimes}/>
         </div>
         <div className='flex-shrink-0 w-full md:w-auto'>
-          {' '}
           <ShowingMoviesList />
         </div>
       </div>

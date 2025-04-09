@@ -1,356 +1,540 @@
-// src/components/BookingModal/BookingModal.js
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
-import { Modal, Button, Divider, message, Tag } from 'antd'; // Added message, Tag
-import { CloseCircleFilled } from '@ant-design/icons';
-import { getAgeLimitColor, getEndTime, formatPrice } from '../../utils/dateUtils'; // Import helpers
-import PaymentModal from '../PaymentModal'; // <-- 1. Import PaymentModal (Adjust path if needed)
+import React, { useState, useEffect, useMemo } from 'react'
+import PropTypes from 'prop-types'
+import { Modal, Button, Divider, message, Tag, Spin, Alert } from 'antd'
+import { getAgeLimitColor, formatPrice } from '../../utils/dateUtils'
+import PaymentModal from '../PaymentModal' // Adjust path if needed
+import api from '../../utils/api'
 
-// --- Helper Functions (Moved outside component for better practice) ---
-const generateSeatGrid = (totalSeats, columns, startRow = 0) => {
-  const seatGrid = [];
-  let rowIndex = startRow;
-  if (totalSeats <= 0 || columns <= 0) return []; // Guard
-  for (let i = 0; i < totalSeats; i++) {
-    const rowLabel = String.fromCharCode(65 + rowIndex);
-    const seatLabel = `${rowLabel}${(i % columns) + 1}`;
-    seatGrid.push(seatLabel);
-    if ((i + 1) % columns === 0) rowIndex++;
-  }
-  return seatGrid;
-};
+// @Data
+// @Document(collection = "booking_details")
+// public class BookingDetail {
+//     @Id
+//     private String id;
 
-const generateCoupleSeatGrid = totalSeats => {
-  if (!totalSeats || totalSeats <= 0) return [];
-  return Array.from(
-    { length: totalSeats },
-    (_, i) => `CP${(i + 1).toString().padStart(2, '0')}`
-  );
-};
-// --- End Helper Functions ---
+//     @Indexed(unique = true)
+//     private String bookingDetailCode;
 
+//     @DBRef
+//     private User user;
 
+//     @DBRef
+//     private Showtime showTime;
+
+//     @DBRef
+//     private List<Seat> seats;
+
+//     private double subTotal;
+//     private double discountAmount;
+//     private double taxAmount;
+//     private double totalAmount;
+
+//     @DBRef
+//     private Coupon coupon;
+
+//     @DBRef
+//     private Payment payment;
+
+//     @DBRef
+//     private Booking booking;
+
+//     @Indexed
+//     private BookingStatus status;
+
+//     public enum BookingStatus {
+//         PENDING, CONFIRMED, CANCELLED, COMPLETED
+//     }
+// }
+
+// --- Component ---
 const BookingModal = ({ visible, onClose, showtime }) => {
-  const [selectedSeats, setSelectedSeats] = useState([]);
-  // --- 2. Add state for Payment Modal ---
-  const [paymentModalVisible, setPaymentModalVisible] = useState(false);
-  const [currentBookingDetails, setCurrentBookingDetails] = useState(null);
-  // ------------------------------------
+  // --- State ---
+  const [screenLayout, setScreenLayout] = useState([])
+  const [selectedSeats, setSelectedSeats] = useState([])
+  const [isLoadingLayout, setIsLoadingLayout] = useState(false)
+  const [errorLayout, setErrorLayout] = useState(null)
+  const [paymentModalVisible, setPaymentModalVisible] = useState(false)
+  const [currentBookingDetails, setCurrentBookingDetails] = useState(null)
+  // --- End State ---
 
-  useEffect(() => {
-    // Reset state when modal becomes visible to ensure clean state
-    // and when the underlying showtime data changes
-    if (visible) {
-        setSelectedSeats([]);
-        setCurrentBookingDetails(null);
-        setPaymentModalVisible(false);
-    }
-  }, [visible, showtime]); // Depend on visibility and showtime change
+  console.log(selectedSeats)
 
-  // --- Guards and Safe Data Access ---
-  if (!visible || !showtime) return null; // Guard if not visible or no showtime
-
-  // Safely destructure showtime, providing defaults
+  // --- Derived Data ---
   const {
-    seats = {}, // Default seats to {}
     movieTitle = 'N/A',
-    time = 'N/A',
-    room = 'N/A',
+    startTime = 'N/A',
+    endTime = 'N/A',
+    screenCode = 'N/A',
     ageLimit = 'N/A',
     duration = 0,
     date = '',
-    cinemaId = null, // Expect cinemaId or similar identifier
-    id: showtimeId = null // Expect showtimeId
-  } = showtime;
+    cinemaCode = null,
+    cinemaId = null,
+    cinemaName = 'N/A',
+    showtimeCode = null,
+    price: basePrice = 0
+  } = showtime || {}
 
-  const bookedSeats = seats.bookedSeats || [];
-  const standardSeatsData = seats.types?.Standard || { available: 0, price: 0 };
-  const vipSeatsData = seats.types?.VIP || { available: 0, price: 0 };
-  const coupleSeatsData = seats.types?.Couple || { available: 0, price: 0 };
+  // --- Effects ---
+  // Fetch Layout
+  useEffect(() => {
+    if (
+      visible &&
+      cinemaCode &&
+      screenCode &&
+      cinemaCode !== 'N/A' &&
+      screenCode !== 'N/A'
+    ) {
+      const fetchLayout = async () => {
+        setIsLoadingLayout(true)
+        setErrorLayout(null)
+        setScreenLayout([])
+        try {
+          const response = await api.get(`/seats/${cinemaCode}/${screenCode}`)
+          setScreenLayout(Array.isArray(response.data) ? response.data : [])
+          console.log('Fetched screen layout with status: ', response.data)
+        } catch (error) {
+          console.error('Error fetching screen layout:', error)
+          setErrorLayout('Could not load screen layout. Please try again.')
+          setScreenLayout([])
+        } finally {
+          setIsLoadingLayout(false)
+        }
+      }
+      fetchLayout()
+    } else if (!visible) {
+      setScreenLayout([])
+      setErrorLayout(null)
+    }
+  }, [visible, cinemaCode, screenCode])
 
-  const totalStandardVIP = (standardSeatsData.available || 0) + (vipSeatsData.available || 0);
-  const gridColumns = totalStandardVIP > 100 ? 20 : (totalStandardVIP > 0 ? 10 : 1);
+  // Reset Selection
+  useEffect(() => {
+    if (visible) {
+      setSelectedSeats([])
+      setCurrentBookingDetails(null)
+      setPaymentModalVisible(false)
+    }
+  }, [visible, showtimeCode])
 
-  const seatGrid = generateSeatGrid(totalStandardVIP, gridColumns);
-  const coupleSeatGrid = generateCoupleSeatGrid(coupleSeatsData.available || 0);
-  // --- End Data Prep ---
+  // --- Memoized Calculations ---
+  const seatsByRow = useMemo(() => {
+    /* ... same logic ... */
+    if (!screenLayout || screenLayout.length === 0) return {}
+    return screenLayout.reduce((acc, seat) => {
+      const row = seat.row || 'UNKNOWN'
+      if (!acc[row]) acc[row] = []
+      acc[row].push(seat)
+      acc[row].sort((a, b) => {
+        const numA = parseInt(a.seatCode.match(/\d+$/)?.[0] || '0', 10)
+        const numB = parseInt(b.seatCode.match(/\d+$/)?.[0] || '0', 10)
+        return numA - numB
+      })
+      return acc
+    }, {})
+  }, [screenLayout])
 
-  // --- Component Internal Functions ---
-  const getSeatType = (seatId, isCouple) => {
-    if (isCouple) return 'Couple';
-    const standardCount = standardSeatsData.available || 0;
-    // Simple check based on position relative to standard count
-    return seatGrid.indexOf(seatId) >= standardCount ? 'VIP' : 'Standard';
-  };
+  const sortedRowLabels = useMemo(() => {
+    return Object.keys(seatsByRow).sort((a, b) => {
+      const isANumeric = /^\d+$/.test(a) || a.startsWith('CP')
+      const isBNumeric = /^\d+$/.test(b) || b.startsWith('CP')
+      if (isANumeric && !isBNumeric) return 1
+      if (!isANumeric && isBNumeric) return -1
+      if (a.startsWith('CP') && b.startsWith('CP')) {
+        const numA = parseInt(a.substring(2), 10)
+        const numB = parseInt(b.substring(2), 10)
+        return numA - numB
+      }
+      return a.localeCompare(b)
+    })
+  }, [seatsByRow])
 
-  const handleSeatSelection = seatId => {
-    if (bookedSeats.includes(seatId)) return; // Don't select booked seats
+  const totalPrice = useMemo(
+    () => selectedSeats.reduce((total, seat) => total + (seat.price || 0), 0),
+    [selectedSeats]
+  )
+
+  const displayDate = useMemo(() => {
+    if (!date) return 'N/A'
+    try {
+      const d = new Date(date + 'T00:00:00')
+      return d.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      })
+    } catch (e) {
+      return 'Invalid Date'
+    }
+  }, [date])
+
+  const isLoading = isLoadingLayout
+  const hasError = !!errorLayout
+
+  // --- Event Handlers ---
+  const handleSeatSelection = seat => {
+    // Check status directly from the seat object
+    if (seat.status !== 'AVAILABLE') {
+      message.info(
+        `Seat ${seat.seatCode} is ${
+          seat.status?.toLowerCase() || 'unavailable'
+        }.`,
+        1.5
+      )
+      return
+    }
+
+    const seatCode = seat.seatCode
+
+    // *** CHANGE IS HERE ***
+    // Create the object to store in state. Start with the full 'seat' object.
+    const seatDataForState = {
+      ...seat, // Include all properties from the fetched seat object
+      // Calculate and add price if it's not directly on the seat object from API
+      price: seat.price || basePrice * (seat.multiplier || 1)
+    }
+
+    // Add or remove the full seat object from the selection state
     setSelectedSeats(prev =>
-      prev.includes(seatId) ? prev.filter(s => s !== seatId) : [...prev, seatId]
-    );
-  };
+      // Check if a seat with the same seatCode already exists
+      prev.some(selectedSeat => selectedSeat.seatCode === seatCode)
+        ? // If yes, remove it (deselect)
+          prev.filter(selectedSeat => selectedSeat.seatCode !== seatCode)
+        : // If no, add the new full seat object (select)
+          [...prev, seatDataForState]
+    )
+  }
 
-  const removeSeat = seatId => {
-    setSelectedSeats(prev => prev.filter(s => s !== seatId));
-  };
+  const removeSeat = seatCode =>
+    setSelectedSeats(prev => prev.filter(s => s.seatCode !== seatCode))
 
-  const totalPrice = selectedSeats.reduce((total, seatId) => {
-    const isCouple = coupleSeatGrid.includes(seatId);
-    const seatType = getSeatType(seatId, isCouple);
-    const price = seats.types?.[seatType]?.price || 0; // Safe access price
-    return total + price;
-  }, 0);
+  const handleProceedToPayment = () => {
+    if (selectedSeats.length === 0) {
+      message.warning('Please select at least one seat.')
+      return
+    }
+
+    // console.log('Proceeding to Payment...', selectedSeats, totalPrice);
+
+    const details = {
+      userCode: '67ef3c10b50a606c784293b8',
+      showtimeCode,
+      movieTitle,
+      cinemaName,
+      cinemaId,
+      screenCode,
+      date,
+      startTime,
+      endTime,
+      seats: selectedSeats.map(seat => seat.seatCode),
+      totalPrice,
+      duration
+    }
+    setCurrentBookingDetails(details)
+    setPaymentModalVisible(true)
+  }
+
+  const handleFinalBookingSuccess = paidBookingDetails => {
+    console.log('Payment successful:', paidBookingDetails)
+    message.success('Booking and payment successful!')
+    setPaymentModalVisible(false)
+    onClose()
+  }
 
   // --- Render Seat ---
-  const renderSeat = (seatId, isCouple = false) => {
-    const isBooked = bookedSeats.includes(seatId);
-    const isSelected = selectedSeats.includes(seatId);
-    const seatType = getSeatType(seatId, isCouple);
+  const renderSeat = seat => {
+    // Mostly same logic, ensure fixed sizes for grid predictability
+    const isSelected = selectedSeats.some(s => s.seatCode === seat.seatCode)
+    const seatType = seat.type?.toUpperCase() || 'STANDARD'
+    const seatStatus = seat.status || 'UNAVAILABLE'
+    const isAvailable = seatStatus === 'AVAILABLE'
 
-    // Using the exact style structure from the original code
-     const seatColors = {
-       Standard: { available: 'bg-purple-600 hover:bg-purple-700', selected: 'bg-blue-900 border-2 border-white text-white' },
-       VIP: { available: 'bg-red-600 hover:bg-red-700', selected: 'bg-blue-900 border-2 border-white text-white' },
-       Couple: { available: 'bg-pink-600 hover:bg-pink-700', selected: 'bg-blue-900 border-2 border-white text-white' } // Removed col-span, adjust width below if needed
-     };
+    // Base classes - Adjusted slightly for potentially smaller text/padding if needed
+    const baseClasses = `
+        rounded flex items-center justify-center
+        font-semibold text-[10px] sm:text-xs transition-all duration-150 ease-in-out select-none
+        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 focus:ring-offset-black
+    ` // Added select-none, adjusted focus offset for dark bg
 
-    const colors = seatColors[seatType] || seatColors.Standard;
+    // Size classes - KEEP THESE FIXED for grid layout. Adjust if absolutely necessary for extreme small screens
+    const sizeClasses =
+      seatType === 'COUPLE'
+        ? 'w-[4.2rem] h-7 sm:w-[4.36rem] sm:h-8'
+        : 'w-7 h-7 sm:w-8 sm:h-8' // Slightly smaller base, scale up slightly
 
-    const baseClasses = 'h-10 text-white flex items-center justify-center rounded cursor-pointer text-xs sm:text-sm font-bold transition-colors';
-    // Adjust width based on whether it's a couple seat (maintain original logic)
-    const widthClass = isCouple ? 'w-20' : 'w-10';
-    const stateClasses = isBooked
-      ? 'bg-gray-500 text-gray-300 cursor-not-allowed' // Use gray-500 for booked
-      : isSelected
-      ? colors.selected
-      : colors.available;
+    // State and Type specific classes
+    let stateTypeClasses = ''
+    if (isSelected && isAvailable) {
+      stateTypeClasses =
+        'bg-blue-600 text-white ring-2 ring-offset-1 ring-white scale-105 shadow-md cursor-pointer'
+    } else if (isAvailable) {
+      stateTypeClasses = 'text-white cursor-pointer '
+      switch (seatType) {
+        case 'VIP':
+          stateTypeClasses += 'bg-red-600 hover:bg-red-700'
+          break
+        case 'COUPLE':
+          stateTypeClasses += 'bg-pink-600 hover:bg-pink-700'
+          break
+        case 'STANDARD':
+        default:
+          stateTypeClasses += 'bg-purple-600 hover:bg-purple-700'
+          break
+      }
+      stateTypeClasses += ' hover:scale-105 hover:shadow-sm'
+    } else {
+      // Not available
+      stateTypeClasses =
+        'bg-gray-600 text-gray-400 cursor-not-allowed opacity-60' // Adjusted unavailable style for dark bg
+    }
 
-    // Combine classes carefully with spaces
-    const finalClassName = `${baseClasses} ${widthClass} ${stateClasses}`;
+    const finalClassName = `${baseClasses} ${sizeClasses} ${stateTypeClasses}`
 
     return (
       <div
-        key={seatId}
-        onClick={() => !isBooked && handleSeatSelection(seatId)} // Prevent clicking booked seats
+        key={seat.seatCode}
+        onClick={() => isAvailable && handleSeatSelection(seat)}
         className={finalClassName}
-        aria-disabled={isBooked}
-        role="checkbox"
+        aria-disabled={!isAvailable}
+        role='checkbox'
         aria-checked={isSelected}
+        tabIndex={!isAvailable ? -1 : 0}
+        onKeyPress={e => {
+          if (isAvailable && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault()
+            handleSeatSelection(seat)
+          }
+        }}
       >
-        {seatId}
+        {/* Only show seat code if it fits reasonably */}
+        <span className='truncate px-0.5'>{seat.seatCode}</span>
       </div>
-    );
-  };
+    )
+  }
   // --- End Render Seat ---
 
-  // Format date for display
-  const displayDate = React.useMemo(() => {
-    if (!date) return 'N/A'; // Handle missing date
-    try {
-        const d = new Date(date + 'T00:00:00'); // Ensure consistent time for date part
-        return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-    } catch(e) {
-        console.error("Error parsing date:", date, e);
-        return 'Invalid Date';
-    }
-  }, [date]);
-
-  // --- 3. Handler to Open Payment Modal ---
-  const handleProceedToPayment = () => {
-    if (selectedSeats.length === 0) {
-      message.warning('Please select at least one seat.');
-      return;
-    }
-    const details = {
-      showtimeId,
-      movieTitle,
-      cinemaId, // Pass necessary IDs (make sure they exist in 'showtime')
-      room,
-      date,
-      time,
-      seats: selectedSeats,
-      totalPrice,
-      duration,
-      ageLimit
-      // Add other necessary details...
-    };
-    setCurrentBookingDetails(details); // Set details for payment modal
-    setPaymentModalVisible(true);   // Open payment modal
-  };
-  // -------------------------------------
-
-  // --- 4. Handler for Payment Success ---
-  const handleFinalBookingSuccess = (paidBookingDetails) => {
-    console.log('Payment successful, booking confirmed for:', paidBookingDetails);
-    message.success('Booking and payment successful!'); // Give user feedback
-    setPaymentModalVisible(false); // Close payment modal
-    onClose(); // Close the booking modal
-    // Optionally: Trigger data refresh or navigate to a success page
-    // navigate('/booking-success');
-  };
-  // ------------------------------------
+  // --- Render Logic ---
+  if (!visible) return null
 
   return (
-    <> {/* Use Fragment to hold both modals */}
+    <>
       <Modal
-        // title='Select Your Seats' // Removed title for cleaner look maybe?
         open={visible}
         onCancel={onClose}
-        footer={null} // Custom footer area below
-        width='auto' // Adapts to content
-        // Style remains the same as original example
-        style={{ maxWidth: '90vw', maxHeight: '90vh' }}
-        bodyStyle={{ padding: '15px', overflowY: 'auto' }}
-        centered
-      >
-        {/* Seat Selection Area - Structure remains the same */}
-        <div className='gap-4 p-4 bg-gray-900 text-white rounded-xl w-full flex flex-col justify-center items-center mb-4'>
-          {/* Screen */}
-          <div className='screen flex flex-col justify-center items-center w-full mb-4'>
-            <div className='w-3/4 h-2 bg-white rounded-t-lg shadow-lg shadow-white/30'></div>
-            <span className='text-white text-sm tracking-widest'>SCREEN</span>
+        footer={null}
+        // Responsive Width: Use AntD's default responsive behavior or adjust %
+        width='95%' // Slightly wider % for small screens
+        // Max Width: Limit width on large screens
+        style={{ maxWidth: '850px', top: '2vh' }} // Increased max-width slightly, smaller top margin
+        // Body Styling: Control padding, max-height, and scrolling
+        bodyStyle={{
+          padding: '0', // Remove default padding, apply within sections
+          // Calculate max height considering header AND potential summary footer height
+          maxHeight: 'calc(90vh - 55px - 100px)', // Approx 55px header, 100px summary
+          overflowY: 'auto',
+          backgroundColor: '#1f2937' // Tailwind gray-800 - Apply dark bg to whole scrollable body
+        }}
+        closable={true}
+        destroyOnClose={true}
+        maskClosable={false}
+        // Title: Keep sticky
+        title={
+          <div className='text-lg font-extrabold  py-3 px-4  sticky top-0 z-20'>
+            {' '}
+            {/* Adjusted styling for dark theme */}
+            {movieTitle} - Select Seats
           </div>
-
-          {/* Standard & VIP Seats */}
-          {seatGrid.length > 0 && (
-            <div
-              className='gap-2 justify-center'
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${gridColumns}, minmax(2.2rem, 1fr))`
-              }}
-            >
-              {seatGrid.map(seat => renderSeat(seat, false))}
+        }
+      >
+        {/* Main Content Wrapper within Scrollable Body */}
+        <div className='min-h-full'>
+          {' '}
+          {/* Ensures background covers even if content is short */}
+          {/* Error Display Area */}
+          {hasError && (
+            <div className='p-3 sticky top-0 z-10 bg-gray-800'>
+              {' '}
+              {/* Sticky error below title */}
+              <Alert
+                message='Error Loading Seats'
+                description={errorLayout}
+                type='error'
+                showIcon
+                closable
+                onClose={() => setErrorLayout(null)}
+              />
             </div>
           )}
-
-          {/* Couple Seats Section */}
-          {coupleSeatGrid.length > 0 && (
-             <div className='w-full flex justify-center items-center mt-4'>
-               <div className='flex gap-3 flex-wrap justify-center'>
-                 {coupleSeatGrid.map(seat => renderSeat(seat, true))}
-               </div>
-             </div>
-           )}
-
-          {/* Legend - Structure remains the same */}
-          <div className='w-full px-1 sm:px-3 flex flex-wrap gap-x-3 gap-y-1 justify-center mt-4 text-xs sm:text-sm'>
-            <div className='flex gap-1 items-center'><div className='w-4 h-4 rounded bg-gray-500'></div><span>Booked</span></div>
-            {standardSeatsData.available > 0 && <div className='flex gap-1 items-center'><div className='w-4 h-4 rounded bg-purple-600'></div><span>Standard</span></div>}
-            {vipSeatsData.available > 0 && <div className='flex gap-1 items-center'><div className='w-4 h-4 rounded bg-red-600'></div><span>VIP</span></div>}
-            {coupleSeatsData.available > 0 && <div className='flex gap-1 items-center'><div className='w-4 h-4 rounded bg-pink-600'></div><span>Couple</span></div>}
-            <div className='flex gap-1 items-center'><div className='w-4 h-4 rounded bg-blue-900 border border-white'></div><span>Selected</span></div>
-          </div>
-        </div>
-
-        {/* Booking Summary Area - Structure remains the same */}
-        <div className='mt-4 flex flex-col'>
-          {/* Movie Info */}
-          <div className='flex flex-col sm:flex-row w-full justify-between items-start sm:items-center mb-2'>
-            <div className='flex gap-2 items-center mb-1 sm:mb-0'>
-              <span className={`px-2 py-0.5 text-xs rounded text-white ${getAgeLimitColor(ageLimit)}`}>
-                {ageLimit}
-              </span>
-              <span className='font-bold text-base sm:text-lg'>{movieTitle}</span>
+          {/* Loading Spinner Area */}
+          {isLoading && (
+            <div className='min-h-[300px] flex justify-center items-center '>
+              {' '}
+              {/* Ensure spinner area has height */}
+              <Spin size='large' tip='Loading seat map...' />
             </div>
-            <span className='info flex flex-wrap gap-x-2 text-xs sm:text-sm text-gray-600'>
-              <span>{time} ~ {getEndTime(time, duration)}</span>
-              <span>·</span>
-              <span>{displayDate}</span>
-              <span>·</span>
-              <span>{room}</span>
-            </span>
-          </div>
-          <Divider className="my-2" />
+          )}
+          {/* Seat Selection Area (Only if not loading/error and layout exists) */}
+          {!isLoading && !hasError && screenLayout.length > 0 && (
+            // Use padding on this inner container now
+            <div className='p-3 sm:p-4 flex flex-col items-center'>
+              {/* Screen Indicator - Simplified for dark bg */}
+              <div className='w-2/4  max-w-xs sm:max-w-sm md:max-w-md h-1.5 bg-white rounded-b-full shadow-md shadow-gray-700/50 mb-8 relative'>
+                <span className='absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 font-medium tracking-wider'>
+                  SCREEN
+                </span>
+              </div>
 
-          {/* Selected Seats - Using Ant Design Tag for consistency */}
-           <div className='flex w-full items-start mb-2 min-h-[30px]'>
-             <span className='text-gray-500 text-sm flex-shrink-0 mr-2 pt-0.5'>Selected:</span>
-             <div className='flex gap-1 flex-wrap justify-end flex-grow'> {/* Changed justify-end to justify-start */}
-               {selectedSeats.length === 0 && <span className="text-gray-400 text-sm italic pt-0.5">No seats selected</span>}
-               {selectedSeats.map(seat => (
-                 <Tag
-                     key={seat}
-                     closable
-                     onClose={(e) => { e.preventDefault(); removeSeat(seat); }}
-                     color="red" // Or customize color
-                     style={{ marginRight: 3, marginBottom: 3 }} // Add spacing
-                 >
-                   {seat}
-                 </Tag>
-               ))}
-             </div>
-           </div>
-          <Divider className="my-2" />
+              {/* Seat Grid Container - CRITICAL FOR RESPONSIVENESS */}
+              <div className='flex flex-col items-center gap-1.5 sm:gap-2 w-full max-w-full overflow-x-auto py-2 px-1'>
+                {/* Seat Rows */}
+                {sortedRowLabels.map(rowLabel => (
+                  <div
+                    key={rowLabel}
+                    className='flex items-center gap-2 sm:gap-3 w-auto justify-center flex-nowrap'
+                  >
+                    {/* Row Label - Adjusted color */}
+                    <div className='w-5 sm:w-6 text-center font-medium text-gray-400 text-xs sm:text-sm flex-shrink-0'>
+                      {rowLabel}
+                    </div>
+                    {/* Seats */}
+                    <div className='flex gap-1 sm:gap-1.5 flex-nowrap'>
+                      {seatsByRow[rowLabel].map(seat => renderSeat(seat))}
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-          {/* Total Price & Book Button */}
-          <div className='flex w-full justify-between items-center'>
-            <div className='flex flex-col'>
-              <span className='text-gray-500 text-sm'>Total:</span>
-              {/* Apply red color directly if 'text-primary' doesn't work or is not defined */}
-              <span className='font-bold text-xl sm:text-2xl text-red-600'>
-                {formatPrice(totalPrice)} đ
+              {/* Legend - Adjusted for dark bg */}
+              <div className='flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-2 justify-center mt-6 pt-4 border-t border-gray-300 w-full max-w-lg text-xs text-gray-300'>
+                <div className='flex items-center gap-1.5'>
+                  {' '}
+                  <div className='w-3 h-3 sm:w-4 sm:h-4 rounded bg-purple-600 border border-gray-500'></div>{' '}
+                  <span>Standard</span>{' '}
+                </div>
+                <div className='flex items-center gap-1.5'>
+                  {' '}
+                  <div className='w-3 h-3 sm:w-4 sm:h-4 rounded bg-red-600 border border-gray-500'></div>{' '}
+                  <span>VIP</span>{' '}
+                </div>
+                <div className='flex items-center gap-1.5'>
+                  {' '}
+                  <div className='w-6 h-3 sm:w-8 sm:h-4 rounded bg-pink-600 border border-gray-500'></div>{' '}
+                  <span>Couple</span>{' '}
+                </div>
+                <div className='flex items-center gap-1.5'>
+                  {' '}
+                  <div className='w-3 h-3 sm:w-4 sm:h-4 rounded bg-blue-600 border border-gray-500'></div>{' '}
+                  <span>Selected</span>{' '}
+                </div>
+                <div className='flex items-center gap-1.5'>
+                  {' '}
+                  <div className='w-3 h-3 sm:w-4 sm:h-4 rounded bg-gray-600 border border-gray-500'></div>{' '}
+                  <span>Unavailable</span>{' '}
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Message if layout is empty */}
+          {!isLoading && !hasError && screenLayout.length === 0 && (
+            <div className='p-4 text-center text-gray-400 min-h-[200px] flex items-center justify-center'>
+              Seat map data is unavailable or empty.
+            </div>
+          )}
+        </div>{' '}
+        {/* End Main Content Wrapper */}
+        {!isLoading && !hasError && screenLayout.length > 0 && (
+          <div className='p-3 sm:p-4 border-t bg-[#ffffff]  bottom-0 z-20'>
+            {/* Movie Info */}
+            <div className='flex flex-col sm:flex-row w-full justify-between items-start sm:items-center mb-2 gap-1'>
+              <div className='flex gap-2 items-center flex-shrink-0'>
+                {/* <Tag color={getAgeLimitColor(ageLimit, true)}>
+                  {ageLimit || 'N/A'}
+                </Tag> */}
+                <Tag>{ageLimit || 'N/A'}</Tag>
+                {/* Allow title to potentially wrap, limit lines */}
+                <span className='font-extrabold text-sm sm:text-base line-clamp-2 '>
+                  {movieTitle}
+                </span>
+              </div>
+              {/* Ensure this info wraps or shrinks nicely */}
+              <span className='flex flex-wrap gap-x-2 text-[11px] sm:text-xs text-gray-400 flex-shrink-0 justify-end'>
+                <span>
+                  {startTime} ~ {endTime}
+                </span>{' '}
+                <span className='hidden sm:inline'>·</span>
+                <span>{displayDate}</span>{' '}
+                <span className='hidden sm:inline'>·</span>
+                <span>{screenCode}</span>
               </span>
             </div>
-            <Button
-              type='primary'
-              danger // Use AntD red theme
-              disabled={selectedSeats.length === 0}
-              // --- 5. Update onClick to trigger payment flow ---
-              onClick={handleProceedToPayment}
-              // -------------------------------------------------
-              // Apply explicit red styling for consistency
-              className='!bg-red-600 hover:!bg-red-700 !border-red-600 hover:!border-red-700'
-              style={{
-                padding: '10px 20px', // Maintain original style
-                height: 'auto',
-                fontWeight: 'bold',
-                fontSize: '1rem'
-              }}
-            >
-              Book Ticket{selectedSeats.length > 0 ? ` (${selectedSeats.length})` : ''}
-            </Button>
+            <Divider className=' !bg-gray-50' /> {/* Adjusted Divider color */}
+            {/* Selected Seats - Allow wrapping */}
+            <div className='flex w-full items-start mb-2 min-h-[30px]'>
+              <span className='text-gray-400 text-xs sm:text-sm flex-shrink-0 mr-2 pt-0.5'>
+                Seats:
+              </span>
+              <div className='flex gap-1 flex-wrap justify-end flex-grow'>
+                {selectedSeats.length === 0 ? (
+                  <span className='text-gray-500 text-xs sm:text-sm italic pt-0.5'>
+                    Select available seats above
+                  </span>
+                ) : (
+                  selectedSeats.map(({ seatCode }) => (
+                    <Tag
+                      key={seatCode}
+                      closable
+                      onClose={e => {
+                        e.preventDefault()
+                        removeSeat(seatCode)
+                      }}
+                      color='red'
+                      className='!text-[10px] sm:!text-xs !px-1 sm:!px-1.5 !py-0 sm:!py-0.5'
+                      style={{ marginRight: 3, marginBottom: 3 }}
+                    >
+                      {seatCode}
+                    </Tag>
+                  ))
+                )}
+              </div>
+            </div>
+            <Divider className=' !bg-gray-50' />
+            {/* Total Price & Book Button */}
+            <div className='flex w-full justify-between items-center gap-3'>
+              <div className='flex flex-col flex-shrink-0'>
+                <span className='text-gray-400 text-xs sm:text-sm'>Total:</span>
+                <span className='font-bold text-lg sm:text-xl text-red-500'>
+                  {' '}
+                  {/* Slightly smaller price font */}
+                  {formatPrice(totalPrice)} đ
+                </span>
+              </div>
+              {/* Button: Ensure it doesn't get too wide */}
+              <Button
+                type='primary'
+                danger
+                disabled={selectedSeats.length === 0 || isLoading || hasError}
+                onClick={handleProceedToPayment}
+                className='!font-bold !text-sm sm:!text-base'
+                size='large'
+              >
+                Book Ticket
+                {selectedSeats.length > 0 ? ` (${selectedSeats.length})` : ''}
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </Modal>
 
-      {/* --- 6. Render PaymentModal Conditionally --- */}
+      {/* Payment Modal */}
       {currentBookingDetails && (
         <PaymentModal
           visible={paymentModalVisible}
-          onClose={() => setPaymentModalVisible(false)} // Allow closing payment modal independently
+          onClose={() => setPaymentModalVisible(false)}
           bookingDetails={currentBookingDetails}
-          onPaymentSuccess={handleFinalBookingSuccess} // Pass success handler
+          onPaymentSuccess={handleFinalBookingSuccess}
         />
       )}
-      {/* ----------------------------------------- */}
     </>
-  );
-};
+  )
+}
 
-// --- PropTypes ---
-BookingModal.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  showtime: PropTypes.shape({
-    id: PropTypes.any,
-    movieTitle: PropTypes.string,
-    time: PropTypes.string,
-    room: PropTypes.string,
-    ageLimit: PropTypes.string,
-    duration: PropTypes.number,
-    date: PropTypes.string,
-    cinemaId: PropTypes.any,
-    seats: PropTypes.shape({
-      bookedSeats: PropTypes.arrayOf(PropTypes.string),
-      types: PropTypes.shape({
-        Standard: PropTypes.shape({ available: PropTypes.number, price: PropTypes.number }),
-        VIP: PropTypes.shape({ available: PropTypes.number, price: PropTypes.number }),
-        Couple: PropTypes.shape({ available: PropTypes.number, price: PropTypes.number }),
-      })
-    })
-  })
-};
-// --- End PropTypes ---
-
-export default BookingModal;
+export default BookingModal

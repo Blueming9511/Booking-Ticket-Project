@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MovieCarousel from '../../components/Carousel'
 import PaginatedMovieList from '../../components/PaginatedMovieList'
+import { Spin } from 'antd'
+import api from '../../utils/api'
 // Example: src/data/movies.js
 const moviesData = [
   {
@@ -254,6 +256,36 @@ const moviesData2 = [
   }
 ]
 export default function MoviePage () {
+    const [movieData, setMovieData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // Add loading state
+  
+    useEffect(() => {
+      const fetchMovies = async () => {
+        setIsLoading(true); // Set loading to true before fetching
+  
+        try {
+          const response = await api.get('/movies');
+          setMovieData(response.data);
+        } catch (error) {
+          console.error('Error fetching movies:', error);
+        } finally {
+          setIsLoading(false); // Set loading to false after fetching, regardless of success/failure
+        }
+      };
+  
+      fetchMovies();
+    }, []);
+  
+    const nowShowingMovies = movieData?.filter(movie => movie.status === 'NOW_SHOWING');
+  
+    if (isLoading) {
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <Spin size="large" /> {/* Display loading spinner */}
+        </div>
+      );
+    }
+  
   return (
     <div className='mb-10 '>
       {/* Now showing */}
@@ -262,7 +294,7 @@ export default function MoviePage () {
           Now Showing
         </h2>
         <div className='flex justify-center items-center w-full '>
-          <MovieCarousel movies={moviesData} />
+          <MovieCarousel movies={nowShowingMovies}  theme="dark"/>
         </div>
       </div>
 
@@ -271,7 +303,7 @@ export default function MoviePage () {
         <div className='max-w-[1100px] w-full '>
         
 
-          <PaginatedMovieList moviesData={moviesData2} itemsPerPage={12}/>
+          <PaginatedMovieList moviesData={movieData} itemsPerPage={12}/>
         </div>
       </div>
     </div>

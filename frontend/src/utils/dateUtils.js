@@ -50,6 +50,6 @@ export const formatDateToYYYYMMDD = (date) => {
         case '13+': return 'bg-yellow-500 text-black'; // Viewers aged 13 and over
         case '16+': return 'bg-orange-500'; // Viewers aged 16 and over
         case '18+': return 'bg-red-600';    // Viewers aged 18 and over
-        default: return 'bg-gray-500';      // No rating or unknown
+        default: return 'bg-yellow-600';      // No rating or unknown
       }
   };
