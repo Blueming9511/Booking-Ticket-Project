@@ -4,6 +4,8 @@ import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.ShowtimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +36,8 @@ public class ShowtimeController implements IController<Showtime, String> {
         return showtimeService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+
+
     @Override
     public ResponseEntity<Map<String, String>> getAllNames() {
         return ResponseEntity.notFound().build();
@@ -50,5 +54,12 @@ public class ShowtimeController implements IController<Showtime, String> {
         if (!showtimeService.existsById(id)) return ResponseEntity.notFound().build();
         showtimeService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/movie/{movieCode}")
+    public ResponseEntity<List<Showtime>> getShowtimesByMovieCode(@PathVariable String movieCode) {
+        List<Showtime> showtimes = showtimeService.findByMovieCode(movieCode);
+        return ResponseEntity.ok(showtimes);
     }
 }

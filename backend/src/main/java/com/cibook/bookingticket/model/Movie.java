@@ -39,9 +39,9 @@ public class Movie {
     private String status;
 
 //    public enum MovieStatus {
-//        COMMING_SOOM,
+//        COMMING_SOON,
 //        NOW_SHOWING,
-//        CLOSED,
+//        ENDED,
 //        POSTPONE
 //    }
 }

@@ -19,4 +19,5 @@ public class Screen {
     private int capacity;
     private String status;
     private String cinemaId;
+
 }

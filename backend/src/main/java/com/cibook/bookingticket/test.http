@@ -12,10 +12,11 @@
 # !! then copy the generated 'id' from the response body
 # !! and paste it into the corresponding variable below.
 @cinemaId     = 67ef4c4de21d8829e5c0d4e9
-@screenId     = 67ef4ec5e21d8829e5c0d4f8
+@screenId     = 67efc6d80d91701dc8da4e88
+@screenCode   = SCR001
 @seatId       = 67effa70426dee0a01eb867a
 @movieId      = 67eeb346e21d8829e5c0d4a6
-@movieCode    = MOV010
+@movieCode    = MOV08
 @couponId     = 67ef2a5b3433dd4a7bab353b
 @userId       = 67ef3c96b50a606c784293ba
 @bookingId    = 67ef47786954627740371e7a
@@ -86,7 +87,7 @@ Accept: {{accept}}
     "type": "Standard",
     "capacity": 100,
     "status": "Active",
-    "cinemaId": "{{cinemaId}}" # Assuming model links via cinema's ID
+    "cinemaId": "{{cinemaId}}"
 }
 
 ### [R] READ ALL Screens
@@ -121,6 +122,47 @@ DELETE {{baseUrl}}/screens/{{screenId}}
 # ==========================================
 # == Seats CRUD Operations
 # ==========================================
+
+PUT {{baseUrl}}/seats/layout/screen/{{screenCode}}
+Content-Type: application/json
+
+
+{
+  "totalRows": 1,
+  "totalColumns": 1,
+  "seatTypeZones": [],
+  "coupleSeatDefinitions": [],
+  "unavailableSeatNumbers": []
+}
+
+
+
+### 
+PUT {{baseUrl}}/seats/layout/{{cinemaCodeRef}}/{{screenCode}}
+Content-Type: application/json
+
+{
+  "totalRows": 7,
+  "totalColumns": 12,
+  "seatTypeZones": [
+    
+    {
+      "type": "STANDARD",
+      "rows": ["A", "B", "C" ]
+    },
+    {
+      "type": "VIP",
+      "rows": ["D", "E", "F"]
+    },
+    {
+      "type": "COUPLE",
+      "rows": ["G"]
+    }
+  ],
+  "unavailableSeatNumbers": [
+    "G11","G10","G12", "G09","G08","G07"
+  ]
+}
 
 ### [C] CREATE Seat
 POST {{baseUrl}}/seats
@@ -522,23 +564,17 @@ DELETE {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
 # !! Adjust JSON based on ACTUAL required fields and unique constraints (e.g., showTimeCode) !!
 # !! Sending 'date' in ISO format might fail. Sending 'startTime'/'endTime' with date part will fail. !!
 POST {{baseUrl}}/showtimes
-Content-Type: {{contentType}}
-Accept: {{accept}}
+Content-Type: application/json
+Accept: application/json
 
 {
-  "date": "2025-04-04",
-  "startTime": "09:00:00",
-  "endTime": "12:00:00",
-  "price": 18.50,
-  "movie": {
-    "id": "{{movieId}}"
-  },
-  "screen": {
-    "id": "{{screenId}}"
-  },
-  "cinema": {
-    "id": "{{cinemaId}}"
-  },
+  "date": "2024-10-29",
+  "startTime": "15:00",
+  "endTime": "17:15",
+  "price": 12.00,
+  "movieCode": "{{movieCode}}",
+  "screenCode": "{{screenCodeRef}}",
+  "cinemaCode": "{{cinemaCodeRef}}",
   "status": "AVAILABLE"
 }
 
@@ -585,3 +621,5 @@ DELETE {{baseUrl}}/showtimes/{{showtimeId}}
 
 
 ###
+GET {{baseUrl}}/showtimes/MOV08
+Accept: application/json

@@ -19,4 +19,6 @@ public interface CinemaRepository extends MongoRepository<Cinema, String> {
         String getId();
         String getCinemaName();
     }
+
+    boolean existsByCinemaCode(String cinemaCode);
 }

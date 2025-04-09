@@ -63,4 +63,8 @@ public class ShowtimeService implements IService<Showtime, String> {
     public boolean existsById(String id) {
         return showtimeRepository.existsById(id);
     }
+
+    public List<Showtime> findByMovieCode(String id){
+        return showtimeRepository.findByMovieCode(id);
+    }
 }

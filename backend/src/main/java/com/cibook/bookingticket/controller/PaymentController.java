@@ -24,7 +24,7 @@ public class PaymentController implements IController<Payment, String>{
     }
 
     @Override
-    public ResponseEntity<List<Payment>> getAll() {
+    public ResponseEntity<List<Payment>>     getAll() {
         return ResponseEntity.ok().body(paymentService.findAll());
     }
 
