@@ -15,7 +15,7 @@
 
         @Indexed
         private String seatCode;
-        private String number;
+        private Integer number;
         private SeatType type;
         private String row;
         private String screenCode;
