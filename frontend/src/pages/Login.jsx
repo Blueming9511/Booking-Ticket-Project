@@ -8,12 +8,9 @@ import { Link } from 'react-router-dom';
 const { Title, Text, Paragraph } = Typography;
 
 // --- Helper Styles (Red & White Theme) ---
-// Using Tailwind's red-600 for focus and primary elements
 const inputClassName = "!bg-white !border-gray-300 !text-gray-900 placeholder:!text-gray-400 focus:!border-red-600 focus:ring-1 focus:ring-red-600 !rounded-md";
 const labelClassName = "text-gray-700 font-medium"; // Keep labels dark gray for readability
 const iconClassName = "site-form-item-icon text-gray-500 pr-2"; // Keep icons mid-gray
-
-// --- Placeholder Image URL (Replace with your actual image - maybe something with red accents?) ---
 const sideImageUrl = 'https://i.pinimg.com/736x/62/74/e2/6274e27e43cfb816c6fcfeaefdd9b21d.jpg '; // Example image with some red
 
 const Login = () => {
@@ -40,7 +37,7 @@ const Login = () => {
   };
 
   const handleGoogleSignIn = () => {
-    const googleAuthUrl = process.env.REACT_APP_GOOGLE_AUTH_URL;
+    const googleAuthUrl = import.meta.env.VITE_GOOGLE_AUTH_URL;
     if (googleAuthUrl) {
       console.log("Redirecting to Google Auth...");
       window.location.href = googleAuthUrl;
@@ -54,29 +51,24 @@ const Login = () => {
   // This overrides the default Ant Design primary color where components use it internally
   const themeConfig = {
     token: {
-      colorPrimary: '#dc2626', // Tailwind red-600
-      // colorPrimaryHover: '#b91c1c', // Tailwind red-700 (Optional: for hover states AntD handles)
+      colorPrimary: '#dc2626',
     },
   };
 
   return (
-    // Use ConfigProvider to apply theme overrides to AntD components within it
     <ConfigProvider theme={themeConfig}>
       <Flex
         justify="center"
         align="center"
-        // Background: Very light, slightly warm off-white. Could also use a subtle red/pink gradient.
         className="min-h-screen bg-gradient-to-br from-red-50 via-gray-50 to-red-100 p-4"
       >
         {/* --- Main Card Container --- */}
         <Card
-          // White card, standard styling
           className="w-full max-w-4xl shadow-xl bg-white rounded-xl border border-gray-200 overflow-hidden"
-          bordered={false}
-          bodyStyle={{ padding: 0 }}
+          variant={"borderless"}
+          styles={{body: {padding: 0}}}
         >
           <Row>
-            {/* --- Form Column --- */}
             <Col
               xs={24}
               md={14}
@@ -153,9 +145,7 @@ const Login = () => {
                   {/* Sign In Button (Styled with Red) */}
                   <Form.Item>
                     <Button
-                      // Remove type="primary" if overriding completely with Tailwind
                       htmlType="submit"
-                      // Explicitly style with Tailwind red colors
                       className="w-full !font-semibold !bg-red-600 hover:!bg-red-700 !border-red-600 hover:!border-red-700 !text-white !transition-colors"
                       size="large"
                       loading={loading}
@@ -167,11 +157,9 @@ const Login = () => {
                   {/* Divider */}
                   <Divider className="!text-gray-500 !text-sm !font-normal">or continue with</Divider>
 
-                  {/* Google Sign In Button (Kept neutral style) */}
                   <Form.Item>
                     <Button
                       icon={<FcGoogle className="!text-xl" />}
-                      // Style for secondary action, hover uses red border/text
                       className="flex items-center justify-center w-full !border-gray-300 !text-gray-700 hover:!border-red-500 hover:!text-red-600"
                       size="large"
                       onClick={handleGoogleSignIn}

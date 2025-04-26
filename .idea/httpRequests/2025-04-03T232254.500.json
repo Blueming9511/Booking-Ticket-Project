@@ -1,6 +1,0 @@
-{
-  "timestamp": "2025-04-03T16:22:54.608+00:00",
-  "status": 500,
-  "error": "Internal Server Error",
-  "path": "/api/movies/MOV0001"
-}

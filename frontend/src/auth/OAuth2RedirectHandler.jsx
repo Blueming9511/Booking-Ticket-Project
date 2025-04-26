@@ -5,15 +5,19 @@ const OAuth2RedirectHandler = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // const token = new URLSearchParams(window.location.search).get("token");
-    // if (token) {
-    //     localStorage.setItem("jwt", token);
-    //     navigate("/dashboard");
-    // }
+    const getCookie = name =>
+        document.cookie.split('; ').reduce((r, v) => {
+          const [key, val] = v.split('=');
+          return key === name ? decodeURIComponent(val) : r
+        }, '');
 
-    const token = new URLSearchParams(window.location.search).get('token')
-    localStorage.setItem('jwt', token)
-    navigate('/dashboard')
+    const token = getCookie('JWT_TOKEN');
+    if (token) {
+      localStorage.setItem('jwt', token);
+      navigate('/dashboard');
+    } else {
+      navigate('/login');
+    }
   }, [])
 
   return <div>Logging in...</div>

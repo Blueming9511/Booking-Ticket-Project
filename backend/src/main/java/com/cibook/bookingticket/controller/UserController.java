@@ -18,8 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/users")
 public class UserController implements IController<User, String>{
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
-    UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
