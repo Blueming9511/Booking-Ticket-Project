@@ -9,7 +9,8 @@ import {
 // Import Row, Col, DatePicker AND ConfigProvider
 import { Button, Form, Input, Card, Typography, Flex, message, Spin, Row, Col, DatePicker, ConfigProvider } from 'antd';
 import { Link } from 'react-router-dom';
-import dayjs from 'dayjs'; // Import dayjs for date calculations in validation
+import dayjs from 'dayjs';
+import axios from "axios";
 
 const { Title, Text } = Typography;
 
@@ -45,8 +46,10 @@ const backgroundImageUrl = 'https://i.pinimg.com/736x/62/74/e2/6274e27e43cfb816c
 
 
 const Register = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -57,13 +60,13 @@ const Register = () => {
     console.log('Received registration values (formatted): ', formattedValues);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-      const { confirm, ...registrationData } = formattedValues;
-      message.success(`Registration successful for ${values.name}! Welcome.`);
+      const response = await axios.post(`${API_URL}/auth/register`, formattedValues);
+      messageApi.success(`Registration successful for ${response.name}! Welcome.`);
+
       form.resetFields();
     } catch (error) {
       console.error('Registration API call failed:', error);
-      message.error('Registration failed. Please try again.');
+      messageApi.error('Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -77,19 +80,18 @@ const Register = () => {
   // NOTE: Background image is NOT set here. It's applied via Tailwind classes.
   const themeConfig = {
     token: {
-      colorPrimary: '#dc2626', // Tailwind red-600 - For AntD components like Checkbox, DatePicker highlights, Form feedback icons
+      colorPrimary: '#dc2626',
     },
-    // components: { ... } // Keep component overrides if you had specific ones
+    // components: { ... }
   };
 
   return (
     // Use ConfigProvider to apply theme overrides to AntD components within it
     <ConfigProvider theme={themeConfig}>
+      {contextHolder}
       <Flex
         justify="center"
         align="center"
-        // Apply background image using Tailwind classes
-        // Add 'relative' for potential overlay positioning
         className={`
           min-h-screen p-4 sm:p-6 md:p-8
           bg-cover bg-center bg-no-repeat relative
@@ -100,7 +102,6 @@ const Register = () => {
         {/* Optional: Add a semi-transparent overlay for better readability */}
         <div className="absolute inset-0 bg-black/20 z-0"></div>
 
-        {/* Card needs 'relative' and 'z-10' to sit above the overlay */}
         <Card
            className="w-full max-w-2xl shadow-lg bg-white rounded-xl border border-gray-200 p-6 sm:p-10 relative z-10" // Add relative z-10
         >

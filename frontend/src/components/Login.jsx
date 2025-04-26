@@ -8,7 +8,6 @@ const { Title, Text } = Typography;
 const Login = () => {
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
-    // TODO: Implement actual login logic here (e.g., call API)
     alert(`Login attempt with Username: ${values.username}, Password: ${values.password}`);
   };
 
