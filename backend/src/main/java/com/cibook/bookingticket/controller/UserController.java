@@ -1,7 +1,8 @@
 package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.User;
-import com.cibook.bookingticket.service.UserService;
+import com.cibook.bookingticket.repository.UserRepository;
+import com.cibook.bookingticket.service.Auth.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController implements IController<User, String>{
+public class UserController implements IController<User, String> {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
     }
 
@@ -32,7 +33,7 @@ public class UserController implements IController<User, String>{
             savedUser.setPassword("[PROTECTED]");
             return ResponseEntity.ok(savedUser);
         } catch (Exception e) {
-            log.error("Error adding user", e);  // This will log the full stack trace
+            log.error("Error adding user", e);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error adding user: " + e.getMessage(),
@@ -40,15 +41,16 @@ public class UserController implements IController<User, String>{
             );
         }
     }
+
     @Override
     public ResponseEntity<List<User>> getAll() {
         List<User> users = userService.findAll();
-        users.forEach(user -> user.setPassword("[PROTECTED]"));
-        return ResponseEntity.ok(users);    }
+        return ResponseEntity.ok(users);
+    }
 
     @Override
     public ResponseEntity<User> getById(String id) {
-        return  userService.findById(id)
+        return userService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -56,7 +58,8 @@ public class UserController implements IController<User, String>{
     @Override
     public ResponseEntity<Map<String, String>> getAllNames() {
         Map<String, String> namesMap = userService.findAllNamesWithID();
-        return ResponseEntity.ok(namesMap);    }
+        return ResponseEntity.ok(namesMap);
+    }
 
     @Override
     public ResponseEntity<User> update(String id, User entity) {
@@ -69,5 +72,6 @@ public class UserController implements IController<User, String>{
             return ResponseEntity.notFound().build();
         }
         userService.deleteById(id);
-        return ResponseEntity.ok().build();    }
+        return ResponseEntity.ok().build();
+    }
 }

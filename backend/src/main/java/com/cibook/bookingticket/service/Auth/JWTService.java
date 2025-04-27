@@ -1,4 +1,4 @@
-package com.cibook.bookingticket.service;
+package com.cibook.bookingticket.service.Auth;
 
 import com.cibook.bookingticket.model.User;
 import io.jsonwebtoken.Claims;
@@ -18,19 +18,6 @@ public class JWTService {
     private final long accessTokenExpirationMs = 15 * 60 * 1000;
     private final long refreshTokenExpirationMs = 7 * 24 * 60 * 60 * 1000;
 
-    public String generateToken(OAuth2User user) {
-        return Jwts.builder()
-                .subject(user.getName())
-                .claim("email", user.getAttributes().get("email"))
-                .claim("name", user.getAttributes().get("name"))
-                .claim("picture", user.getAttributes().get("picture"))
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + accessTokenExpirationMs))
-                .signWith(getSigningKey())
-                .compact();
-    }
-
-
     public String generateToken(User user) {
         return Jwts.builder()
                 .subject(user.getId())
@@ -48,15 +35,6 @@ public class JWTService {
     public String generateRefreshToken(User user) {
         return Jwts.builder()
                 .subject(user.getId())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
-                .signWith(getRefreshKey())
-                .compact();
-    }
-
-    public String generateRefreshToken(OAuth2User user) {
-        return Jwts.builder()
-                .subject(user.getName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
                 .signWith(getRefreshKey())
@@ -99,7 +77,7 @@ public class JWTService {
 
     public boolean isRefreshTokenValid(String token, String id) {
         final String extractedId = getIdFromRefreshToken(token);
-        return (extractedId.equals(id) && isTokenExpired(token, refreshSecret));
+        return (extractedId.equals(id) && !isTokenExpired(token, refreshSecret));
     }
 
     private boolean isTokenExpired(String token, SecretKey key) {

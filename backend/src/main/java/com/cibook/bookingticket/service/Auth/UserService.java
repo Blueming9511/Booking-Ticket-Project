@@ -1,7 +1,8 @@
-package com.cibook.bookingticket.service;
+package com.cibook.bookingticket.service.Auth;
 
 import com.cibook.bookingticket.model.User; // Assuming you have a User model
 import com.cibook.bookingticket.repository.UserRepository;
+import com.cibook.bookingticket.service.IService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 // Import PasswordEncoder if handling password hashing here

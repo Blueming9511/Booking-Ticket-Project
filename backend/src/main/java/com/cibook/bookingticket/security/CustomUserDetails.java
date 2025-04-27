@@ -2,50 +2,32 @@ package com.cibook.bookingticket.security;
 
 import com.cibook.bookingticket.model.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-public class CustomerUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails {
     private final User user;
 
-    public CustomerUserDetails(User user) {
+    public CustomUserDetails(User user) {
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        String roleName = "ROLE_" + user.getRole().name();
+        return List.of(new SimpleGrantedAuthority(roleName));
     }
 
-    @Override
-    public String getPassword() {
-        return "";
-    }
+    @Override public String getPassword() { return user.getPassword(); }
+    @Override public String getUsername() { return user.getEmail(); }
+    @Override public boolean isAccountNonExpired() { return true; }
+    @Override public boolean isAccountNonLocked() { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled() { return true; }
+    public String getId() { return user.getId(); }
+    public String getName() { return user.getName(); }
 
-    @Override
-    public String getUsername() {
-        return "";
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
-    }
 }

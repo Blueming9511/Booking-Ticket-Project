@@ -1,4 +1,4 @@
-package com.cibook.bookingticket.controller;
+package com.cibook.bookingticket.controller.auth;
 
 import com.cibook.bookingticket.dto.LoginRequest;
 import com.cibook.bookingticket.dto.UserRegisterDto;
@@ -9,10 +9,9 @@ import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.service.Auth.CookieService;
 import com.cibook.bookingticket.service.Auth.JWTService;
 import com.cibook.bookingticket.service.Auth.UserService;
-import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,7 +43,10 @@ public class AuthController {
         try {
             User user = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
             String accessToken = jwtService.generateToken(user);
-            String refreshToken = jwtService.generateRefreshToken(user);
+            String refreshToken = null;
+            if (loginRequest.isRemember()) {
+                refreshToken = jwtService.generateRefreshToken(user);
+            }
             cookieService.addAuthCookies(response, accessToken, refreshToken);
             UserResponseDto userResponse = userResponseMapper.toDto(user);
             return ResponseEntity.ok(userResponse);
@@ -59,10 +61,17 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        cookieService.removeAuthCookies(response);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterDto userRegisterDto) {
         try {
             User user = mapper.toEntity(userRegisterDto);
+            user.setRole(User.Role.CUSTOMER);
             User savedUser = userService.add(user);
             return ResponseEntity.ok(savedUser);
         } catch (IllegalArgumentException e) {
