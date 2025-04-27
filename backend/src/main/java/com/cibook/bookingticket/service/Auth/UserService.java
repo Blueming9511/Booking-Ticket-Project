@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 // Import PasswordEncoder if handling password hashing here
 // import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional; // Optional: If combining multiple repo calls
@@ -25,7 +27,6 @@ public class UserService implements IService<User, String> {
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        // Assign PasswordEncoder if injecting: this.passwordEncoder = passwordEncoder;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -40,17 +41,16 @@ public class UserService implements IService<User, String> {
      */
     @Override
     public User add(User entity) {
-
-        // Check for existing username
-        userRepository.findByUsername(entity.getUsername()).ifPresent(existing -> {
-            log.warn("Attempted to add user with existing username: {}", entity.getUsername());
-            throw new IllegalArgumentException("Username already exists: " + entity.getUsername());
-        });
-
         // Check for existing email
-        userRepository.findByEmail(entity.getEmail()).ifPresent(existing -> { // Assuming getEmail exists
+        userRepository.findByEmail(entity.getEmail()).ifPresent(existing -> {
             log.warn("Attempted to add user with existing email: {}", entity.getEmail());
             throw new IllegalArgumentException("Email already exists: " + entity.getEmail());
+        });
+
+        // Check for existing phone number
+        userRepository.findByPhoneNumber(entity.getPhoneNumber()).ifPresent(existing -> {
+            log.warn("Attempted to add user with existing phone: {}", entity.getPhoneNumber());
+            throw new IllegalArgumentException("already exists: " + entity.getPhoneNumber());
         });
 
         // *** PASSWORD HASHING  ***
@@ -60,7 +60,6 @@ public class UserService implements IService<User, String> {
 
         return userRepository.save(entity);
     }
-
 
 
     /**
@@ -79,7 +78,7 @@ public class UserService implements IService<User, String> {
     @Override
     public Optional<User> findByCode(String username) {
         log.info("UserService: Finding user by Code (interpreted as Username): {}", username);
-        return userRepository.findByUsername(username);
+        return null;
     }
 
     // Consider adding specific findByEmail/findByUsername methods if needed directly by controllers
@@ -107,7 +106,7 @@ public class UserService implements IService<User, String> {
         return userRepository.findAll().stream()
                 .collect(Collectors.toMap(
                         User::getId,
-                        User::getUsername,
+                        User::getName,
                         (existingValue, newValue) -> existingValue
                 ));
     }
@@ -138,5 +137,19 @@ public class UserService implements IService<User, String> {
     public boolean existsById(String id) {
         log.info("UserService: Checking existence for user with ID {}", id);
         return userRepository.existsById(id);
+    }
+
+    public Optional<Object> findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Email not found: " + email));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        }
+        return user;
     }
 }

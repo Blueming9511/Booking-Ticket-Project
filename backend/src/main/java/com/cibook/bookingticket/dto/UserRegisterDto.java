@@ -1,4 +1,4 @@
 package com.cibook.bookingticket.dto;
 
-public class LoginResponse {
+public class UserRegisterDto {
 }
