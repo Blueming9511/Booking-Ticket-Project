@@ -1,25 +1,13 @@
 import React, {useState} from "react";
 // Import Row and Col for layout
 import {
-    Input,
-    Button,
-    Checkbox,
-    Typography,
-    Divider,
-    Form,
-    message,
-    Spin,
-    Flex,
-    Card,
-    Row,
-    Col,
-    ConfigProvider
+    Input, Button, Checkbox, Typography, Divider, Form, message, Spin, Flex, Card, Row, Col, ConfigProvider
 } from "antd"; // Added ConfigProvider
 import {FcGoogle} from "react-icons/fc";
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
-import Cookies from  "js-cookie";
+import Cookies from "js-cookie";
 
 const {Title, Text, Paragraph} = Typography;
 
@@ -40,11 +28,12 @@ const Login = () => {
         setLoading(true);
         console.log("Success (Form values):", values);
         try {
-            const response = await axios.post(`${API_URL}/auth/login`, values);
+            const response = await axios.post(`${API_URL}/auth/login`, values, {
+                withCredentials: true
+            });
             console.log(response.data)
             const name = response?.data?.name ?? "Anonymous";
             messageApi.success(`Welcome back, ${name}!`);
-            Cookies.set("token", response.data.token, {expires: 1})
             navigate('/dashboard');
         } catch (error) {
             console.error("Login failed:", error);
@@ -70,8 +59,7 @@ const Login = () => {
         },
     };
 
-    return (
-        <ConfigProvider theme={themeConfig}>
+    return (<ConfigProvider theme={themeConfig}>
             {contextHolder}
             <Flex
                 justify="center"
@@ -212,8 +200,7 @@ const Login = () => {
                     </Row>
                 </Card>
             </Flex>
-        </ConfigProvider>
-    );
+        </ConfigProvider>);
 };
 
 export default Login;

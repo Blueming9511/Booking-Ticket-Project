@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import MainRoutes from './routes/MainRoutes';
 import AdminRoutes from './routes/AdminRoutes';
 import ProviderRoutes from './routes/ProviderRoutes';
-import OAuth2RedirectHandler from "./auth/OAuth2RedirectHandler.jsx";
 
 function App() {
     return (
@@ -33,8 +32,6 @@ function App() {
 
                 {/* Provider Routes */}
                 <Route path="/provider/*" element={<ProviderRoutes/>}/>
-
-                <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
             </Routes>
         </Router>
     );
