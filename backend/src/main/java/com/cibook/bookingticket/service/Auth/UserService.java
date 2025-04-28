@@ -153,4 +153,8 @@ public class UserService implements IService<User, String> {
         }
         return user;
     }
+
+    public Optional<User> findByResetToken(String token) {
+        return userRepository.findByResetToken(token);
+    }
 }
