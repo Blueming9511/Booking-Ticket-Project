@@ -1,4 +1,4 @@
-package com.cibook.bookingticket.security;
+package com.cibook.bookingticket.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
