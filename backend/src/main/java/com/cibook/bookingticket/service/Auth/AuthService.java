@@ -8,6 +8,7 @@ import com.cibook.bookingticket.mapper.UserResponseMapper;
 import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.service.Email.EmailService;
 import com.cibook.bookingticket.util.OTPUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -107,14 +108,14 @@ public class AuthService {
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
         userService.update(user.getId(), user);
 
-        String resetLink = "http://localhost:8080/reset-password?token=" + resetToken;
+        String resetLink = "http://localhost:5173/forgot-password?token=" + resetToken;
 
         emailService.sendPasswordResetEmail(user.getEmail(), resetCode, resetLink);
 
         return true;
     }
 
-    public boolean verifyResetCode(String email, String resetCode) {
+    public boolean verifyResetCode(String email, String resetCode, HttpServletResponse response) {
         User user = userService.findByEmail(email).orElse(null);
         if (user == null || user.getResetCode() == null) {
             return false;
@@ -123,8 +124,34 @@ public class AuthService {
         if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
             return false;
         }
+        if (user.getResetCode().equals(resetCode)) {
+            cookieService.addCookie("resetPasswordToken", user.getResetToken(), 15 * 60, response);
+            return true;
+        }
+        return false;
+    }
 
-        return user.getResetCode().equals(resetCode);
+    public boolean resetPassword(String newPassword, HttpServletRequest request, HttpServletResponse response) {
+        String cookie = cookieService.getCookieValue(request, "resetPasswordToken");
+        User user = userService.findByResetToken(cookie).orElse(null);
+        if (user == null) {
+            return false;
+        }
+
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setResetCode(null);
+        user.setResetTokenExpiry(null);
+
+        cookieService.addCookie("resetPasswordToken", user.getResetToken(), 0, response);
+        userService.update(user.getId(), user);
+        emailService.sendPasswordResetSuccessEmail(user.getEmail());
+
+        return true;
     }
 
     public boolean resetPassword(String token, String newPassword) {
@@ -136,9 +163,7 @@ public class AuthService {
         if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
             return false;
         }
-
         user.setPassword(passwordEncoder.encode(newPassword));
-
         user.setResetToken(null);
         user.setResetCode(null);
         user.setResetTokenExpiry(null);
@@ -148,6 +173,7 @@ public class AuthService {
 
         return true;
     }
+
 
     public User findUserByToken(String token) {
         User user = userService.findByResetToken(token).orElseThrow(() -> new NotFoundException("Token not found"));

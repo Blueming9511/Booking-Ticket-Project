@@ -9,6 +9,7 @@ import com.cibook.bookingticket.service.Auth.CookieService;
 import com.cibook.bookingticket.service.Auth.JWTService;
 import com.cibook.bookingticket.service.Auth.UserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/forgot")
+    @PostMapping("/forgot-password")
     public ResponseEntity<?> requestPasswordReset(@Valid @RequestBody PasswordResetRequestDto requestDto) {
         boolean success = authService.requestPasswordReset(requestDto.getEmail());
 
@@ -108,8 +109,9 @@ public class AuthController {
     }
 
     @PostMapping("/verify-code")
-    public ResponseEntity<?> verifyResetCode(@Valid @RequestBody PasswordVerificationDto verificationDto) {
-        boolean isValid = authService.verifyResetCode(verificationDto.getEmail(), verificationDto.getCode());
+    public ResponseEntity<?> verifyResetCode(@Valid @RequestBody PasswordVerificationDto verificationDto, HttpServletResponse r) {
+        System.out.println("hiii");
+        boolean isValid = authService.verifyResetCode(verificationDto.getEmail(), verificationDto.getOtp(), r);
 
         Map<String, Object> response = new HashMap<>();
         if (isValid) {
@@ -123,9 +125,16 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/reset")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDto resetDto) {
-        boolean success = authService.resetPassword(resetDto.getToken(), resetDto.getNewPassword());
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDto passwordResetDto, HttpServletRequest request, HttpServletResponse r) {
+        boolean success = false;
+        if (passwordResetDto.getToken() == null || passwordResetDto.getToken().isEmpty()) {
+            System.out.println("hiii");
+            success = authService.resetPassword(passwordResetDto.getNewPassword(), request, r);
+        } else {
+            System.out.println("barrr");
+            success = authService.resetPassword(passwordResetDto.getToken(), passwordResetDto.getNewPassword());
+        }
 
         Map<String, Object> response = new HashMap<>();
         if (success) {
@@ -136,19 +145,6 @@ public class AuthController {
             response.put("message", "Invalid or expired token");
             response.put("success", false);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    }
-
-    @GetMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String token, HttpServletResponse response) {
-        try {
-            User user = authService.findUserByToken(token);
-            response.sendRedirect(frontend + "/reset-password");
-            return ResponseEntity.ok(user);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "An error occurred"));
         }
     }
 }

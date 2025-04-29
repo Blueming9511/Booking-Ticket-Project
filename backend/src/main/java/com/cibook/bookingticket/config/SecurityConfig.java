@@ -30,7 +30,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/oauth2/**", "/swagger-ui/**", "/v3/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/auth/reset-password", "/api/auth/reset-password/**").permitAll()
                         .requestMatchers("/reset-password**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/bookingdetails").hasRole("CUSTOMER")
@@ -48,7 +48,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
-
 }

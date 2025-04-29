@@ -1,6 +1,7 @@
 package com.cibook.bookingticket.config;
 
 import com.cibook.bookingticket.security.CustomUserDetails;
+import com.cibook.bookingticket.service.Auth.CookieService;
 import com.cibook.bookingticket.service.Auth.JWTService;
 import com.cibook.bookingticket.service.Auth.UserService;
 import jakarta.servlet.FilterChain;
@@ -19,29 +20,24 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final UserService userService;
+    private final CookieService cookieService;
 
-    public JwtAuthenticationFilter(JWTService jwtService, UserService userService) {
+    public JwtAuthenticationFilter(JWTService jwtService, UserService userService, CookieService cookieService) {
         this.jwtService = jwtService;
         this.userService = userService;
+        this.cookieService = cookieService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String refreshToken = getCookieValue(request, "refreshToken");
+        String refreshToken = cookieService.getCookieValue(request, "refreshToken");
         if (refreshToken != null) {
             String userId = jwtService.getIdFromRefreshToken(refreshToken);
             if (userId != null && jwtService.isRefreshTokenValid(refreshToken, userId)) {
                 userService.findById(userId).ifPresent(user -> {
                     String newAccessToken = jwtService.generateToken(user);
-
-                    Cookie accessCookie = new Cookie("accessToken", newAccessToken);
-                    accessCookie.setHttpOnly(true);
-                    accessCookie.setSecure(false);
-                    accessCookie.setPath("/");
-                    accessCookie.setMaxAge(15 * 60);
-                    response.addCookie(accessCookie);
-
+                    cookieService.addCookie("accessToken", newAccessToken, 15 * 60, response);
                     CustomUserDetails userDetails = new CustomUserDetails(user);
                     UsernamePasswordAuthenticationToken auth =
                             new UsernamePasswordAuthenticationToken(
@@ -52,17 +48,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-    }
-
-    private String getCookieValue(HttpServletRequest request, String cookieName) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookieName.equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
     }
 }

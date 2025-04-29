@@ -11,5 +11,5 @@ public class PasswordVerificationDto {
     private String email;
 
     @NotBlank(message = "Verification code is required")
-    private String code;
+    private String otp;
 }
