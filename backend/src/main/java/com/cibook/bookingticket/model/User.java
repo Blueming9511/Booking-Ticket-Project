@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,11 @@ public class User {
     private String avatar;
     private Role role;
     private Date dateOfBirth;
+    private String otp;
+    private boolean verified;
+    private String resetToken;
+    private String resetCode;
+    private LocalDateTime resetTokenExpiry;
 
 
     public enum Role {

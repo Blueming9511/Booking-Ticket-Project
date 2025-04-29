@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/oauth2/**", "/swagger-ui/**", "/v3/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/reset-password**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/bookingdetails").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.GET, "/api/bookings").hasRole("CUSTOMER")

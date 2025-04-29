@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">CiBook Email</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Header */
+        .email-header {
+            background-color: #1a2a3d;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 120px;
+            height: auto;
+        }
+
+        /* Content */
+        .email-content {
+            padding: 32px 24px;
+        }
+
+        .email-title {
+            font-size: 24px;
+            color: #1a2a3d;
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        /* OTP Styles */
+        .otp-container {
+            background-color: #f5f7fa;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .otp-code {
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            color: #1a2a3d;
+            margin: 16px 0;
+        }
+
+        /* Button */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #4a6cf7;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            margin: 16px 0;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #3a5de5;
+        }
+
+        /* Footer */
+        .email-footer {
+            background-color: #f5f7fa;
+            padding: 20px 24px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .footer-links {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #4a6cf7;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        .copyright {
+            margin-top: 12px;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 100%;
+                border-radius: 0;
+            }
+
+            .email-header, .email-content, .email-footer {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="email-header">
+        <img src="cid:logo" alt="CiBook Logo" class="logo">
+    </div>
+
+    <div class="email-content">
+        <div th:replace="~{::content}"></div>
+    </div>
+
+    <div class="email-footer">
+        <div class="footer-links">
+            <a href="#" th:href="${applicationUrl}">Website</a>
+            <a href="#" th:href="${applicationUrl + '/contact'}">Contact Us</a>
+            <a href="#" th:href="${applicationUrl + '/help'}">Help Center</a>
+        </div>
+        <p>If you have any questions, please contact our support team.</p>
+        <p class="copyright" th:text="${'© ' + #dates.format(#dates.createNow(), 'yyyy') + ' ' + applicationName + '. All rights reserved.'}">© 2025 CiBook. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>
