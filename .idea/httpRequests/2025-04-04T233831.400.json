@@ -1,6 +1,0 @@
-{
-  "timestamp": "2025-04-04T16:38:31.275+00:00",
-  "status": 400,
-  "error": "Bad Request",
-  "path": "/api/bookings/67ef47786954627740371e7a/details"
-}

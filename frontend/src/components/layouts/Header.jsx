@@ -1,7 +1,9 @@
 import React, { useState } from 'react'; // Use React import
 import { Layout, Menu, Dropdown, Avatar, Drawer, Button, Grid, message } from 'antd'; // Added message
 import { UserOutlined, DownOutlined, MenuOutlined, LoginOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from "js-cookie";
+import axios from "axios"; // Import useNavigate
 
 const { useBreakpoint } = Grid;
 const { Header } = Layout;
@@ -10,32 +12,29 @@ const { Header } = Layout;
 const AppHeader = () => {
   // --- State ---
   const [drawerVisible, setDrawerVisible] = useState(false);
-  // ** Simulate Authentication State **
-  // !! In a real app, replace this with your actual auth check !!
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // <-- Set to false to test logged-out behaviour
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const screens = useBreakpoint();
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
-  // --- Handlers ---
   const showDrawer = () => setDrawerVisible(true);
   const closeDrawer = () => setDrawerVisible(false);
 
-  // Placeholder for actual logout function
-  const handleLogout = () => {
+  const handleLogout = async () => {
+      const API_URL = import.meta.env.VITE_API_URL;
     console.log('Logging out...');
-    setIsLoggedIn(false); // Simulate logout
+    await axios.post(`${API_URL}/auth/logout`, {}, {withCredentials: true});
+    setIsLoggedIn(false);
     closeDrawer();
-    message.success('Logged out successfully.');
+
     navigate('/login');
   };
 
   // --- Menu Definitions ---
-  // Define main menu items as an array of objects for the Menu component's `items` prop
   const mainMenuItemsConfig = [
     {
       key: 'home',
       label: <Link to='/' onClick={closeDrawer}>Home</Link>,
-      style: styles.menuItem // Apply style here if needed per item
+      style: styles.menuItem
     },
     {
       key: 'booking',
