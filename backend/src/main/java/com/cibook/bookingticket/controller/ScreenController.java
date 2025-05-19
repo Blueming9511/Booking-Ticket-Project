@@ -1,9 +1,14 @@
 package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.Screen;
+import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.ScreenService;
+import com.cibook.bookingticket.service.ShowtimeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +24,7 @@ public class ScreenController implements IController<Screen, String> {
     public final ScreenService screenService;
 
     @Autowired
-    public ScreenController(ScreenService screenService) {
+    public ScreenController(ScreenService screenService, ShowtimeService showtimeService) {
         this.screenService = screenService;
     }
 
@@ -29,8 +34,10 @@ public class ScreenController implements IController<Screen, String> {
     }
 
     @Override
-    public ResponseEntity<List<Screen>> getAll() {
-        return ResponseEntity.ok(screenService.findAll());
+    public ResponseEntity<Page<Screen>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Screen> screens = screenService.findAll(pageable);
+        return ResponseEntity.ok(screens);
     }
 
     @Override

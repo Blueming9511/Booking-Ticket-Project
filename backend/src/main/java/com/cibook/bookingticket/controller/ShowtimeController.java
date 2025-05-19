@@ -3,6 +3,9 @@ package com.cibook.bookingticket.controller;
 import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.ShowtimeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +26,12 @@ public class ShowtimeController implements IController<Showtime, String> {
     public ResponseEntity<Showtime> add(Showtime entity) {
         return ResponseEntity.ok(showtimeService.add(entity));
     }
-
+    
     @Override
-    public ResponseEntity<List<Showtime>> getAll() {
-        return ResponseEntity.ok(showtimeService.findAll());
+    public ResponseEntity<Page<Showtime>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Showtime> showtimes = showtimeService.findAll(pageable);
+        return ResponseEntity.ok(showtimes);
     }
 
     @Override

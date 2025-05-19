@@ -4,6 +4,8 @@ import com.cibook.bookingticket.model.Seat;
 import com.cibook.bookingticket.repository.ScreenRepository;
 import com.cibook.bookingticket.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +42,11 @@ public class SeatService implements  IService<Seat, String>{
     @Override
     public List<Seat> findAll() {
         return seatRepository.findAll();
+    }
+
+    @Override
+    public Page<Seat> findAll(Pageable pageable) {
+        return seatRepository.findAll(pageable);
     }
 
     @Override

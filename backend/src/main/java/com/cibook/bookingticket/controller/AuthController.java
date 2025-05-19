@@ -1,14 +1,8 @@
-package com.cibook.bookingticket.controller.auth;
+package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.dto.*;
-import com.cibook.bookingticket.mapper.UserRegisterMapper;
-import com.cibook.bookingticket.mapper.UserResponseMapper;
 import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.service.Auth.AuthService;
-import com.cibook.bookingticket.service.Auth.CookieService;
-import com.cibook.bookingticket.service.Auth.JWTService;
-import com.cibook.bookingticket.service.Auth.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

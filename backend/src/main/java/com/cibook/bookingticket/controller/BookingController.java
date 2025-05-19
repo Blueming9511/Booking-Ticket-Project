@@ -2,9 +2,13 @@ package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.Booking;
 import com.cibook.bookingticket.model.BookingDetail;
+import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.BookingDetailService;
 import com.cibook.bookingticket.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +20,10 @@ import java.util.Map;
 public class BookingController implements IController<Booking, String> {
 
     private final BookingService bookingService;
-    private final BookingDetailService bookingDetailService;
 
     @Autowired
     public BookingController(BookingService bookingService, BookingDetailService bookingDetailService) {
         this.bookingService = bookingService;
-        this.bookingDetailService = bookingDetailService;
     }
 
     @Override
@@ -30,8 +32,10 @@ public class BookingController implements IController<Booking, String> {
     }
 
     @Override
-    public ResponseEntity<List<Booking>> getAll() {
-        return ResponseEntity.ok(bookingService.findAll());
+    public ResponseEntity<Page<Booking>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Booking> bookings = bookingService.findAll(pageable);
+        return ResponseEntity.ok(bookings);
     }
 
     @Override
@@ -69,6 +73,12 @@ public class BookingController implements IController<Booking, String> {
     @DeleteMapping("/all")
     public ResponseEntity<Void> deleteAll() {
         bookingService.deleteAll();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/u/")
+    public ResponseEntity<Booking> create(@RequestBody Map<String, String> entity) {
+        bookingService.addWithDetail(entity);
         return ResponseEntity.ok().build();
     }
 }

@@ -4,6 +4,8 @@ import com.cibook.bookingticket.model.Screen;
 import com.cibook.bookingticket.repository.ScreenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,6 +46,11 @@ public class ScreenService implements IService<Screen, String> {
     @Override
     public List<Screen> findAll() {
         return screenRepository.findAll();
+    }
+
+    @Override
+    public Page<Screen> findAll(Pageable pageable) {
+        return screenRepository.findAll(pageable);
     }
 
     @Override

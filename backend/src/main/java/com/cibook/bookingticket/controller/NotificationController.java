@@ -2,9 +2,13 @@ package com.cibook.bookingticket.controller;
 
 // Import the specific Model and Service
 import com.cibook.bookingticket.model.Notification;
+import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.NotificationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*; // Needed for annotations defined in IController + RequestMapping
 
@@ -30,10 +34,10 @@ public class NotificationController implements IController<Notification, String>
         return ResponseEntity.ok(savedNotification);
     }
 
-
     @Override
-    public ResponseEntity<List<Notification>> getAll() {
-        List<Notification> notifications = notificationService.findAll();
+    public ResponseEntity<Page<Notification>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Notification> notifications = notificationService.findAll(pageable);
         return ResponseEntity.ok(notifications);
     }
 

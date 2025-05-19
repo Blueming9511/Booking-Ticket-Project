@@ -1,5 +1,6 @@
 package com.cibook.bookingticket.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -9,7 +10,7 @@ import java.util.Date;
 
 @Data
 @Document (collection = "payments")
-
+@Builder
 public class Payment {
     @Id
     private String id;
@@ -20,8 +21,7 @@ public class Payment {
     private PaymentMethod method;
     private Double amount;
     private String date;
-    private String UserID;
-
+    private String bookingID;
     private PaymentStatus status;
 
     public enum PaymentStatus {

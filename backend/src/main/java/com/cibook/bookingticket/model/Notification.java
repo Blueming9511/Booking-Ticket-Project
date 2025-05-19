@@ -1,5 +1,6 @@
 package com.cibook.bookingticket.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -10,42 +11,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Data
+@Builder
 @Document (collection = "notifications")
 public class Notification {
     @Id
     private String id;
-
     @Indexed(unique = true)
     private String notificationCode;
-
+    private String userId;
     @Indexed
     private String title;
-
     private String message;
-
     @CreatedDate
     private Date dateSent;
-
-    @Indexed
-    private NotificationStatus status;
-
-    @DBRef
-    private BookingDetail bookingDetail;
-
-    @DBRef
-    private User user;
-
-    private NotificationType type;
-
     private boolean isRead;
-
-    public enum NotificationStatus {
-        SENT,
-        DELIVERED,
-        READ,
-        FAILED
-    }
-
+    private NotificationType type;
     public enum NotificationType {
         BOOKING_CONFIRMATION,
         PAYMENT_SUCCESS,
@@ -55,7 +35,5 @@ public class Notification {
         PROMOTION,
         SYSTEM_ALERT
     }
-
-
 
 }

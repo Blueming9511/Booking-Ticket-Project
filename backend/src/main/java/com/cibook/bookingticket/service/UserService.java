@@ -1,17 +1,16 @@
-package com.cibook.bookingticket.service.Auth;
+package com.cibook.bookingticket.service;
 
-import com.cibook.bookingticket.model.User; // Assuming you have a User model
+import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.repository.UserRepository;
-import com.cibook.bookingticket.service.IService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-// Import PasswordEncoder if handling password hashing here
-// import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Optional: If combining multiple repo calls
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -97,7 +96,15 @@ public class UserService implements IService<User, String> {
     @Override
     public List<User> findAll() {
         log.info("UserService: Finding all users");
-        return userRepository.findAll();
+        var users = userRepository.findAll();
+        users.forEach(user -> user.setPassword("[PROTECTED]"));
+        return users;
+    }
+
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        log.info("UserService: Finding all users (paginated)");
+        return userRepository.findAll(pageable);
     }
 
 
@@ -157,4 +164,9 @@ public class UserService implements IService<User, String> {
     public Optional<User> findByResetToken(String token) {
         return userRepository.findByResetToken(token);
     }
+
+    public String findEmailUser(String userId) {
+        return userRepository.findEmailById(userId).orElse(null);
+    }
 }
+

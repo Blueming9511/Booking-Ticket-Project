@@ -1,9 +1,13 @@
 package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.Seat;
+import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.SeatService;
 
 // Import necessary Spring Web annotations
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +42,10 @@ public class SeatController implements IController<Seat, String> {
     }
 
     @Override
-    public ResponseEntity<List<Seat>> getAll() {
-        return ResponseEntity.ok(seatService.findAll());
+    public ResponseEntity<Page<Seat>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Seat> seats = seatService.findAll(pageable);
+        return ResponseEntity.ok(seats);
     }
 
     @Override

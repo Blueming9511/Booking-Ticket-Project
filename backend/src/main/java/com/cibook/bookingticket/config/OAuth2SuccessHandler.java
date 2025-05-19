@@ -4,8 +4,6 @@ import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.repository.UserRepository;
 import com.cibook.bookingticket.service.Auth.CookieService;
 import com.cibook.bookingticket.service.Auth.JWTService;
-import com.cibook.bookingticket.service.Auth.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;

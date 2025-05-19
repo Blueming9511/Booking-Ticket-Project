@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Confirmation</title>
+</head>
+<body>
+<div th:fragment="content">
+    <h1 class="email-title">Order Confirmation</h1>
+
+    <p>Hello <span th:text="${customerName}">Customer</span>,</p>
+
+    <p>Thank you for your booking with <span th:text="${applicationName}">CiBook</span>. Your booking has been received
+        and is being processed.</p>
+
+    <div class="order-container">
+        <p>Booking Details:</p>
+        <div class="order-number">Booking ID: <span th:text="${booking.bookingId}">BK12345678</span></div>
+        <p>Booking Code: <span th:text="${booking.bookingCode}">CODE123456</span></p>
+        <p>Status: <span th:text="${booking.status}">CONFIRMED</span></p>
+
+        <div class="order-details">
+            <div class="order-item">
+                <div>Show Time:</div>
+                <div th:text="${booking.showTimeCode}">ST12345</div>
+            </div>
+            <div class="order-item">
+                <div>Seats:</div>
+                <div th:text="${#strings.listJoin(booking.seatCode, ', ')}">A1, A2, B3</div>
+            </div>
+            <div class="order-item">
+                <div>Subtotal:</div>
+                <div th:text="${#numbers.formatDecimal(booking.subTotal, 0, 'COMMA', 2, 'POINT')}">$100.00</div>
+            </div>
+            <div class="order-item" th:if="${booking.discountAmount > 0}">
+                <div>Discount:</div>
+                <div th:text="${#numbers.formatDecimal(booking.discountAmount, 0, 'COMMA', 2, 'POINT')}">$10.00</div>
+            </div>
+            <div class="order-item" th:if="${booking.taxAmount > 0}">
+                <div>Tax:</div>
+                <div th:text="${#numbers.formatDecimal(booking.taxAmount, 0, 'COMMA', 2, 'POINT')}">$5.00</div>
+            </div>
+            <div class="order-total">
+                <div>Total Amount:</div>
+                <div th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">$95.00</div>
+            </div>
+        </div>
+
+        <p th:if="${booking.couponCode != null and booking.couponCode != ''}">Coupon Applied: <span
+                th:text="${booking.couponCode}">SUMMER20</span></p>
+        <p th:if="${booking.paymentCode != null and booking.paymentCode != ''}">Payment Code: <span
+                th:text="${booking.paymentCode}">PAY987654</span></p>
+    </div>
+
+    <p>You can view your booking details and status by clicking the button below:</p>
+
+    <a href="#" th:href="${applicationUrl + '/bookings/' + booking.bookingCode}" class="btn">View Booking Details</a>
+
+    <p style="margin-top: 24px;">Thank you for choosing <span th:text="${applicationName}">CiBook</span>!</p>
+
+    <p>Best regards,<br>The <span th:text="${applicationName}">CiBook</span> Team</p>
+</div>
+</body>
+</html>

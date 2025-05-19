@@ -3,6 +3,8 @@ package com.cibook.bookingticket.service;
 import com.cibook.bookingticket.model.Movie;
 import com.cibook.bookingticket.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +44,11 @@ public class MovieService implements IService<Movie, String> {
         return movieRepository.findAll().stream()
                 .map(this::normalizeMovieStatus)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Movie> findAll(Pageable pageable) {
+        return movieRepository.findAll(pageable);
     }
 
     private Movie normalizeMovieStatus(Movie movie) {

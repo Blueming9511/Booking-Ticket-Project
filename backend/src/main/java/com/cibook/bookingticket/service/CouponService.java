@@ -4,6 +4,8 @@ import com.cibook.bookingticket.model.Coupon;
 import com.cibook.bookingticket.repository.CouponRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +43,11 @@ public class CouponService implements IService<Coupon, String> {
     @Override
     public List<Coupon> findAll() {
         return couponRepository.findAll();
+    }
+
+    @Override
+    public Page<Coupon> findAll(Pageable pageable) {
+        return couponRepository.findAll(pageable);
     }
 
     @Override

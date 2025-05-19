@@ -1,8 +1,12 @@
 package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.Movie;
+import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +30,10 @@ public class MovieController implements IController<Movie, String>{
     }
 
     @Override
-    public ResponseEntity<List<Movie>> getAll() {
-        return ResponseEntity.ok(movieService.findAll());
+    public ResponseEntity<Page<Movie>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> movies = movieService.findAll(pageable);
+        return ResponseEntity.ok(movies);
     }
 
     @Override

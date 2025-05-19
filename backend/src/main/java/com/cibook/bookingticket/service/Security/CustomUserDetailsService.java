@@ -1,9 +1,9 @@
 package com.cibook.bookingticket.service.Security;
 
 import com.cibook.bookingticket.model.User;
-import com.cibook.bookingticket.repository.UserRepository;
 import com.cibook.bookingticket.security.CustomUserDetails;
-import com.cibook.bookingticket.service.Auth.UserService;
+import com.cibook.bookingticket.service.BookingDetailService;
+import com.cibook.bookingticket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

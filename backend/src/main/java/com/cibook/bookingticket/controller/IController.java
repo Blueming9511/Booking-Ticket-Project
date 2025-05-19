@@ -1,5 +1,7 @@
 package com.cibook.bookingticket.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +13,7 @@ public interface IController<T, K> {
     ResponseEntity<T> add(@RequestBody T entity);
 
     @GetMapping
-    ResponseEntity<List<T>> getAll();
+    ResponseEntity<Page<T>> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size);
 
     @GetMapping("/{id}")
     ResponseEntity<T> getById(@PathVariable("id") K id);

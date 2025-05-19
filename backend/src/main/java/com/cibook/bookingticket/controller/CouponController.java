@@ -1,8 +1,12 @@
 package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.Coupon;
+import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +30,10 @@ public class CouponController implements IController<Coupon, String>{
     }
 
     @Override
-    public ResponseEntity<List<Coupon>> getAll() {
-        return ResponseEntity.ok(couponService.findAll());
+    public ResponseEntity<Page<Coupon>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Coupon> coupons = couponService.findAll(pageable);
+        return ResponseEntity.ok(coupons);
     }
 
     @Override

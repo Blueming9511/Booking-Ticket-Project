@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +50,11 @@ public class CinemaService implements IService<Cinema, String> {
     @Override
     public List<Cinema> findAll() {
         return cinemaRepository.findAll();
+    }
+
+    @Override
+    public Page<Cinema> findAll(Pageable pageable) {
+        return cinemaRepository.findAll(pageable);
     }
 
     @Override

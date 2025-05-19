@@ -4,6 +4,8 @@ import com.cibook.bookingticket.model.Payment;
 import com.cibook.bookingticket.repository.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +43,11 @@ public class PaymentService implements IService<Payment, String> {
     @Override
     public List<Payment> findAll() {
         return paymentRepository.findAll();
+    }
+
+    @Override
+    public Page<Payment> findAll(Pageable pageable) {
+        return paymentRepository.findAll(pageable);
     }
 
     @Override

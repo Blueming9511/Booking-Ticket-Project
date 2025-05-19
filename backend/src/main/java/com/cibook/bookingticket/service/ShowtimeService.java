@@ -3,6 +3,8 @@ package com.cibook.bookingticket.service;
 import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.repository.ShowtimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +40,11 @@ public class ShowtimeService implements IService<Showtime, String> {
     @Override
     public List<Showtime> findAll() {
         return showtimeRepository.findAll();
+    }
+
+    @Override
+    public Page<Showtime> findAll(Pageable pageable) {
+        return showtimeRepository.findAll(pageable);
     }
 
     @Override

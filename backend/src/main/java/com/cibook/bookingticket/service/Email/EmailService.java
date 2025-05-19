@@ -1,5 +1,6 @@
 package com.cibook.bookingticket.service.Email;
 
+import com.cibook.bookingticket.model.BookingDetail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -151,6 +152,28 @@ public class EmailService {
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to send password reset success email: " + e.getMessage());
+        }
+    }
+
+    public void sendOrderConfirmationEmail(String to, BookingDetail bookingDetail) {
+        try {
+            Map<String, Object> templateModel = new HashMap<>();
+            templateModel.put("applicationName", applicationName);
+            templateModel.put("applicationUrl", applicationUrl);
+            templateModel.put("booking", bookingDetail);
+            // templateModel.put("customerName", user.getName());
+            templateModel.put("customerName", "Valued Customer");
+            String htmlContent = processTemplate("order-confirmation", templateModel);
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(to);
+            helper.setSubject("Booking Confirmation - " + applicationName);
+            helper.setText(htmlContent, true);
+            mailSender.send(mimeMessage);
+        } catch (
+                MessagingException e) {
+            throw new RuntimeException("Failed to send booking confirmation email: " + e.getMessage());
         }
     }
 
