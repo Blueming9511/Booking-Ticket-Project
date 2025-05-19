@@ -2,10 +2,12 @@ package com.cibook.bookingticket.model;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -20,9 +22,11 @@ public class Payment {
 
     private PaymentMethod method;
     private Double amount;
-    private String date;
+    @CreatedDate
+    private LocalDateTime date;
     private String bookingID;
-    private PaymentStatus status;
+    @Builder.Default
+    private PaymentStatus status = PaymentStatus.PENDING;
 
     public enum PaymentStatus {
         PENDING,

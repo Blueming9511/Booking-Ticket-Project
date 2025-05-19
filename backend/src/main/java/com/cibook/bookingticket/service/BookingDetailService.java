@@ -40,11 +40,7 @@ public class BookingDetailService implements IService<BookingDetail, String> {
 
     @Override
     public Optional<BookingDetail> findById(String bookingId) {
-        return bookingDetailRepository.findById(bookingId)
-                .or(() -> {
-                    List<BookingDetail> byBookingCode = bookingDetailRepository.findByBookingCode(bookingId);
-                    return byBookingCode.isEmpty() ? Optional.empty() : Optional.of(byBookingCode.get(0));
-                });
+        return bookingDetailRepository.findById(bookingId);
     }
 
     @Override
@@ -87,16 +83,6 @@ public class BookingDetailService implements IService<BookingDetail, String> {
     @Override
     public boolean existsById(String id) {
         return bookingDetailRepository.existsById(id);
-    }
-
-
-    public List<BookingDetail> findByBookingId(String bookingId) {
-        return bookingDetailRepository.findByBookingCode(bookingId);
-    }
-
-
-    public List<BookingDetail> addAll(List<BookingDetail> bookingDetails) {
-        return bookingDetailRepository.saveAll(bookingDetails);
     }
 
     public void deleteAll() {

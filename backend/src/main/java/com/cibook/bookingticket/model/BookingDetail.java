@@ -15,21 +15,5 @@ import java.util.List;
 public class BookingDetail {
     @Id
     private String id;
-    private String userCode;
-    private String bookingId;
-    private String showTimeCode;
     private List<String> seatCode;
-    private Double subTotal;
-    private Double discountAmount;
-    private Double taxAmount;
-    private Double totalAmount;
-    private String couponCode;
-    private String paymentCode;
-    private String bookingCode;
-
-    private BookingStatus status;
-
-    public enum BookingStatus {
-        PENDING, CONFIRMED, CANCELLED, COMPLETED
-    }
 }

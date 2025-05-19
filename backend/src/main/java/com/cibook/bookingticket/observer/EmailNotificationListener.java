@@ -6,9 +6,10 @@ import com.cibook.bookingticket.service.BookingDetailService;
 import com.cibook.bookingticket.service.Email.EmailService;
 import com.cibook.bookingticket.service.UserService;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
-
+@Component
 public class EmailNotificationListener implements NotificationListener {
     private final UserService userService;
     private final EmailService emailService;

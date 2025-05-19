@@ -59,7 +59,7 @@ public class BookingDetailController implements IController<BookingDetail, Strin
 
     @PostMapping("/all")
     public ResponseEntity<List<BookingDetail>> addAll(@RequestBody List<BookingDetail> bookingDetails) {
-        return ResponseEntity.ok(bookingDetailService.addAll(bookingDetails));
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/all")

@@ -1,5 +1,6 @@
 package com.cibook.bookingticket.controller;
 
+import com.cibook.bookingticket.dto.BookingRequestDto;
 import com.cibook.bookingticket.model.Booking;
 import com.cibook.bookingticket.model.BookingDetail;
 import com.cibook.bookingticket.model.Showtime;
@@ -22,7 +23,7 @@ public class BookingController implements IController<Booking, String> {
     private final BookingService bookingService;
 
     @Autowired
-    public BookingController(BookingService bookingService, BookingDetailService bookingDetailService) {
+    public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
@@ -61,8 +62,8 @@ public class BookingController implements IController<Booking, String> {
     }
 
     @GetMapping("/{id}/details")
-    public ResponseEntity<List<BookingDetail>> getBookingDetails(@PathVariable("id") String id) {
-        return ResponseEntity.ok(bookingService.getDetailsById(id));
+    public ResponseEntity<BookingDetail> getBookingDetails(@PathVariable("id") String id) {
+        return ResponseEntity.ok(bookingService.getBookingDetailById(id));
     }
 
     @PostMapping("/all")
@@ -77,8 +78,9 @@ public class BookingController implements IController<Booking, String> {
     }
 
     @PostMapping("/u/")
-    public ResponseEntity<Booking> create(@RequestBody Map<String, String> entity) {
+    public ResponseEntity<Booking> createWithDetail(@RequestBody BookingRequestDto entity) {
         bookingService.addWithDetail(entity);
         return ResponseEntity.ok().build();
     }
+
 }

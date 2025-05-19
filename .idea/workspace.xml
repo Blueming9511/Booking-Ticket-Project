@@ -5,59 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="024da782-8bc2-4977-976c-63b80b17d9c8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/AsyncConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/NotificationConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/WebSocketConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/DBNotificationListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/EmailNotificationListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/NotificationEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/NotificationListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/NotificationSubject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/WebSocketNotificationListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/UserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/order-confirmation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_29_2025_11_52_AM_[Changes]1/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_29_2025_11_52_AM__Changes_1.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/MongoConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/WebSocketChatController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/BookingRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/static/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/OAuth2SuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/OAuth2SuccessHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/NotificationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/NotificationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/BookingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/BookingController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/BookingDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/BookingDetailController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/CinemaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/CinemaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/CouponController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/CouponController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/IController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/IController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/MovieController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/MovieController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/NotificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/NotificationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/PaymentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/ScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/ScreenController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/SeatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/SeatController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/ShowtimeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/ShowtimeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/auth/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Booking.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/BookingDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/BookingDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Notification.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Payment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Auth/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Auth/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Auth/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/EmailNotificationListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/EmailNotificationListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/BookingDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/BookingDetailRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/BookingDetailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/BookingDetailService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/BookingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/BookingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/CinemaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/CinemaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/CouponService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/CouponService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Email/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Email/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/IService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/IService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/MovieService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/MovieService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/NotificationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/PaymentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ScreenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ScreenService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/SeatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/SeatService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Security/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Security/CustomUserDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ShowtimeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ShowtimeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/templates/email.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/templates/otp.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/otp.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,8 +34,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="HTML File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -91,7 +55,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="backend/email-service" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -133,7 +97,7 @@
     "Spring Boot.BookingticketApplication.executor": "Run",
     "dart.analysis.tool.window.visible": "false",
     "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "frontend/notification__website",
+    "git-widget-placeholder": "front__end/notification__website",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/BaiTap/JAVA/Final",
     "node.js.detected.package.eslint": "true",
@@ -152,6 +116,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\BaiTap\JAVA\Final\backend\src\main\resources\static\" />
       <recent name="D:\BaiTap\JAVA\Final\backend\src\main\resources\static\images\" />
     </key>
   </component>
