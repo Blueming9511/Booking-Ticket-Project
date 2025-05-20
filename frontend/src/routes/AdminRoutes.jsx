@@ -1,10 +1,10 @@
 import React from 'react'
 import { Route, Router, Routes } from 'react-router-dom'
 import Dashboard from '../pages/admin/Dashboard'
-import Layout_admin from '../components/layouts/LayoutAdmin'
 import Cinemas from '../pages/admin/Cinemas'
 import Movies from '../pages/admin/Movies'
 import Users from '../pages/admin/Users'
+import LayoutAdmin from "../components/layouts/LayoutAdmin.jsx";
 
 const AdminRoutes = () => {
   return (
