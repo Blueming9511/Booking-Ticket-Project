@@ -50,21 +50,39 @@
             font-weight: 600;
         }
 
-        /* OTP Styles */
-        .otp-container {
+        /* Order Details */
+        .order-container {
             background-color: #f5f7fa;
             border-radius: 6px;
             padding: 16px;
             margin: 24px 0;
-            text-align: center;
         }
 
-        .otp-code {
-            font-size: 32px;
+        .order-number {
+            font-size: 18px;
             font-weight: bold;
-            letter-spacing: 8px;
             color: #1a2a3d;
             margin: 16px 0;
+        }
+
+        .order-details {
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-top: 16px;
+            padding-top: 8px;
+            border-top: 2px solid #ddd;
         }
 
         /* Button */
@@ -137,7 +155,9 @@
             <a href="#" th:href="${applicationUrl + '/help'}">Help Center</a>
         </div>
         <p>If you have any questions, please contact our support team.</p>
-        <p class="copyright" th:text="${'© ' + #dates.format(#dates.createNow(), 'yyyy') + ' ' + applicationName + '. All rights reserved.'}">© 2025 CiBook. All rights reserved.</p>
+        <p class="copyright"
+           th:text="${'© ' + #dates.format(#dates.createNow(), 'yyyy') + ' ' + applicationName + '. All rights reserved.'}">
+            © 2025 CiBook. All rights reserved.</p>
     </div>
 </div>
 </body>

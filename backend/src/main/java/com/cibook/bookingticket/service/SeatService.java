@@ -81,4 +81,9 @@ public class SeatService implements  IService<Seat, String>{
     public void deleteAll() {
         seatRepository.deleteAll();
     }
+
+    public Double getPrice(String id, String screenCode, String cinemaCode) {
+        System.out.println(id + " " + screenCode + " " + cinemaCode);
+        return 100.0;
+    }
 }

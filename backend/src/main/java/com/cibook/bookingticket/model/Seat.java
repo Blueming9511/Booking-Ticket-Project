@@ -21,6 +21,7 @@
         private String screenCode;
         private String cinemaCode;
         private Double multiplier;
+        private Double price;
         private SeatStatus status;
 
         public enum  SeatType {

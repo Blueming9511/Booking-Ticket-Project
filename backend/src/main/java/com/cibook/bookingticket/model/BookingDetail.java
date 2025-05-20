@@ -15,5 +15,7 @@ import java.util.List;
 public class BookingDetail {
     @Id
     private String id;
-    private List<String> seatCode;
+    private String bookingId;
+    private String seatCode;
+    private Double price;
 }

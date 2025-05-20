@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class CinemaController implements IController<Cinema, String> {
 
     @Override
     public ResponseEntity<Page<Cinema>> getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("cinemaCode").ascending());
         Page<Cinema> cinemas = cinemaService.findAll(pageable);
         return ResponseEntity.ok(cinemas);
     }
@@ -48,7 +49,7 @@ public class CinemaController implements IController<Cinema, String> {
     }
 
     @Override
-    public ResponseEntity<Cinema> update(String id, @RequestBody  Cinema entity) {
+    public ResponseEntity<Cinema> update(String id, @RequestBody Cinema entity) {
         return ResponseEntity.ok(cinemaService.update(id, entity));
     }
 
@@ -63,7 +64,7 @@ public class CinemaController implements IController<Cinema, String> {
 
     @GetMapping("/code/{id}")
     public ResponseEntity<Cinema> getByCode(@PathVariable("id") String id) {
-       return cinemaService.findByCode(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return cinemaService.findByCode(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
 

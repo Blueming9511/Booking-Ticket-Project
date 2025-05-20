@@ -13,7 +13,7 @@ import java.util.List;
 public class BookingRequestDto {
     private String userId;
     private String showtimeId;
-    private List<String> seatId;
+    private List<String> seats;
     private String paymentMethod;
     private Double totalAmount;
 }

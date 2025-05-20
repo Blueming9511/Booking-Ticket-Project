@@ -13,7 +13,8 @@ public interface IController<T, K> {
     ResponseEntity<T> add(@RequestBody T entity);
 
     @GetMapping
-    ResponseEntity<Page<T>> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size);
+    ResponseEntity<Page<T>> getAll(@RequestParam(name = "page", defaultValue = "0") int page,
+                                   @RequestParam(name = "size", defaultValue = "10") int size);
 
     @GetMapping("/{id}")
     ResponseEntity<T> getById(@PathVariable("id") K id);

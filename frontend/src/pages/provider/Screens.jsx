@@ -12,7 +12,6 @@ const Screen = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [state, setState] = useState({
     screens: [],
-    filteredScreens: [],
     filters: {
       search: "",
       status: null,
@@ -26,6 +25,11 @@ const Screen = () => {
         { value: "MAINTENANCE", label: "Maintenance" },
       ],
     },
+    pagination: {
+      page: 0,
+      size: 5,
+      totalElements: 0,
+    },
     modals: {
       add: false,
       edit: false,
@@ -35,16 +39,14 @@ const Screen = () => {
     loading: false,
   });
 
-  const fetchData = useCallback(async (showSucess=true) => {
+  const fetchData = useCallback(async (showSucess = true) => {
     try {
       setState(prev => ({ ...prev, loading: true }));
-      showSucess && messageApi.loading("Fetching data...");
-      
-      const [screensRes, cinemaRes, typeRes, cinemas] = await Promise.all([
+
+      const [screensRes, cinemaRes, typeRes] = await Promise.all([
         axios.get("http://localhost:8080/api/screens", { withCredentials: true }),
         axios.get("http://localhost:8080/api/cinemas/names", { withCredentials: true }),
         axios.get("http://localhost:8080/api/screens/types", { withCredentials: true }),
-        axios.get("http://localhost:8080/api/cinemas", { withCredentials: true }),
       ]);
 
       setState(prev => ({
@@ -56,12 +58,9 @@ const Screen = () => {
           cinemaOptions: Object.entries(cinemaRes.data).map(([value, label]) => ({ value, label })),
           typeOptions: Object.entries(typeRes.data).map(([value, label]) => ({ value, label })),
         },
-        cinemas: cinemas.data
       }));
-      showSucess && messageApi.destroy();
-      showSucess && messageApi.success("Data fetched successfully", 2);
     } catch (error) {
-      showSucess && messageApi.error("Failed to fetch data", 2);
+      messageApi.error("Failed to fetch data", 2);
       console.error("Fetch error:", error);
     } finally {
       setState(prev => ({ ...prev, loading: false }));
@@ -72,6 +71,20 @@ const Screen = () => {
     fetchData();
   }, [fetchData]);
 
+  const fetchScreen = async (page = 0, size = 5) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/screens?page=${page}&size=${size}`, { withCredentials: true });
+      setState(prev => ({ ...prev, screens: response.data.content, pagination: { ...prev.pagination, totalElements: response.data.totalElements } }));
+    } catch (error) {
+      messageApi.error("Failed to fetch data", 2);
+      console.error("Fetch error:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchScreen(state.pagination.page);
+  }, [state.pagination.page]);
+
   useEffect(() => {
     const { search, status, type, cinema } = state.filters;
     let result = [...state.screens];
@@ -80,9 +93,9 @@ const Screen = () => {
       const searchLower = search.toLowerCase();
       result = result.filter(
         screen =>
-            screen.id.toLowerCase().includes(searchLower) ||
-            screen.cinema.toLowerCase().includes(searchLower) ||
-            screen.location.toLowerCase().includes(searchLower)
+          screen.id.toLowerCase().includes(searchLower) ||
+          screen.cinema.toLowerCase().includes(searchLower) ||
+          screen.location.toLowerCase().includes(searchLower)
       );
     }
     if (status) result = result.filter(screen => screen.status === status);
@@ -113,7 +126,7 @@ const Screen = () => {
   };
 
   const handleSubmit = async (action, values = null) => {
-     console.log(state.selectedScreen);
+    console.log(state.selectedScreen);
     const config = {
       add: {
         method: "post",
@@ -159,8 +172,8 @@ const Screen = () => {
       <Card
         title={<span className="text-xl font-bold">Screen Management</span>}
         variant="borderless"
-        styles = {{header: {borderBottom: 'none'}}}
-        style={{boxShadow: 'none'}}
+        styles={{ header: { borderBottom: 'none' } }}
+        style={{ boxShadow: 'none' }}
         extra={
           <Space wrap>
             <Select
@@ -192,14 +205,15 @@ const Screen = () => {
           </Space>
         }
       >
-        <ScreenStatistics data={filteredScreens} loading={loading} />
-        {console.log(state.cinemas)}
+        {/* <ScreenStatistics data={state.screens} loading={loading} /> */}
         <ScreenTable
-          data={filteredScreens}
+          data={state.screens}
           onEdit={screen => toggleModal("edit", true, screen)}
           onDelete={screen => toggleModal("delete", true, screen)}
           loading={loading}
           cinemas={state.cinemas || []}
+          pagination={state.pagination}
+          onSetPage={page => setState(prev => ({ ...prev, pagination: { ...prev.pagination, page } }))}
         />
       </Card>
 

@@ -16,15 +16,14 @@ import java.util.Date;
 public class Payment {
     @Id
     private String id;
-
+    private String bookingID;
     @Indexed(unique = true)
     private String paymentCode;
-
     private PaymentMethod method;
-    private Double amount;
+
     @CreatedDate
     private LocalDateTime date;
-    private String bookingID;
+
     @Builder.Default
     private PaymentStatus status = PaymentStatus.PENDING;
 

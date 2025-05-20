@@ -1,15 +1,18 @@
 import { Divider, Table } from "antd";
 import { columns } from "./ColumnsConfig";
 
-const ScreenTable = ({ data, onEdit, onDelete, loading, cinemas }) => {
+const ScreenTable = ({ data, onEdit, onDelete, loading, cinemas, pagination, onSetPage }) => {
   return (
     <>
       <Table
         columns={columns(onEdit, onDelete, cinemas)}
         dataSource={data}
         pagination={{
-          pageSize: 5,
+          current: pagination.page + 1,
+          pageSize: pagination.size,
+          total: pagination.totalElements,
           responsive: true,
+          onChange: (page) => onSetPage(page - 1),
         }}
         rowClassName={(record) => {
           if (record.status === "Closed") return "bg-red-50 hover:bg-red-100";
