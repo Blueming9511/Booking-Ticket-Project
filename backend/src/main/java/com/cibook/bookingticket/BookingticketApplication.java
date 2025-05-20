@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class BookingticketApplication{
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(BookingticketApplication.class, args);
 	}
