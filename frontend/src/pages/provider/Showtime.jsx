@@ -11,39 +11,138 @@ import ModalDelete from "../../components/ui/Modal/ModalDelete";
 const Showtime = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [state, setState] = useState({
-        showtimes: null,
+        showtimes: [],
+        filteredShowtimes: [],
+        filters: {
+            cinema: null,
+            room: null,
+            status: null,
+            cinemaOptions: [],
+            roomOptions: [],
+            statusOptions: [
+                {value: "Active", label: "Active"},
+                {value: "Inactive", label: "Inactive"},
+            ],
+        },
+        modals: {
+            add: false,
+            edit: false,
+        },
         pagination: {
             page: 0,
             size: 5,
             totalElements: 0
         },
-        filters: {
-            cinemaOptions: {},
-            screenOptions: {},
-
-        }
-    })
-
+        movies: null,
+        selectedShowtime: null,
+    });
+    const [loading, setLoading] = useState(false)
     const fetchShowtime = async (page = 0, size = 5) => {
         try {
-            const res = await axios.get("http://localhost:8080/api/showtimes", {withCredentials: true});
-            setState(prev => ({
+            setLoading(true);
+            const res = await axios.get(`http://localhost:8080/api/showtimes/v2/?page=${page}&size=${size}`);
+            setState((prev) => ({
                 ...prev,
                 showtimes: res.data.content,
-                pagination: {
-                    ...prev.pagination,
-                    totalElements: res.data.totalElements
-                }
-            }));
-            messageApi.success("Successfully", 2)
+                pagination: {...state.pagination, totalElements: res.data.totalElements}
+            }))
+            messageApi.success("Successfully!", 2)
         } catch (e) {
-            messageApi.error("Fetching error!");
+            messageApi.error("Fetching error", 2);
+            console.error(e)
+        } finally {
+            setLoading(false)
         }
     }
 
+    const fetchData = useCallback(
+        async (showSuccess = true) => {
+            try {
+                const [cinemasRes, roomsRes, moviesRes, movies] =
+                    await Promise.all([
+                        axios.get("http://localhost:8080/api/cinemas/names", {
+                            withCredentials: true,
+                        }),
+                        axios.get("http://localhost:8080/api/screens/names", {
+                            withCredentials: true,
+                        }),
+                        axios.get("http://localhost:8080/api/movies/names", {
+                            withCredentials: true,
+                        }),
+                        axios.get("http://localhost:8080/api/movies", {
+                            withCredentials: true,
+                        }),
+                    ]);
+                setState((prev) => ({
+                    ...prev,
+                    movies: movies.data.content,
+                    rooms: roomsRes.data,
+                    filters: {
+                        ...prev.filters,
+                        cinemaOptions: Object.entries(cinemasRes.data).map(
+                            ([value, label]) => ({
+                                value,
+                                label,
+                            })
+                        ),
+                        roomOptions: Object.entries(roomsRes.data).map(
+                            ([value, label]) => ({
+                                value,
+                                label,
+                            })
+                        ),
+                        movieOptions: Object.entries(moviesRes.data).map(
+                            ([value, label]) => ({
+                                value,
+                                label,
+                            })
+                        ),
+                    },
+                }));
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        },
+        [messageApi]
+    );
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
     useEffect(() => {
         fetchShowtime(state.pagination.page, state.pagination.size)
-    }, [state.pagination.page])
+    }, [state.pagination.page]);
+
+    useEffect(() => {
+        const {cinema, room, status} = state.filters;
+        let result = [...state.showtimes];
+        if (cinema) result = result.filter((item) => item.cinemaCode === cinema);
+        if (room)
+            result = result.filter((item) => item.screenCode === room.split("-")[1]);
+        if (status) result = result.filter((item) => item.status === status);
+
+        setState((prev) => ({...prev, filteredShowtimes: result}));
+    }, [state.filters, state.showtimes]);
+
+    useEffect(() => {
+        if (state.movies) {
+            console.log("✅ Movies updated:", state.movies);
+        }
+    }, [state.movies]);
+
+    const handleFilterChange = (field, value) => {
+        setState((prev) => {
+            const updatedFilters = {...prev.filters, [field]: value};
+
+            if (field === "cinema") {
+                updatedFilters.room = value ? state.rooms[value] : null;
+                updatedFilters.roomOptions = state.rooms[value] || [];
+            }
+
+            return {...prev, filters: updatedFilters};
+        });
+    };
 
     const toggleModal = (modalName, isOpen, showtime = null) => {
         setState((prev) => ({
@@ -72,7 +171,7 @@ const Showtime = () => {
         };
 
         try {
-            setState((prev) => ({...prev, loading: true}));
+            setLoading(true)
             await axios({...config[action], withCredentials: true});
             messageApi.success(
                 `Showtime ${action === "add" ? "added" : "updated"} successfully`,
@@ -84,11 +183,11 @@ const Showtime = () => {
             messageApi.error(`Failed to ${action} showtime`, 2);
             console.error(`${action} error:`, error);
         } finally {
-            setState((prev) => ({...prev, loading: false}));
+            setLoading(false)
         }
     };
 
-    const {filteredShowtimes, filters, modals, selectedShowtime, loading} =
+    const {filteredShowtimes, filters, modals, selectedShowtime} =
         state;
 
     return (
@@ -135,7 +234,7 @@ const Showtime = () => {
                     </Space>
                 }
             >
-                <ShowTimeStatistics data={state.showtimes} bookings={state.bookingDetailsRes}/>
+                <ShowTimeStatistics data={filteredShowtimes}/>
                 <ShowTimeTable
                     data={state.showtimes}
                     loading={loading}
@@ -144,10 +243,8 @@ const Showtime = () => {
                     movies={state.movies}
                     cinemas={filters.cinemaOptions}
                     rooms={filters.roomOptions}
-                    bookingDetails={state.bookingDetailsRes}
                 />
             </Card>
-
             <ModalShowTimeAdd
                 visible={modals.add}
                 onCancel={() => toggleModal("add", false)}

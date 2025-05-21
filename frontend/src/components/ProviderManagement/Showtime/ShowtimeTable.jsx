@@ -2,9 +2,10 @@ import React from "react";
 import { Table, Divider } from "antd";
 import { columns } from "./ColumnsConfig";
 const ShowtimeTable = ({ data, onEdit, onDelete, cinemas, rooms, movies, bookingDetails }) => {
-  return (
+  console.log(data, cinemas, rooms, movies, bookingDetails)
+    return (
     <>
-      <Table
+        <Table
         columns={columns(onEdit, onDelete, cinemas, rooms, movies, bookingDetails)}
         dataSource={data}
         rowKey="key"
