@@ -7,7 +7,7 @@ export const CinemaTable = ({ data, onEdit, onDelete, pagination, onPageChange }
     <>
       <Table
         columns={columns(onEdit, onDelete)}
-        dataSource={data.content}
+        dataSource={data}
         pagination={{
           current: pagination.page + 1,
           pageSize: pagination.size,

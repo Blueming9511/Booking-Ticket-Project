@@ -125,8 +125,6 @@ const Cinemas = ({ role = "Admin" }) => {
     }));
   };
 
-
-
   const { filteredCinemas, filters, modals, selectedCinema, loading } = state;
 
   return (

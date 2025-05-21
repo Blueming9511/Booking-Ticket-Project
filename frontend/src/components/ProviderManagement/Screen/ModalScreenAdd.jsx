@@ -6,12 +6,12 @@ const ModalScreenAdd = ({ visible, initialValues, onCancel, onSuccess, loading, 
 
   return (
     <Modal
-      title="Edit Movie"
+      title="Add Screen"
       open={visible}
       onCancel={onCancel}
       onOk={() => form.submit()}
       confirmLoading={loading}
-      width={500}
+      width={800}
     >
       <ModalScreenForm
         form={form}

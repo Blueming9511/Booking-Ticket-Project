@@ -5,38 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="024da782-8bc2-4977-976c-63b80b17d9c8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/ScreenLocationWithOptionsResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/ScreenRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/ScreenWithLocationDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Layout/TheaterLayout.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Layout/TheaterLayoutView.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/com/cibook/bookingticket/index.http" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/com/cibook/bookingticket/test.http" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/out/production/Final/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/email.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/forgot-success.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/forgot-success.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/forgot.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/forgot.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/otp.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/otp.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/static/images/logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/templates/email.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/templates/forgot-success.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/templates/forgot.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/templates/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/templates/otp.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/templates/verify.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/CinemaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/CinemaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/IController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/IController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/BookingRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/BookingRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/BookingResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/BookingResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Booking.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/BookingDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/BookingDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Payment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/ScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/ScreenController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/SeatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/SeatController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Screen.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Screen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Seat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/EmailNotificationListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/observer/EmailNotificationListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/SeatRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/SeatRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/BookingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/BookingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Email/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/Email/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/IService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/IService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ScreenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ScreenService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/SeatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/SeatService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/templates/order-confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/order-confirmation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Cinema/CinemaTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Cinema/CinemaTable.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ColumnsConfig.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ColumnsConfig.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ModalScreenAdd.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ModalScreenAdd.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ModalScreenEdit.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ModalScreenEdit.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ModalScreenForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ModalScreenForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ScreenTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ScreenTable.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/provider/Cinemas.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/provider/Cinemas.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/provider/Screens.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/provider/Screens.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,6 +185,8 @@
       <workItem from="1746078133759" duration="9000" />
       <workItem from="1747652483046" duration="2876000" />
       <workItem from="1747656186185" duration="7545000" />
+      <workItem from="1747790902208" duration="5885000" />
+      <workItem from="1747797178064" duration="29169000" />
     </task>
     <servers />
   </component>

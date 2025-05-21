@@ -13,4 +13,6 @@ public interface SeatRepository extends MongoRepository<Seat, String> {
 
     @Query("{'seatCode': ?0, 'screenCode': ?1, 'cinemaCode': ?2}")
     Double getPriceBySeatCode(String seatCode, String screenCode, String cinemaCode);
+
+    void deleteAllByCinemaCodeAndScreenCode(String cinemaCode, String screenCode);
 }

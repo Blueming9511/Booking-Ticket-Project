@@ -66,7 +66,6 @@ public class BookingService implements IService<Booking, String> {
                 BookingDetail.builder()
                         .bookingId(finalBooking.getId())
                         .seatCode(seatId)
-                        .price(seatService.getPrice(seatId, showtime.getScreenCode(), showtime.getCinemaCode()))
                         .build()
         ).toList();
         details = bookingDetailRepository.saveAll(details);

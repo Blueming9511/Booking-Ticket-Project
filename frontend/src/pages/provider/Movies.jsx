@@ -21,17 +21,22 @@ const Movies = () => {
     add: false,
     delete: false
   });
+  const [pagination, setPagination] = useState({
+    page: 0,
+    size: 5,
+    totalElements: 0
+  })
 
   // Fetch movies data
-  const fetchMovies = async () => {
+  const fetchMovies = async (page = 0, size = 5) => {
     try {
       setLoading(true);
       messageApi.loading("Fetching movies...", 0);
-      const response = await axios.get("http://localhost:8080/api/movies", {
+      const response = await axios.get(`http://localhost:8080/api/movies?page=${page}&size=${size}`, {
         withCredentials: true,
       });
-      setMovies(response.data);
-      setFilteredMovies(response.data);
+      setMovies(response.data.content);
+      setPagination((prev) => ({ ...prev, totalElements: response.data.totalElements }));
       messageApi.destroy();
       messageApi.success("Movies fetched successfully");
     } catch (error) {
@@ -57,8 +62,8 @@ const Movies = () => {
 
   // Initial data fetch
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(pagination.page, pagination.size);
+  }, [pagination.page]);
 
   const toggleModal = (modalName, isOpen, movie = null) => {
     setModalState(prev => ({ ...prev, [modalName]: isOpen }));
@@ -139,10 +144,12 @@ const Movies = () => {
       >
         <MovieStatistics data={filteredMovies} loading={loading} />
         <MovieTable
-          data={filteredMovies}
+          data={movies}
           onEdit={(movie) => toggleModal('edit', true, movie)}
           onDelete={(movie) => toggleModal('delete', true, movie)}
           loading={loading}
+          pagination={pagination}
+          onChangePage={(page) => setPagination((prev) => ({...prev, page: page}))}
         />
       </Card>
 

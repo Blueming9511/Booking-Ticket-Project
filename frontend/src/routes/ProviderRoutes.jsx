@@ -7,7 +7,6 @@ import Movies from '../pages/provider/Movies'
 import Coupon from '../pages/provider/Coupon'
 import Payment from '../pages/provider/Payment'
 import Screens from '../pages/provider/Screens'
-import Seat from '../pages/provider/Seat'
 import ShowTime from '../pages/provider/Showtime'
 
 const ProviderRoutes = () => {
@@ -21,7 +20,6 @@ const ProviderRoutes = () => {
         <Route path='/coupons' element={<Coupon />} />
         <Route path='/payments' element={<Payment />} />
         <Route path='/screens' element={<Screens />} />
-        <Route path='/seats' element={<Seat />} />
         <Route path='/payments' element={<Payment />} />
         <Route path='/showtimes' element={<ShowTime />} />
       </Route>

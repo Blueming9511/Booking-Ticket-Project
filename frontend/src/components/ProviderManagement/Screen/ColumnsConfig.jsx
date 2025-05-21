@@ -2,22 +2,6 @@ import { Avatar, Tag, Dropdown, Button, Badge } from "antd";
 import { EnvironmentOutlined, EllipsisOutlined } from "@ant-design/icons";
 import TagStatus from "../../ui/Tag/TagStatus";
 
-const CinemaInfo = ({ cinemaId, cinemaData, location=false }) => {
-  const cinema = cinemaData.find(c => c.cinemaCode === cinemaId);
-  console.log(cinema)
-  if (location)
-    return (
-      <div className="flex items-center text-xs text-gray-500">
-        {cinema?.location || "Unknown Cinema"}
-      </div>
-    );
-  return (
-    <div className="flex items-center text-xs text-gray-500">
-      {cinema?.location.split(",").slice(-1)[0] || "Unknown Cinema"}
-    </div>
-  );
-};
-
 export const columns = (handleEdit, handleDelete, cinemaData) => [
   {
     title: "Screen Info",
@@ -50,7 +34,7 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
           </div>
           <div className="flex items-center text-xs text-gray-500">
             <EnvironmentOutlined className="mr-1" />
-            <CinemaInfo cinemaId={record.cinemaId} cinemaData={cinemaData} />
+            <p className={"text-sm"}>{record.cinemaName}</p>
           </div>
         </div>
       </div>
@@ -104,9 +88,9 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
   },
   {
     title: "Location",
-    dataIndex: "location",
-    key: "location",
-    render: (_, record) => <CinemaInfo cinemaId={record.cinemaId} cinemaData={cinemaData} location />,
+    dataIndex: "cinemaLocation",
+    key: "cinemaLocation",
+    render: (location) => <p className={"text-xs text-gray-600"}>{location}</p>,
     width: 200,
   },
   {

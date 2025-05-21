@@ -11,10 +11,10 @@ public interface IService<T, K> {
 
     T add(T entity);
 
-    Optional<T> findById(K id);
-    Optional<T> findByCode(K id);
-    List<T> findAll();
-    Page<T> findAll(Pageable pageable);
+    Optional<?> findById(K id);
+    Optional<?> findByCode(K id);
+    List<?> findAll();
+    Page<?> findAll(Pageable pageable);
     Map<K, K> findAllNamesWithID();
 
     T update(K id, T entity);

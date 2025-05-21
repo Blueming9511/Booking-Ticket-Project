@@ -4,10 +4,6 @@ import ModalScreenForm from "./ModalScreenForm";
 const ModalScreenEdit = ({ visible, initialValues, onCancel, onSuccess, loading, cinemas }) => {
   const [form] = Form.useForm();
 
-  const handleSubmit = () => {
-    onSuccess(form.getFieldsValue());
-  };
-
   return (
     <Modal
       title="Edit Movie"
@@ -15,12 +11,12 @@ const ModalScreenEdit = ({ visible, initialValues, onCancel, onSuccess, loading,
       onCancel={onCancel}
       onOk={() => form.submit()}
       confirmLoading={loading}
-      width={500}
+      width={800}
     >
       <ModalScreenForm
         form={form}
         initialValues={initialValues}
-        onFinish={handleSubmit}
+        onFinish={onSuccess}
         cinemas={cinemas}
       />
     </Modal>
