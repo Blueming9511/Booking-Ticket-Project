@@ -1,0 +1,994 @@
+GET http://localhost:8080/api/bookings/67ef47786954627740371e7a/details/67f00b1747405c01d51462a6
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T234327.200.json
+
+###
+
+PUT http://localhost:8080/api/bookings/67ef47786954627740371e7a/details/67f00b1747405c01d51462a6
+Content-Type: application/json
+Accept: application/json
+Content-Length: 475
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+   "user": { "id": "67ef3c96b50a606c784293ba" },
+   "showTime": { "id": "67ef5bca8225673361871d13" },
+   "seats": [ { "id": "67effa70426dee0a01eb867a" } ],
+  "subTotal": 26.00,
+  "discountAmount": 1.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon":  {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "payment":  {
+    "id": "P001"
+  },
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T234303.200.json
+
+###
+
+POST http://localhost:8080/api/bookings/67ef47786954627740371e7a/details
+Content-Type: application/json
+Accept: application/json
+Content-Length: 316
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "user": { "id": "67ef3c96b50a606c784293ba" },
+  "showTime": { "id": "67ef5bca8225673361871d13" },
+  "seats": [
+    { "id": "67effa70426dee0a01eb867a" }
+  ],
+  "subTotal": 150.75,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": null,
+  "payment": null,
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T233847.201.json
+
+###
+
+POST http://localhost:8080/api/bookings/67ef47786954627740371e7a/details
+Content-Type: application/json
+Accept: application/json
+Content-Length: 336
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "user": { "id": "67ef3c96b50a606c784293ba" },
+  "showTime": { "id": "67ef5bca8225673361871d13" },
+  "seats": [
+    { "id": "67effa70426dee0a01eb867a" }
+  ],
+  "subTotal": 150.75,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": 67ef2a5b3433dd4a7bab353b,
+  "payment": null,
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T233831.400.json
+
+###
+
+POST http://localhost:8080/api/bookings/67ef47786954627740371e7a/details
+Content-Type: application/json
+Accept: application/json
+Content-Length: 336
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "user": { "id": "67ef3c96b50a606c784293ba" },
+  "showTime": { "id": "67ef5bca8225673361871d13" },
+  "seats": [
+    { "id": "67effa70426dee0a01eb867a" }
+  ],
+  "subTotal": 150.75,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": 67ef2a5b3433dd4a7bab353b,
+  "payment": P001,
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T233537.400.json
+
+###
+
+GET http://localhost:8080/api/bookings/67ef47786954627740371e7a
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T233518.200.json
+
+###
+
+POST http://localhost:8080/api/bookings/67ef47786954627740371e7a/details
+Content-Type: application/json
+Accept: application/json
+Content-Length: 336
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "user": { "id": "67ef3c96b50a606c784293ba" },
+  "showTime": { "id": "67ef5bca8225673361871d13" },
+  "seats": [
+    { "id": "67effa70426dee0a01eb867a" }
+  ],
+  "subTotal": 150.75,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": 67ef2a5b3433dd4a7bab353b,
+  "payment": P001,
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T233450-1.400.json
+
+###
+
+POST http://localhost:8080/api/bookings/67ef47786954627740371e7a/details
+Content-Type: application/json
+Accept: application/json
+Content-Length: 336
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "user": { "id": "67ef3c96b50a606c784293ba" },
+  "showTime": { "id": "67ef5bca8225673361871d13" },
+  "seats": [
+    { "id": "67effa70426dee0a01eb867a" }
+  ],
+  "subTotal": 150.75,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": 67ef2a5b3433dd4a7bab353b,
+  "payment": P001,
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T233450.400.json
+
+###
+
+POST http://localhost:8080/api/bookings/67ef47786954627740371e7a/details
+Content-Type: application/json
+Accept: application/json
+Content-Length: 336
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "user": { "id": "67ef3c96b50a606c784293ba" },
+  "showTime": { "id": "67ef5bca8225673361871d13" },
+  "seats": [
+    { "id": "67effa70426dee0a01eb867a" }
+  ],
+  "subTotal": 150.75,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": 67ef2a5b3433dd4a7bab353b,
+  "payment": P001,
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T233428.400.json
+
+###
+
+POST http://localhost:8080/api/bookings/67ef47786954627740371e7a/details
+Content-Type: application/json
+Accept: application/json
+Content-Length: 336
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "user": { "id": "67ef3c96b50a606c784293ba" },
+  "showTime": { "id": "67ef5bca8225673361871d13" },
+  "seats": [
+    { "id": "67effa70426dee0a01eb867a" }
+  ],
+  "subTotal": 150.75,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": 67ef2a5b3433dd4a7bab353b,
+  "payment": null,
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T232723.405.json
+
+###
+
+POST http://localhost:8080/api/bookings/67ef47786954627740371e7a/details
+Content-Type: application/json
+Accept: application/json
+Content-Length: 352
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "user": { "id": "67ef3c96b50a606c784293ba" },
+  "showTime": { "id": "67ef5bca8225673361871d13" },
+  "seats": [
+    { "id": "67effa70426dee0a01eb867a" }
+  ],
+  "subTotal": 150.75,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": 67ef2a5b3433dd4a7bab353b,
+  "payment": P001,
+  "status": "CONFIRMED"
+}
+
+<> 2025-04-04T232659.405.json
+
+###
+
+PUT http://localhost:8080/api/payments/PAY001
+Content-Type: application/json
+Accept: application/json
+Content-Length: 140
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "method": "MOMO",
+  "amount": 150.75,
+  "date": "2024-04-05T11:00:00Z",
+  "userID": "67ef3c96b50a606c784293ba",
+  "status": "APPROVED"
+}
+
+<> 2025-04-04T232455.200.json
+
+###
+
+PUT http://localhost:8080/api/payments/PAY001
+Content-Type: application/json
+Accept: application/json
+Content-Length: 140
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "method": "MOMO",
+  "amount": 150.75,
+  "date": "2024-04-05T11:00:00Z",
+  "UserID": "67ef3c96b50a606c784293ba",
+  "status": "APPROVED"
+}
+
+<> 2025-04-04T232449.200.json
+
+###
+
+PUT http://localhost:8080/api/payments/PAY001
+Content-Type: application/json
+Accept: application/json
+Content-Length: 140
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "method": "MOMO",
+  "amount": 150.75,
+  "date": "2024-04-05T11:00:00Z",
+  "UserID": "67ef3c96b50a606c784293ba",
+  "status": "APPROVED"
+}
+
+<> 2025-04-04T232442.200.json
+
+###
+
+PUT http://localhost:8080/api/payments/PAY001
+Content-Type: application/json
+Accept: application/json
+Content-Length: 155
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "method": "MOMO",
+  "amount": 150.75,
+  "date": "2024-04-05T11:00:00Z",
+  "UserID": "67ef3c96b50a606c784293ba",
+  "status": "APPROVED"
+}
+
+<> 2025-04-04T232308.200.json
+
+###
+
+GET http://localhost:8080/api/payments/names
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:8080/api/payments/PAY001
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T232156.200.json
+
+###
+
+POST http://localhost:8080/api/payments
+Content-Type: application/json
+Accept: application/json
+Content-Length: 140
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "method": "VNPAY",
+  "amount": 150.75,
+  "date": "2024-04-05T10:30:00Z",
+  "UserID": "67ef3c96b50a606c784293ba",
+  "status": "PENDING"
+}
+
+<> 2025-04-04T231954.200.json
+
+###
+
+GET http://localhost:8080/api/seats/67effa70426dee0a01eb867a
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T231231.200.json
+
+###
+
+GET http://localhost:8080/api/seats
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T231226.200.json
+
+###
+
+PUT http://localhost:8080/api/seats/67effa70426dee0a01eb867a
+Content-Type: application/json
+Accept: application/json
+Content-Length: 146
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "number": "E1",
+  "type": "VIP",
+  "row": "A",
+  "screenCode": "SCR002",
+  "cinemaCode": "CIN002",
+  "multiplier": 1.5,
+  "status": "BOOKED"
+}
+
+<> 2025-04-04T231215.200.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Accept: application/json
+Content-Length: 450
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+[
+  {
+    "number": "D1", "type": "Standard", "row": "D", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "D2", "type": "Standard", "row": "D", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "D3", "type": "Couple", "row": "D", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  }
+]
+
+<> 2025-04-04T225656.201.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Accept: application/json
+Content-Length: 450
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+[
+  {
+    "number": "C1", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C2", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C3", "type": "Couple", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  }
+]
+
+<> 2025-04-04T225613.201.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Accept: application/json
+Content-Length: 450
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+[
+  {
+    "number": "C1", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C2", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C3", "type": "Couple", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  }
+]
+
+<> 2025-04-04T225201.500.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Accept: application/json
+Content-Length: 450
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+[
+  {
+    "number": "C1", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C2", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C3", "type": "Couple", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  }
+]
+
+<> 2025-04-04T224900.500.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Accept: application/json
+Content-Length: 450
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+[
+  {
+    "number": "C1", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C2", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C3", "type": "Couple", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  }
+]
+
+<> 2025-04-04T224432.500.json
+
+###
+
+POST http://localhost:8080/api/seats/all
+Content-Type: application/json
+Accept: application/json
+Content-Length: 450
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+[
+  {
+    "number": "C1", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C2", "type": "Standard", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "C3", "type": "Couple", "row": "C", "screenCode": "SCR002", "cinemaCode": "CIN002", "multiplier": 1.0, "status": "AVAILABLE"
+  }
+]
+
+<> 2025-04-04T223846.500.json
+
+###
+
+GET http://localhost:8080/api/seats/67effa70426dee0a01eb867a
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T222913.200.json
+
+###
+
+PUT http://localhost:8080/api/seats/67effa70426dee0a01eb867a
+Content-Type: application/json
+Accept: application/json
+Content-Length: 176
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "number": "A1",
+  "type": "VIP",
+  "row": "A",
+  "screenCode": "SCR002",
+  "cinemaCode": "CIN002",
+  "multiplier": 1.5,
+  "status": "BOOKED"
+}
+
+<> 2025-04-04T222909.200.json
+
+###
+
+GET http://localhost:8080/api/seats/67effa70426dee0a01eb867a
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T222841.200.json
+
+###
+
+PUT http://localhost:8080/api/seats/67eead2837c02c5cd1371caf
+Content-Type: application/json
+Accept: application/json
+Content-Length: 228
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "number": "A1",
+  "type": "VIP",              # Example update
+  "row": "A",
+  "screenCode": "SCR002",
+  "cinemaCode": "CIN002",
+  "multiplier": 1.5,          # Example update
+  "status": "BOOKED"          # Example update
+}
+
+<> 2025-04-04T222813.400.json
+
+###
+
+GET http://localhost:8080/api/seats
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T222758.200.json
+
+###
+
+POST http://localhost:8080/api/seats
+Content-Type: application/json
+Accept: application/json
+Content-Length: 155
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "number": "A1",
+  "type": "Standard",
+  "row": "A",
+  "screenCode": "SCR002",
+  "cinemaCode": "CIN002",
+  "multiplier": 1.0,
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T222744.200.json
+
+###
+
+GET http://localhost:8080/api/showtimes
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T222515.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 288
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "date": "2025-04-04",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T222308.200.json
+
+###
+
+GET http://localhost:8080/api/showtimes
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T174436.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 288
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "date": "2025-04-04",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T174432.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 289
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+   "date": "2025-04-04",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T173840.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 303
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "date": "2025-04-04T09:00:00+07:00",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T173204.400.json
+
+###
+
+PUT http://localhost:8080/api/showtimes/67efaf1186ad412329851d97
+Content-Type: application/json
+Accept: application/json
+Content-Length: 298
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "date": "2025-04-04T09:00:00+07:00",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 16.00,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "FULL"
+}
+
+<> 2025-04-04T173137.400.json
+
+###
+
+GET http://localhost:8080/api/showtimes
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T172907.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 288
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "date": "2025-05-04",
+  "startTime": "13:00:00",
+  "endTime": "17:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T172903.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 288
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "date": "2025-04-04",
+  "startTime": "13:00:00",
+  "endTime": "17:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T172648.200.json
+
+###
+
+GET http://localhost:8080/api/showtimes
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T172612.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 288
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "date": "2025-04-04",
+  "startTime": "13:00:00",
+  "endTime": "17:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T172605.200.json
+
+###
+
+GET http://localhost:8080/api/showtimes
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T172536.200.json
+
+###
+
+GET http://localhost:8080/api/showtimes
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-04-04T172513.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 288
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "date": "2025-04-04",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T172508.200.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 306
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+ "date": "2025-04-04T00:00:00.000+00:00",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T172443.400.json
+
+###
+
+POST http://localhost:8080/api/showtimes
+Content-Type: application/json
+Accept: application/json
+Content-Length: 305
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.3.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+ "date": "2025-04-04T00:00:00.000+00:00",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00"
+  "price": 18.50,
+  "movie": {
+    "id": "67eeb346e21d8829e5c0d4a6"
+  },
+  "screen": {
+    "id": "67ef4ec5e21d8829e5c0d4f8"
+  },
+  "cinema": {
+    "id": "67ef4c4de21d8829e5c0d4e9"
+  },
+  "status": "AVAILABLE"
+}
+
+<> 2025-04-04T172435.400.json
+
+###
+

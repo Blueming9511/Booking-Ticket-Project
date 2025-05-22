@@ -8,6 +8,10 @@ const { Title, Text } = Typography;
 const Login = () => {
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+<<<<<<< HEAD
+=======
+    // TODO: Implement actual login logic here (e.g., call API)
+>>>>>>> origin/front_end/end_user
     alert(`Login attempt with Username: ${values.username}, Password: ${values.password}`);
   };
 
