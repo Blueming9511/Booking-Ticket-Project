@@ -6,6 +6,8 @@ import com.cibook.bookingticket.model.BookingDetail;
 import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.BookingDetailService;
 import com.cibook.bookingticket.service.BookingService;
+import com.cibook.bookingticket.service.SeatUnavailableException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -56,7 +58,8 @@ public class BookingController implements IController<Booking, String> {
 
     @Override
     public ResponseEntity<Void> delete(String id) {
-        if (!bookingService.existsById(id)) return ResponseEntity.notFound().build();
+        if (!bookingService.existsById(id))
+            return ResponseEntity.notFound().build();
         bookingService.deleteById(id);
         return ResponseEntity.ok().build();
     }
@@ -78,9 +81,13 @@ public class BookingController implements IController<Booking, String> {
     }
 
     @PostMapping("/u/")
-    public ResponseEntity<Booking> createWithDetail(@RequestBody BookingRequestDto entity) {
-        bookingService.addWithDetail(entity);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> createWithDetail(@RequestBody BookingRequestDto entity) {
+        try {
+            Booking booking = bookingService.addWithDetail(entity);
+            return ResponseEntity.ok(booking);
+        } catch (SeatUnavailableException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
 }

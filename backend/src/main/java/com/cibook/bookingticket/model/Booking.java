@@ -21,7 +21,6 @@ public class Booking {
     private String bookingCode;
     private String userId;
     private String showTimeCode;
-    private List<BookingDetail> bookingDetails;
     private Double totalAmount;
     private String couponCode;
     @Builder.Default
@@ -34,7 +33,7 @@ public class Booking {
     public enum BookingStatus {
         PENDING,
         CONFIRMED,
-        CANCELED,
+        CANCELLED,
         EXPIRED
     }
 

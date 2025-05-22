@@ -18,12 +18,13 @@ const { Content } = Layout;
 
 const providerItems = [
   { key: 1, label: "Dashboard", path: "/", icon: <DashboardOutlined /> },
-  { key: 2,label: "Cinemas", path: "/cinemas", icon: <BankOutlined /> },
-  { key: 3,label: "Screens", path: "/screens", icon: <BankOutlined /> },
-  { key: 4,label: "Movies", path: "/movies", icon: <VideoCameraOutlined /> },
-  { key: 5,label: "Showtime", path: "/showtimes", icon: <UserOutlined /> },
-  { key: 6,label: "Coupon", path: "/coupons", icon: <GiftOutlined /> },
-  { key: 7,label: "Payment", path: "/payments", icon: <CreditCardOutlined /> },
+  { key: 2, label: "Cinemas", path: "/cinemas", icon: <BankOutlined /> },
+  { key: 3, label: "Screens", path: "/screens", icon: <BankOutlined /> },
+  { key: 4, label: "Movies", path: "/movies", icon: <VideoCameraOutlined /> },
+  { key: 5, label: "Showtime", path: "/showtimes", icon: <UserOutlined /> },
+  { key: 6, label: "Coupon", path: "/coupons", icon: <GiftOutlined /> },
+  { key: 7, label: "Booking", path: "/bookings", icon: <UserOutlined /> },
+  { key: 8, label: "Payment", path: "/payments", icon: <CreditCardOutlined /> },
 ];
 
 const LayoutProvider = () => {
@@ -35,7 +36,7 @@ const LayoutProvider = () => {
         <Header />
 
         <Content className="p-6">
-          <div className="bg-white rounded-2xl p-6 min-h-screen" id='shadow-content'>
+          <div className="bg-white rounded-2xl p-6 min-h-screen mt-15" id='shadow-content'>
             <Outlet />
           </div>
         </Content>

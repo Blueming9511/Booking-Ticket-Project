@@ -15,5 +15,6 @@ public class BookingRequestDto {
     private String showtimeId;
     private List<String> seats;
     private String paymentMethod;
+    private String couponCode;
     private Double totalAmount;
 }
