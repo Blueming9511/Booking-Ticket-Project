@@ -1,6 +1,10 @@
 package com.cibook.bookingticket.service;
 
+import com.cibook.bookingticket.dto.BookingAdminDto;
+import com.cibook.bookingticket.dto.BookingAdminDto.BookingDetailDto;
 import com.cibook.bookingticket.dto.BookingRequestDto;
+import com.cibook.bookingticket.dto.BookingResponseDto;
+import com.cibook.bookingticket.dto.ScreenWithLocationDto;
 import com.cibook.bookingticket.model.*;
 import com.cibook.bookingticket.model.Booking.BookingStatus;
 import com.cibook.bookingticket.observer.NotificationSubject;
@@ -8,14 +12,22 @@ import com.cibook.bookingticket.repository.BookingDetailRepository;
 import com.cibook.bookingticket.repository.BookingRepository;
 import com.cibook.bookingticket.repository.PaymentRepository;
 import com.cibook.bookingticket.repository.ShowtimeRepository;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +47,7 @@ public class BookingService implements IService<Booking, String> {
     private final CinemaService cinemaService;
     private final CouponService couponService;
     private final SeatService seatService;
+    private final MongoTemplate mongoTemplate;
 
     @Autowired
     public BookingService(BookingRepository bookingRepository, BookingDetailService bookingDetailService,
@@ -42,7 +55,7 @@ public class BookingService implements IService<Booking, String> {
             BookingDetailRepository bookingDetailRepository, BookingDetailRepository bookingDetailRepository1,
             PaymentRepository paymentRepository, ShowtimeService showtimeService, MovieService movieService,
             CinemaService cinemaService, CouponService couponService, SeatService seatService,
-            ShowtimeRepository showtimeRepository) {
+            ShowtimeRepository showtimeRepository, MongoTemplate mongoTemplate) {
         this.bookingRepository = bookingRepository;
         this.bookingDetailService = bookingDetailService;
         this.notificationSubject = notificationSubject;
@@ -55,6 +68,7 @@ public class BookingService implements IService<Booking, String> {
         this.couponService = couponService;
         this.seatService = seatService;
         this.showtimeRepository = showtimeRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -198,6 +212,155 @@ public class BookingService implements IService<Booking, String> {
     public BookingDetail getBookingDetailById(String id) {
         return bookingDetailService.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("BookingDetail not found with ID: " + id));
+    }
+
+    public Page<BookingAdminDto> findAllBooking(Pageable pageable) {
+        MongoCollection<Document> collection = mongoTemplate.getCollection("bookings");
+
+        List<Document> pipeline = new ArrayList<>();
+
+        pipeline.addAll(Arrays.asList(
+                new Document("$addFields",
+                        new Document("bookingIdStr",
+                                new Document("$toString", "$_id"))
+                                .append("userObjStr",
+                                        new Document("$toObjectId", "$userId"))),
+                new Document("$lookup",
+                        new Document("from", "booking_details")
+                                .append("localField", "bookingIdStr")
+                                .append("foreignField", "bookingId")
+                                .append("as", "booking_details")),
+                new Document("$lookup",
+                        new Document("from", "showtimes")
+                                .append("localField", "showTimeCode")
+                                .append("foreignField", "showTimeCode")
+                                .append("as", "showtimes")),
+                new Document("$unwind",
+                        new Document("path", "$showtimes")
+                                .append("preserveNullAndEmptyArrays", true)),
+                new Document("$lookup",
+                        new Document("from", "movies")
+                                .append("localField", "showtimes.movieCode")
+                                .append("foreignField", "movieCode")
+                                .append("as", "movies")),
+                new Document("$unwind",
+                        new Document("path", "$movies")
+                                .append("preserveNullAndEmptyArrays", true)),
+                new Document("$lookup",
+                        new Document("from", "users")
+                                .append("localField", "userObjStr")
+                                .append("foreignField", "_id")
+                                .append("as", "user")),
+                new Document("$unwind",
+                        new Document("path", "$user")
+                                .append("preserveNullAndEmptyArrays", true)),
+                new Document("$project",
+                        new Document("bookingCode", 1L)
+                                .append("createdAt", 1L)
+                                .append("status", 1L)
+                                .append("totalAmount", 1L)
+                                .append("taxAmount", 1L)
+                                .append("booking_details",
+                                        new Document("$map",
+                                                new Document("input", "$booking_details")
+                                                        .append("as", "bd")
+                                                        .append("in",
+                                                                new Document("seatCode", "$$bd.seatCode")
+                                                                        .append("price", "$$bd.price"))))
+                                .append("user.name", 1L)
+                                .append("user.email", 1L)
+                                .append("user.phoneNumber", 1L)
+                                .append("movies.title", 1L)
+                                .append("movies.thumbnail", 1L)
+                                .append("movies.duration", 1L)
+                                .append("movies.genre", 1L)
+                                .append("showtimes.startTime", 1L)
+                                .append("showtimes.endTime", 1L)
+                                .append("showtimes.screenCode", 1L)
+                                .append("showtimes.cinemaCode", 1L))));
+        AggregateIterable<Document> result = collection.aggregate(pipeline);
+        long total = collection.countDocuments();
+        List<BookingAdminDto> content = new ArrayList<>();
+        for (Document doc : result) {
+            BookingAdminDto dto = mapDocumentToBookingAdminDto(doc);
+            content.add(dto);
+        }
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    private BookingAdminDto mapDocumentToBookingAdminDto(Document doc) {
+        BookingAdminDto dto = new BookingAdminDto();
+
+        dto.setBookingCode(doc.getString("bookingCode"));
+
+        Date createdAtDate = doc.getDate("createdAt");
+        if (createdAtDate != null) {
+            dto.setCreatedAt(createdAtDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime());
+        }
+
+        dto.setStatus(doc.getString("status"));
+        dto.setTotalAmount(doc.getDouble("totalAmount"));
+        dto.setTaxAmount(doc.getDouble("taxAmount"));
+
+        // bookingDetails
+        List<Document> bookingDetailsDocs = (List<Document>) doc.get("booking_details");
+        if (bookingDetailsDocs != null) {
+            List<BookingAdminDto.BookingDetailDto> bookingDetails = bookingDetailsDocs.stream().map(bdDoc -> {
+                BookingAdminDto.BookingDetailDto bdDto = new BookingAdminDto.BookingDetailDto();
+                bdDto.setSeatCode(bdDoc.getString("seatCode"));
+                bdDto.setPrice(bdDoc.getDouble("price"));
+                return bdDto;
+            }).collect(Collectors.toList());
+            dto.setBookingDetails(bookingDetails);
+        }
+
+        // user
+        Document userDoc = (Document) doc.get("user");
+        if (userDoc != null) {
+            BookingAdminDto.UserDto userDto = new BookingAdminDto.UserDto();
+            userDto.setName(userDoc.getString("name"));
+            userDto.setEmail(userDoc.getString("email"));
+            userDto.setPhoneNumber(userDoc.getString("phoneNumber"));
+            dto.setUser(userDto);
+        }
+
+        // movie
+        Document movieDoc = (Document) doc.get("movies");
+        if (movieDoc != null) {
+            BookingAdminDto.MovieDto movieDto = new BookingAdminDto.MovieDto();
+            movieDto.setTitle(movieDoc.getString("title"));
+            movieDto.setThumbnail(movieDoc.getString("thumbnail"));
+            movieDto.setDuration(movieDoc.getInteger("duration"));
+
+            // genre là List<String>
+            List<String> genres = (List<String>) movieDoc.get("genre");
+            movieDto.setGenre(genres);
+
+            dto.setMovie(movieDto);
+        }
+
+        // showtime
+        Document showtimeDoc = (Document) doc.get("showtimes");
+        if (showtimeDoc != null) {
+            BookingAdminDto.ShowtimeDto showtimeDto = new BookingAdminDto.ShowtimeDto();
+
+            Date startDate = showtimeDoc.getDate("startTime");
+            if (startDate != null) {
+                showtimeDto.setStartTime(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            }
+            Date endDate = showtimeDoc.getDate("endTime");
+            if (endDate != null) {
+                showtimeDto.setEndTime(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            }
+            showtimeDto.setScreenCode(showtimeDoc.getString("screenCode"));
+            showtimeDto.setCinemaCode(showtimeDoc.getString("cinemaCode"));
+
+            dto.setShowtime(showtimeDto);
+        }
+
+        return dto;
     }
 
 }

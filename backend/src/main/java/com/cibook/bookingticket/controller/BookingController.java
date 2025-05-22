@@ -1,6 +1,8 @@
 package com.cibook.bookingticket.controller;
 
+import com.cibook.bookingticket.dto.BookingAdminDto;
 import com.cibook.bookingticket.dto.BookingRequestDto;
+import com.cibook.bookingticket.dto.BookingResponseDto;
 import com.cibook.bookingticket.model.Booking;
 import com.cibook.bookingticket.model.BookingDetail;
 import com.cibook.bookingticket.model.Showtime;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -38,6 +42,15 @@ public class BookingController implements IController<Booking, String> {
     public ResponseEntity<Page<Booking>> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Booking> bookings = bookingService.findAll(pageable);
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/v2/")
+    public ResponseEntity<Page<BookingAdminDto>> getAllBooking(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BookingAdminDto> bookings = bookingService.findAllBooking(pageable);
         return ResponseEntity.ok(bookings);
     }
 

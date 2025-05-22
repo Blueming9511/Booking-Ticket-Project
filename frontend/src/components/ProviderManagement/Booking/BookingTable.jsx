@@ -1,6 +1,5 @@
 import { Table, Divider } from "antd";
-import columns from "./ColumnsConfig";
-
+import columns from "./ColumnsConfig"
 const BookingTable = ({ data, onEdit, onDelete }) => {
   return (
     <>

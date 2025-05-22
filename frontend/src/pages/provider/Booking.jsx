@@ -16,8 +16,8 @@ import ModalPaymentEdit from "../../components/ProviderManagement/Payment/ModalP
 // import bookingstatistics from "../../components/ProviderManagement/Payment/bookingstatistics";
 import axios from "axios";
 import dayjs from "dayjs";
-import PaymentTable from "../../components/ProviderManagement/Payment/PaymentTable";
 import ModalDelete from "../../components/ui/Modal/ModalDelete";
+import BookingTable from "../../components/ProviderManagement/Booking/BookingTable";
 
 const { RangePicker } = DatePicker;
 const { Search } = Input;
@@ -62,7 +62,7 @@ const Payment = () => {
             messageApi.loading("Fetching data...");
 
             const bookingsRes = await axios.get(
-                `http://localhost:8080/api/bookings?page=${page}&size=${size}`,
+                `http://localhost:8080/api/bookings/v2/?page=${page}&size=${size}`,
                 {
                     withCredentials: true,
                 }
@@ -201,8 +201,8 @@ const Payment = () => {
                     </Space>
                 }
             >
-                <bookingstatistics data={filteredBookings} />
-                <PaymentTable
+                {/* <bookingstatistics data={filteredBookings} /> */}
+                <BookingTable
                     data={state.bookings}
                     onEdit={(payment) => toggleModal("edit", true, payment)}
                     onDelete={(payment) => toggleModal("delete", true, payment)}
