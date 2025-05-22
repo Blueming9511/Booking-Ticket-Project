@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Document (collection = "payments")
@@ -20,6 +19,7 @@ public class Payment {
     @Indexed(unique = true)
     private String paymentCode;
     private PaymentMethod method;
+    private Double amount;
 
     @CreatedDate
     private LocalDateTime date;

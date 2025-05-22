@@ -309,9 +309,6 @@ const Dashboard = () => {
       </Card>
 
       <Divider />
-      <div className="text-center text-gray-500 text-sm mt-4">
-        Last updated: {dayjs().format("DD/MM/YYYY HH:mm")}
-      </div>
     </div>
   );
 };

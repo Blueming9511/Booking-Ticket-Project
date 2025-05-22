@@ -24,9 +24,9 @@ const columns = (handleEdit, handleDelete) => [
     key: "amount",
     render: (amount) => (
       <span className="font-semibold text-sm">
-        {new Intl.NumberFormat("en-US", {
+        {new Intl.NumberFormat("vi-VN", {
           style: "currency",
-          currency: "USD",
+          currency: "VND",
         }).format(amount)}
       </span>
     ),

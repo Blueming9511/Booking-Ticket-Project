@@ -4,7 +4,6 @@
   --primary-color: rgba(255, 0, 0, 0.782);
   --text-primary-color: rgba(255, 0, 0, 0.468);
   --background-color: #F1EFEC;
-  --white: #F7F7F7; 
   --black: #09122C; 
   
 }
@@ -31,10 +30,6 @@
 
 .bg-background {
   background-color: var(--background-color);
-}
-
-.bg-white {
-  background-color: var(--white);
 }
 
 .bg-black {
@@ -75,10 +70,3 @@ body {
     color: white;
     font-weight: bold; */
   }
-  
-.center{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-

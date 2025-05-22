@@ -24,9 +24,9 @@ const Header = () => {
   );
 
   return (
-    <div className="w-full flex justify-between items-center p-5 border-b border-gray-400 bg-white text-sm font-semibold ">
+    <div className="flex justify-between items-center p-5 border-b border-gray-400 bg-white text-sm font-semibold ">
       <span>{title}</span>
-      
+
       {/* User Dropdown */}
       <Dropdown overlay={userMenu} trigger={["click"]}>
         <div style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>

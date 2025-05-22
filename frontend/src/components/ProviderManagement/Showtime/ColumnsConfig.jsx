@@ -1,11 +1,15 @@
 import React from "react";
-import {Button, Dropdown, Image, Rate, Tag} from "antd";
-import {ClockCircleOutlined, EditOutlined, EllipsisOutlined, StarFilled} from "@ant-design/icons";
+import { Button, Dropdown, Image, Rate, Tag } from "antd";
+import { ClockCircleOutlined, EditOutlined, EllipsisOutlined, StarFilled } from "@ant-design/icons";
 import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const statusOptions = [
-    {value: "AVAILABLE", label: "Available"},
-    {value: "FULL", label: "Full"},
+    { value: "AVAILABLE", label: "Available" },
+    { value: "FULL", label: "Full" },
 ];
 
 export const columns = (handleEdit, handleDelete, cinemas, rooms, movies, bookingDetails) => [
@@ -31,12 +35,12 @@ export const columns = (handleEdit, handleDelete, cinemas, rooms, movies, bookin
                                 disabled
                                 allowHalf
                                 defaultValue={record?.movieRating ? (Number(record.movieRating).toFixed(2) / 2) : 0}
-                                character={<StarFilled/>}
+                                character={<StarFilled />}
                                 className="text-xs"
                             />
                             <span className="text-xs text-gray-500">
-                {Number(record.movieRating).toFixed(2)}/10
-              </span>
+                                {Number(record.movieRating).toFixed(2)}/10
+                            </span>
                         </div>
                         <div className="text-xs text-gray-500">{record.movieDuration} mins</div>
                     </div>
@@ -64,20 +68,21 @@ export const columns = (handleEdit, handleDelete, cinemas, rooms, movies, bookin
         key: "showtime",
         render: (_, record) => {
             console.log(record)
-            const date = dayjs(record.startTime).format('YYYY-MM-DD');
-            const start = dayjs(record.startTime).format('HH:mm');
-            const end = dayjs(record.endTime).format('HH:mm')
+            const date = dayjs.utc(record.startTime).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
+            const start = dayjs.utc(record.startTime).tz('Asia/Ho_Chi_Minh').format('HH:mm');
+            const end = dayjs.utc(record.endTime).tz('Asia/Ho_Chi_Minh').format('HH:mm');
+            console.log(record.startTime, record.endTime)
             return (
                 <div>
                     <div className="font-medium">
                         {date}
                     </div>
                     <div className="flex items-center gap-2">
-                        <ClockCircleOutlined className="text-blue-500"/>
+                        <ClockCircleOutlined className="text-blue-500" />
                         <span>
 
-              {start} - {end}
-            </span>
+                            {start} - {end}
+                        </span>
                     </div>
                 </div>
             )
@@ -94,15 +99,14 @@ export const columns = (handleEdit, handleDelete, cinemas, rooms, movies, bookin
                     <div className="flex items-center gap-2">
                         <div className="w-24 bg-gray-200 rounded-full h-2.5">
                             <div
-                                className={`h-2.5 rounded-full ${
-                                    bookedPercentage === 100 ? "bg-red-500" : "bg-green-500"
-                                }`}
-                                style={{width: `${bookedPercentage}%`}}
+                                className={`h-2.5 rounded-full ${bookedPercentage === 100 ? "bg-red-500" : "bg-green-500"
+                                    }`}
+                                style={{ width: `${bookedPercentage}%` }}
                             ></div>
                         </div>
                         <span className="text-xs font-medium">
-                {record.bookedSeats}/{record.seats}
-              </span>
+                            {record.bookedSeats}/{record.seats}
+                        </span>
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
                         {bookedPercentage}% booked
@@ -164,7 +168,7 @@ export const columns = (handleEdit, handleDelete, cinemas, rooms, movies, bookin
                         {
                             key: "edit",
                             label: "Edit",
-                            icon: <EditOutlined/>,
+                            icon: <EditOutlined />,
                             onClick: () => handleEdit(record),
                         },
                         {
@@ -178,9 +182,9 @@ export const columns = (handleEdit, handleDelete, cinemas, rooms, movies, bookin
                 trigger={["click"]}
             >
                 <Button
-                    icon={<EllipsisOutlined/>}
+                    icon={<EllipsisOutlined />}
                     shape="default"
-                    style={{padding: "0 8px"}}
+                    style={{ padding: "0 8px" }}
                 />
             </Dropdown>
         ),

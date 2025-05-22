@@ -2,13 +2,20 @@ import React from "react";
 import { Table, Divider } from "antd";
 import columns from "./ColumnsConfig";
 
-const CouponTable = ({ data, onEdit, onDelete }) => {
+const CouponTable = ({ data, onEdit, onDelete, pagination, onSetPage }) => {
   return (
     <>
       <Table
         columns={columns(onEdit, onDelete)}
         dataSource={data}
-        pagination={{ pageSize: 5, responsive: true }}
+        pagination={{
+          current: pagination.page + 1, 
+          pageSize: pagination.size,
+          total: pagination.totalElements - 1,
+          responsive: true,
+          onChange: (page) => onSetPage(page - 1)
+        }
+        }
         rowKey="id"
         className="rounded-lg"
         rowClassName="hover:bg-gray-50 cursor-pointer"

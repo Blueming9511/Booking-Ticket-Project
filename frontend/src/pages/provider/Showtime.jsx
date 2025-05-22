@@ -63,7 +63,7 @@ const Showtime = () => {
                         axios.get("http://localhost:8080/api/cinemas/names", {
                             withCredentials: true,
                         }),
-                        axios.get("http://localhost:8080/api/screens/names", {
+                        axios.get("http://localhost:8080/api/screens/v2/names", {
                             withCredentials: true,
                         }),
                         axios.get("http://localhost:8080/api/movies/names", {
@@ -177,7 +177,7 @@ const Showtime = () => {
                 `Showtime ${action === "add" ? "added" : "updated"} successfully`,
                 2
             );
-            await fetchData(false);
+            await fetchShowtime(state.pagination.page, state.pagination.size)
             toggleModal(action, false);
         } catch (error) {
             messageApi.error(`Failed to ${action} showtime`, 2);

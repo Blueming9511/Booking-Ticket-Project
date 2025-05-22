@@ -1,5 +1,6 @@
 package com.cibook.bookingticket.controller;
 
+import com.cibook.bookingticket.dto.ShowtimeResponseDto;
 import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.ShowtimeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 @RestController
@@ -31,6 +35,16 @@ public class ShowtimeController implements IController<Showtime, String> {
     public ResponseEntity<Page<Showtime>> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Showtime> showtimes = showtimeService.findAll(pageable);
+        return ResponseEntity.ok(showtimes);
+    }
+
+    @GetMapping("/v2/")
+    public ResponseEntity<Page<ShowtimeResponseDto>> getShowtimes(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name ="size", defaultValue = "5") int size
+    ) throws ParseException {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ShowtimeResponseDto> showtimes = showtimeService.findAllShowtimes(pageable);
         return ResponseEntity.ok(showtimes);
     }
 

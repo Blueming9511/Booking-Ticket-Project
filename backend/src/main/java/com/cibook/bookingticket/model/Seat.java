@@ -30,7 +30,8 @@
         public enum  SeatType {
             COUPLE,
             STANDARD,
-            VIP
+            VIP,
+            DISABLED
         }
 
         public enum SeatStatus {

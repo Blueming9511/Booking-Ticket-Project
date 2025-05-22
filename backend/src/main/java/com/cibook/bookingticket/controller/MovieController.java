@@ -1,7 +1,6 @@
 package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.Movie;
-import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,13 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Map;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController implements IController<Movie, String>{
     private final MovieService movieService;
-    @Autowired
+
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
@@ -63,4 +63,10 @@ public class MovieController implements IController<Movie, String>{
     public ResponseEntity<Movie> getByCode(@PathVariable("code") String code) {
         return ResponseEntity.ok(movieService.findByCode(code).orElse(null));
     }
+
+    @GetMapping("/duration/{code}")
+    public ResponseEntity<Integer> getDuration(@PathVariable String code) {
+        return ResponseEntity.ok(movieService.getDurationByMovieCode(code));
+    }
+    
 }

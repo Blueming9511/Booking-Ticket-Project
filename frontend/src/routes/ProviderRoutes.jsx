@@ -14,7 +14,6 @@ const ProviderRoutes = () => {
     <Routes>
       <Route path='/' element={<LayoutProvider />}>
         <Route index element={<Dashboard />} />
-        <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/cinemas' element={<Cinemas />} />
         <Route path='/movies' element={<Movies />} />
         <Route path='/coupons' element={<Coupon />} />

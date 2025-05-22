@@ -51,38 +51,36 @@ const Coupon = () => {
       add: false,
       edit: false,
     },
+    pagination: {
+      page: 0,
+      size: 5,
+      totalElements: 0
+    },
     selectedCoupon: null,
-    loading: false,
   });
+  const [loading, setLoading] = useState(false)
 
-  const fetchData = useCallback(async () => {
+  const fetchCoupon = async (page = 0, size = 5) => {
     try {
-      setState((prev) => ({ ...prev, loading: true }));
-      messageApi.loading("Fetching data...");
-
-      const couponsRes = await axios.get("http://localhost:8080/api/coupons", {
-        withCredentials: true,
-      });
-
+      setLoading(true);
+      const res = await axios.get(`http://localhost:8080/api/coupons?page=${page}&size=${size}`);
       setState((prev) => ({
         ...prev,
-        coupons: couponsRes.data,
-        filteredCoupons: couponsRes.data,
-      }));
-
-      messageApi.destroy();
-      messageApi.success("Data fetched successfully", 2);
-    } catch (error) {
-      messageApi.error("Failed to fetch data", 2);
-      console.error("Fetch error:", error);
+        coupons: res.data.content,
+        pagination: { ...state.pagination, totalElements: res.data.totalElements }
+      }))
+      messageApi.success("Successfully!", 2)
+    } catch (e) {
+      messageApi.error("Fetching error", 2);
+      console.error(e)
     } finally {
-      setState((prev) => ({ ...prev, loading: false }));
+      setLoading(false)
     }
-  }, [messageApi]);
+  }
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchCoupon(state.pagination.page, state.pagination.size)
+  }, [state.pagination.page])
 
   useEffect(() => {
     const { status, discountType, dateRange, searchText } = state.filters;
@@ -148,7 +146,7 @@ const Coupon = () => {
     };
 
     try {
-      setState((prev) => ({ ...prev, loading: true }));
+      setLoading(true)
       await axios({ ...config[action], withCredentials: true });
       messageApi.success(
         `Coupon ${action === "add" ? "added" : "updated"} successfully`,
@@ -160,11 +158,11 @@ const Coupon = () => {
       messageApi.error(`Failed to ${action} coupon`, 2);
       console.error(`${action} error:`, error);
     } finally {
-      setState((prev) => ({ ...prev, loading: false }));
+      setLoading(false)
     }
   };
 
-  const { filteredCoupons, filters, modals, selectedCoupon, loading } = state;
+  const { filteredCoupons, filters, modals, selectedCoupon } = state;
 
   return (
     <>
@@ -172,8 +170,8 @@ const Coupon = () => {
       <Card
         title={<span className="text-xl font-bold">Coupon Management</span>}
         variant="borderless"
-        styles={{header: { borderBottom: "none" }}}
-        style={{boxShadow: "none"}}
+        styles={{ header: { borderBottom: "none" } }}
+        style={{ boxShadow: "none" }}
         extra={
           <Space>
             <RangePicker
@@ -207,6 +205,8 @@ const Coupon = () => {
           onEdit={(coupon) => toggleModal("edit", true, coupon)}
           onDelete={(coupon) => toggleModal("delete", true, coupon)}
           loading={loading}
+          pagination={state.pagination}
+          onSetPage={(page) => setState((prev) => ({ ...prev, pagination: { ...prev.pagination, page } }))}
         />
         <Divider />
       </Card>
