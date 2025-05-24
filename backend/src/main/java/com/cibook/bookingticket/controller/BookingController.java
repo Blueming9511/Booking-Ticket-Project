@@ -50,7 +50,7 @@ public class BookingController implements IController<Booking, String> {
         @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BookingAdminDto> bookings = bookingService.findAllBooking(pageable);
+        Page<BookingAdminDto> bookings = bookingService.findAllBooking(pageable, null, null, null);
         return ResponseEntity.ok(bookings);
     }
 

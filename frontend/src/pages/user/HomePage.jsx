@@ -1,6 +1,6 @@
 import React from 'react'
 import SliderComponent from '../../components/Slider/SliderComponent'
-import Carousel from '../../components/Carousel'
+import Carousel from '../../components/common/Carousel'
 import ShowcaseComponent from '../../components/Showcase/ShowcaseComponent'
 const HomePage = () => {
   return (

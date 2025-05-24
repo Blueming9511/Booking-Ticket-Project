@@ -25,6 +25,8 @@ public class Showtime {
     private String screenCode;
     private String cinemaCode;
 
+    private String owner;
+
     private Integer seats;
     @Builder.Default
     private Integer bookedSeats = 0;
@@ -32,6 +34,12 @@ public class Showtime {
     private ShowTimeStatus status = ShowTimeStatus.AVAILABLE;
 
     public enum ShowTimeStatus {
+        PENDING,
+        APPROVED,
+        REJECTED,
+        MAINTAINED,
+        CLOSED,
+        IN_COMING,
         AVAILABLE,
         FULL,
     }

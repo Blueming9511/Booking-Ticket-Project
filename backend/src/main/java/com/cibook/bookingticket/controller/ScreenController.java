@@ -53,12 +53,17 @@ public class ScreenController implements IController<Screen, String> {
         Screen screen = screenService.updateWithSeats(id, dto);
         return ResponseEntity.ok(screen);
     }
+
     @GetMapping("/v2/")
-    public ResponseEntity<ScreenLocationWithOptionsResponse> findAllWithLocation(@RequestParam(name = "page", defaultValue = "0") int page,
-                                                                                 @RequestParam(name = "size", defaultValue = "5") int size,
-                                                                                 @RequestParam(name = "cinema", defaultValue = "") String cinema) {
+    public ResponseEntity<ScreenLocationWithOptionsResponse> findAllWithLocation(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size,
+            @RequestParam(name = "cinema", defaultValue = "") String cinema,
+            @RequestParam(name = "status", defaultValue = "") String status,
+            @RequestParam(name = "owner", defaultValue = "") String owner,
+            @RequestParam(name = "address", defaultValue = "") String address) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ScreenWithLocationDto> screens = screenService.getScreensWithLocation(pageable, cinema);
+        Page<ScreenWithLocationDto> screens = screenService.getScreensWithLocation(pageable, cinema, owner, address, status);
         Map<String, String> cinemaOptions = cinemaService.findAllNamesWithID();
         ScreenLocationWithOptionsResponse response = new ScreenLocationWithOptionsResponse();
         response.setCinemaOptions(cinemaOptions);

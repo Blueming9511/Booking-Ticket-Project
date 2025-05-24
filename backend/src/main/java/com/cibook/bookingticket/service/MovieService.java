@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,12 @@ public class MovieService implements IService<Movie, String> {
         return movieRepository.findAll(pageable);
     }
 
+    public Page<Movie> findAllWithOwner(Pageable pageable, String owner) {
+        if (owner.isEmpty())
+            return movieRepository.findAll(pageable);
+        return movieRepository.findByOwner(owner, pageable);
+    }
+
     private Movie normalizeMovieStatus(Movie movie) {
         if (movie.getStatus() != null) {
             String normalizedStatus = movie.getStatus();
@@ -82,12 +89,14 @@ public class MovieService implements IService<Movie, String> {
 
     @Override
     public Map<String, String> findAllNamesWithID() {
-        return findAll().stream().filter(movie -> movie.getMovieCode() != null).collect(Collectors.toMap(Movie::getMovieCode, Movie::getTitle, (o1, o2) -> o2));
+        return findAll().stream().filter(movie -> movie.getMovieCode() != null)
+                .collect(Collectors.toMap(Movie::getMovieCode, Movie::getTitle, (o1, o2) -> o2));
     }
 
     @Override
     public Movie update(String id, Movie entity) {
-        if (!existsById(id)) return null;
+        if (!existsById(id))
+            return null;
         Movie movie = movieRepository.findById(id).get();
         entity.setMovieCode(movie.getMovieCode());
         entity.setId(movie.getId());
@@ -110,5 +119,11 @@ public class MovieService implements IService<Movie, String> {
         query.fields().include("duration").exclude("_id");
         Document result = mongoTemplate.findOne(query, Document.class, "movies");
         return result.getInteger("duration", 0);
+    }
+
+    public void updateStatus(String id, String string) {
+        Movie movie = findById(id).orElseThrow(() -> new NotFoundException("Movie not found with ID: " + id));
+        movie.setStatus(string);
+        movieRepository.save(movie);
     }
 }

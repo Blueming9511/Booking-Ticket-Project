@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
-import java.util.List;
 import java.util.Map;
 @RestController
 @RequestMapping("/api/showtimes")
@@ -41,10 +40,12 @@ public class ShowtimeController implements IController<Showtime, String> {
     @GetMapping("/v2/")
     public ResponseEntity<Page<ShowtimeResponseDto>> getShowtimes(
             @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name ="size", defaultValue = "5") int size
+            @RequestParam(name ="size", defaultValue = "5") int size,
+            @RequestParam(name = "movie", defaultValue = "") String movie,
+            @RequestParam(name = "status", defaultValue = "") String status
     ) throws ParseException {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ShowtimeResponseDto> showtimes = showtimeService.findAllShowtimes(pageable);
+        Page<ShowtimeResponseDto> showtimes = showtimeService.findAllShowtimes(pageable, null, movie, status);
         return ResponseEntity.ok(showtimes);
     }
 

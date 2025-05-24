@@ -51,5 +51,6 @@ public class BookingAdminDto {
         private LocalDateTime endTime;
         private String screenCode;
         private String cinemaCode;
+        private String owner;
     }
 }

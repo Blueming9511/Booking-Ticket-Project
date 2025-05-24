@@ -28,5 +28,6 @@ public class ShowtimeResponseDto {
     private Double price;
     private int seats;
     private int bookedSeats;
+    private String owner;
     private Showtime.ShowTimeStatus status;
 }

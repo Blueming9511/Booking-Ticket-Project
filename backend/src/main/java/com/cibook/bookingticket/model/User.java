@@ -1,20 +1,23 @@
 package com.cibook.bookingticket.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Document (collection = "users")
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class User {
     @Id
@@ -34,7 +37,13 @@ public class User {
     private String resetToken;
     private String resetCode;
     private LocalDateTime resetTokenExpiry;
-
+    
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+    @Builder.Default
+    private boolean isBan = false;
 
     public enum Role {
         CUSTOMER,

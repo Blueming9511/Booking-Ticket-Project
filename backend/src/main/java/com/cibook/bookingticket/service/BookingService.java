@@ -1,10 +1,7 @@
 package com.cibook.bookingticket.service;
 
 import com.cibook.bookingticket.dto.BookingAdminDto;
-import com.cibook.bookingticket.dto.BookingAdminDto.BookingDetailDto;
 import com.cibook.bookingticket.dto.BookingRequestDto;
-import com.cibook.bookingticket.dto.BookingResponseDto;
-import com.cibook.bookingticket.dto.ScreenWithLocationDto;
 import com.cibook.bookingticket.model.*;
 import com.cibook.bookingticket.model.Booking.BookingStatus;
 import com.cibook.bookingticket.observer.NotificationSubject;
@@ -19,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -214,10 +210,17 @@ public class BookingService implements IService<Booking, String> {
                 .orElseThrow(() -> new NoSuchElementException("BookingDetail not found with ID: " + id));
     }
 
-    public Page<BookingAdminDto> findAllBooking(Pageable pageable) {
+    public Page<BookingAdminDto> findAllBooking(Pageable pageable, String owner, String status, String movie) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("bookings");
 
         List<Document> pipeline = new ArrayList<>();
+
+        if (status != null && !status.isEmpty()) {
+            pipeline.add(new Document("$match", new Document("status", status)));
+        }
+        if (owner != null && !owner.isEmpty()) {
+            pipeline.add(new Document("$match", new Document("userId", owner)));
+        }
 
         pipeline.addAll(Arrays.asList(
                 new Document("$addFields",
@@ -242,7 +245,14 @@ public class BookingService implements IService<Booking, String> {
                         new Document("from", "movies")
                                 .append("localField", "showtimes.movieCode")
                                 .append("foreignField", "movieCode")
-                                .append("as", "movies")),
+                                .append("as", "movies"))));
+
+        if (movie != null && !movie.trim().isEmpty()) {
+            pipeline.add(new Document("$match",
+                    new Document("movies.title", new Document("$regex", ".*" + movie + ".*").append("$options", "i"))));
+        }
+
+        pipeline.addAll(Arrays.asList(
                 new Document("$unwind",
                         new Document("path", "$movies")
                                 .append("preserveNullAndEmptyArrays", true)),
@@ -277,11 +287,29 @@ public class BookingService implements IService<Booking, String> {
                                 .append("showtimes.startTime", 1L)
                                 .append("showtimes.endTime", 1L)
                                 .append("showtimes.screenCode", 1L)
-                                .append("showtimes.cinemaCode", 1L))));
+                                .append("showtimes.cinemaCode", 1L)
+                                .append("showtimes.owner", 1L))));
+
+        List<Document> facetPipeline = new ArrayList<>();
+        facetPipeline.add(new Document("$skip", pageable.getOffset()));
+        facetPipeline.add(new Document("$limit", pageable.getPageSize()));
+
+        List<Document> countPipeline = new ArrayList<>();
+        countPipeline.add(new Document("$count", "total"));
+
+        pipeline.add(new Document("$facet", new Document()
+                .append("content", facetPipeline)
+                .append("count", countPipeline)));
+
         AggregateIterable<Document> result = collection.aggregate(pipeline);
-        long total = collection.countDocuments();
+        Document resultDoc = result.first();
+
+        List<Document> contentDocs = resultDoc.getList("content", Document.class);
+        List<Document> countDocs = resultDoc.getList("count", Document.class);
+        long total = countDocs.isEmpty() ? 0 : countDocs.get(0).getInteger("total");
+
         List<BookingAdminDto> content = new ArrayList<>();
-        for (Document doc : result) {
+        for (Document doc : contentDocs) {
             BookingAdminDto dto = mapDocumentToBookingAdminDto(doc);
             content.add(dto);
         }
@@ -356,6 +384,7 @@ public class BookingService implements IService<Booking, String> {
             }
             showtimeDto.setScreenCode(showtimeDoc.getString("screenCode"));
             showtimeDto.setCinemaCode(showtimeDoc.getString("cinemaCode"));
+            showtimeDto.setOwner(showtimeDoc.getString("owner"));
 
             dto.setShowtime(showtimeDto);
         }

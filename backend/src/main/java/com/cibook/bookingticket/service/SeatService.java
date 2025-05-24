@@ -1,19 +1,14 @@
 package com.cibook.bookingticket.service;
 
-import com.cibook.bookingticket.dto.ScreenWithLocationDto;
-import com.cibook.bookingticket.model.BookingDetail;
 import com.cibook.bookingticket.model.Seat;
-import com.cibook.bookingticket.repository.ScreenRepository;
 import com.cibook.bookingticket.repository.SeatRepository;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;

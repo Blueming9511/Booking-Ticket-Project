@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // Import ConfigProvider to apply theme if needed, though explicit styling is used here
 import { Modal, Button, Typography, Spin, message, Image, Descriptions, Tag, ConfigProvider } from 'antd';
 // Assuming formatPrice is correctly located relative to this file
-import { formatPrice } from '../utils/dateUtils'; // Corrected path assumption
+import { formatPrice } from '../../utils/dateUtils'; // Corrected path assumption
 
 // VNPay logo URL (ensure this is accessible)
 const vnpayLogoUrl = 'https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg'; // Using the new URL

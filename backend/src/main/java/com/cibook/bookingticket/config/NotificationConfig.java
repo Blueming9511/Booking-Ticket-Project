@@ -1,6 +1,5 @@
 package com.cibook.bookingticket.config;
 
-import com.cibook.bookingticket.observer.EmailNotificationListener;
 import com.cibook.bookingticket.observer.NotificationListener;
 import com.cibook.bookingticket.observer.NotificationSubject;
 import jakarta.annotation.PostConstruct;

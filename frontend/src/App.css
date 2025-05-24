@@ -55,3 +55,7 @@
 .card {
   box-shadow: none;
 }
+
+.ant-layout-sider-trigger {
+  width: 100px;
+}

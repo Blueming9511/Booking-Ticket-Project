@@ -3,9 +3,6 @@ package com.cibook.bookingticket.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +11,7 @@ public class ScreenWithLocationDto {
     private String screenCode;
     private int col;
     private int row;
+    private String owner;
     private String type;
     private int capacity;
     private String status;

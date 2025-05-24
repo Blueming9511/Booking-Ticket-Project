@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.text.ParseException;
 import java.util.*;
@@ -63,12 +64,19 @@ public class ShowtimeService implements IService<Showtime, String> {
         return showtimeRepository.findAll(pageable);
     }
 
-    public Page<ShowtimeResponseDto> findAllShowtimes(Pageable pageable) throws ParseException {
+    public Page<ShowtimeResponseDto> findAllShowtimes(Pageable pageable, String owner, String movie, String status)
+            throws ParseException {
         MongoCollection<Document> collection = mongoTemplate.getCollection("showtimes");
 
         // Build aggregation pipeline
         List<Document> pipeline = new ArrayList<>();
 
+        if (status != null && !status.isEmpty()) {
+            pipeline.add(new Document("$match", new Document("status", status)));
+        }
+        if (owner != null && !owner.isEmpty()) {
+            pipeline.add(new Document("$match", new Document("owner", owner)));
+        }
         pipeline.add(new Document("$lookup",
                 new Document("from", "cinemas")
                         .append("let", new Document("cinemaCode", "$cinemaCode"))
@@ -87,6 +95,12 @@ public class ShowtimeService implements IService<Showtime, String> {
                                 new Document("$match",
                                         new Document("$expr",
                                                 new Document("$eq", Arrays.asList("$movieCode", "$$movieCode")))),
+                                (movie != null && !movie.trim().isEmpty())
+                                        ? new Document("$match",
+                                                new Document("title",
+                                                        new Document("$regex", ".*" + movie + ".*").append("$options",
+                                                                "i")))
+                                        : new Document(),
                                 new Document("$project", new Document("name", 1L)
                                         .append("rating", 1L)
                                         .append("duration", 1L)
@@ -110,6 +124,7 @@ public class ShowtimeService implements IService<Showtime, String> {
                 .append("endTime", 1L)
                 .append("price", 1L)
                 .append("showTimeCode", 1L)
+                .append("owner", 1L)
                 .append("data", 1L)
                 .append("movieName", "$movie.name")
                 .append("movieThumbnail", "$movie.thumbnail")
@@ -118,16 +133,27 @@ public class ShowtimeService implements IService<Showtime, String> {
                 .append("movieDuration", "$movie.duration")
                 .append("cinemaLocation", "$cinema.location")));
 
-        long total = collection.countDocuments();
+        List<Document> facetPipeline = new ArrayList<>();
+        facetPipeline.add(new Document("$skip", pageable.getOffset()));
+        facetPipeline.add(new Document("$limit", pageable.getPageSize()));
 
-        pipeline.add(new Document("$skip", pageable.getOffset()));
-        pipeline.add(new Document("$limit", pageable.getPageSize()));
+        List<Document> countPipeline = new ArrayList<>();
+        countPipeline.add(new Document("$count", "total"));
 
-        AggregateIterable<Document> results = collection.aggregate(pipeline);
+        pipeline.add(new Document("$facet", new Document()
+                .append("content", facetPipeline)
+                .append("count", countPipeline)));
+
+        AggregateIterable<Document> result = collection.aggregate(pipeline);
+        Document resultDoc = result.first();
+
+        List<Document> contentDocs = resultDoc.getList("content", Document.class);
+        List<Document> countDocs = resultDoc.getList("count", Document.class);
+        long total = countDocs.isEmpty() ? 0 : countDocs.get(0).getInteger("total");
 
         List<ShowtimeResponseDto> showtimes = new ArrayList<>();
 
-        for (Document doc : results) {
+        for (Document doc : contentDocs) {
             ShowtimeResponseDto dto = ShowtimeResponseDto.builder()
                     .id(doc.getObjectId("_id").toHexString())
                     .cinemaCode(doc.getString("cinemaCode"))
@@ -145,6 +171,7 @@ public class ShowtimeService implements IService<Showtime, String> {
                     .movieThumbnail(doc.getString("movieThumbnail"))
                     .movieDuration(doc.getInteger("movieDuration"))
                     .cinemaLocation(doc.getString("cinemaLocation"))
+                    .owner(doc.getString("owner"))
                     .build();
             showtimes.add(dto);
         }
@@ -179,5 +206,17 @@ public class ShowtimeService implements IService<Showtime, String> {
     @Override
     public boolean existsById(String id) {
         return showtimeRepository.existsById(id);
+    }
+
+    public Page<Showtime> findAllWithOwner(Pageable pageable, String owner) {
+        if (owner.isEmpty())
+            return showtimeRepository.findAll(pageable);
+        return showtimeRepository.findByOwner(owner, pageable);
+    }
+
+    public void updateStatus(String id, String status) {
+        Showtime showtime = findById(id).orElseThrow(() -> new NotFoundException("Showtime not found with ID: " + id));
+        showtime.setStatus(ShowTimeStatus.valueOf(status));
+        showtimeRepository.save(showtime);
     }
 }

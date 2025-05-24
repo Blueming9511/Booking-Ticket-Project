@@ -1,22 +1,15 @@
 package com.cibook.bookingticket.service;
 
 import com.cibook.bookingticket.model.BookingDetail;
-import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.repository.BookingDetailRepository;
 import com.cibook.bookingticket.repository.BookingRepository;
-import com.cibook.bookingticket.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

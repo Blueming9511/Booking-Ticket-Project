@@ -1,7 +1,7 @@
 import { Button, Modal, Table } from 'antd'
 import { React, useState } from 'react' // No {} needed for React import
-import MovieShowtimes from '../../components/MovieShowtimes'
-import ShowingMoviesList from '../../components/ShowingMoviesList'
+import MovieShowtimes from '../../components/common/MovieShowtimes'
+import ShowingMoviesList from '../../components/common/ShowingMoviesList'
 
 const movie = {
   thumbnail:

@@ -4,6 +4,7 @@ import com.cibook.bookingticket.dto.ScreenRequestDto;
 import com.cibook.bookingticket.dto.ScreenWithLocationDto;
 import com.cibook.bookingticket.model.Screen;
 import com.cibook.bookingticket.model.Seat;
+import com.cibook.bookingticket.model.Screen.ScreenStatus;
 import com.cibook.bookingticket.repository.ScreenRepository;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -18,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -120,11 +122,20 @@ public class ScreenService implements IService<Screen, String> {
         return screenRepository.findAll(pageable);
     }
 
-    public Page<ScreenWithLocationDto> getScreensWithLocation(Pageable pageable, String cinema) {
+    public Page<ScreenWithLocationDto> getScreensWithLocation(Pageable pageable, String cinema, String owner,
+            String address, String status) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("screens");
         List<Document> pipeline = new ArrayList<>();
+        if (status != null && !status.isEmpty()) {
+            pipeline.add(new Document("$match", new Document("status", status)));
+        }
+        if (owner != null && !owner.isEmpty()) {
+            pipeline.add(new Document("$match", new Document("owner", owner)));
+        }
+
         if (cinema != null && !cinema.isEmpty()) {
-            pipeline.add(new Document("$match", new Document("cinemaCode", cinema)));
+            pipeline.add(new Document("$match",
+                    new Document("cinemaCode", new Document("$regex", ".*" + cinema + ".*").append("options", "i"))));
         }
         pipeline.addAll(Arrays.asList(
                 new Document("$lookup",
@@ -132,7 +143,19 @@ public class ScreenService implements IService<Screen, String> {
                                 .append("localField", "cinemaCode")
                                 .append("foreignField", "cinemaCode")
                                 .append("as", "cinema")),
-                new Document("$unwind", "$cinema"),
+                new Document("$unwind", "$cinema")));
+        if (address != null && !address.isEmpty()) {
+            pipeline.add(new Document("$match", new Document("$expr",
+                    new Document("$regexMatch", new Document()
+                            .append("input", new Document("$replaceAll", new Document()
+                                    .append("input", "$cinema.location")
+                                    .append("find", ".")
+                                    .append("replacement", "")))
+                            .append("regex", ".*" + address.replace(".", "") + ".*")
+                            .append("options", "i")))));
+
+        }
+        pipeline.addAll(Arrays.asList(
                 new Document("$project",
                         new Document("id", 1L)
                                 .append("screenCode", 1L)
@@ -141,28 +164,37 @@ public class ScreenService implements IService<Screen, String> {
                                 .append("status", 1L)
                                 .append("cinemaCode", 1L)
                                 .append("col", 1L)
+                                .append("owner", 1L)
                                 .append("row", 1L)
                                 .append("location", "$cinema.location")
                                 .append("cinemaName", "$cinema.cinemaName")),
                 new Document("$sort",
-                        new Document("cinemaName", 1L)),
-                new Document("$skip", pageable.getOffset()),
-                new Document("$limit", pageable.getPageSize())));
-        AggregateIterable<Document> result = collection.aggregate(pipeline);
+                        new Document("cinemaName", 1L))));
 
-        long total;
-        if (cinema != null && !cinema.isEmpty()) {
-            total = collection.countDocuments(new Document("cinemaCode", cinema));
-        } else {
-            total = collection.countDocuments();
-        }
+        List<Document> facetPipeline = new ArrayList<>();
+        facetPipeline.add(new Document("$skip", pageable.getOffset()));
+        facetPipeline.add(new Document("$limit", pageable.getPageSize()));
+
+        List<Document> countPipeline = new ArrayList<>();
+        countPipeline.add(new Document("$count", "total"));
+
+        pipeline.add(new Document("$facet", new Document()
+                .append("content", facetPipeline)
+                .append("count", countPipeline)));
+
+        AggregateIterable<Document> result = collection.aggregate(pipeline);
+        Document resultDoc = result.first();
+
+        List<Document> contentDocs = resultDoc.getList("content", Document.class);
+        List<Document> countDocs = resultDoc.getList("count", Document.class);
+        long total = countDocs.isEmpty() ? 0 : countDocs.get(0).getInteger("total");
 
         List<ScreenWithLocationDto> content = new ArrayList<>();
-        for (Document doc : result) {
-            System.out.println(doc.toJson());
+        for (Document doc : contentDocs) {
             ScreenWithLocationDto dto = new ScreenWithLocationDto();
             dto.setId(doc.getObjectId("_id").toHexString());
             dto.setScreenCode(doc.getString("screenCode"));
+            dto.setOwner(doc.getString("owner"));
             dto.setType(doc.getString("type"));
             dto.setCapacity(doc.getInteger("capacity"));
             dto.setStatus(doc.getString("status"));
@@ -233,5 +265,11 @@ public class ScreenService implements IService<Screen, String> {
         query.fields().include("capacity").exclude("_id");
         Document result = mongoTemplate.findOne(query, Document.class, "screens");
         return result.getInteger("capacity", 0);
+    }
+
+    public void updateStatus(String id, String string) {
+        Screen screen = findById(id).orElseThrow(() -> new NotFoundException("Screen not found with ID: " + id));
+        screen.setStatus(ScreenStatus.valueOf(string));
+        screenRepository.save(screen);
     }
 }
