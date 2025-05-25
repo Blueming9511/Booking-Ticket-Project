@@ -1,10 +1,9 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import LocationSelector from './Showcase/LocationSelector'; // Assuming path is correct
-import DatePicker from './Showcase/DatePicker';         // Assuming path is correct
-import CinemaSelector from './Showcase/CinemaSelector';     // Assuming path is correct
+import DatePicker from '../Showcase/DatePicker';         // Assuming path is correct
+import CinemaSelector from '../Showcase/CinemaSelector';     // Assuming path is correct
 import { Collapse, Tag, Button, Image, Divider } from 'antd'; // Import Image and Divider
-import BookingModal from './Showcase/BookingModal';       // Assuming path is correct
-import { getEndTime, getNext7Days } from '../utils/dateUtils'; // Use correct util import
+import BookingModal from '../Showcase/BookingModal';       // Assuming path is correct
+import { getEndTime, getNext7Days } from '../../utils/dateUtils'; // Use correct util import
 
 // --- Data ---
 // Assuming 'movies' and 'allCinemas' are passed as props or fetched,

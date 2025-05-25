@@ -1,7 +1,7 @@
 // src/components/ShowtimeButtons/ShowtimeButtons.js
 import React from 'react';
 import { Button } from 'antd';
-import { getEndTime } from '../utils/dateUtils'; // Import helper
+import { getEndTime } from '../../utils/dateUtils'; // Import helper
 
 const ShowtimeButtons = ({ movie, selectedCinema, selectedDate, handleShowtimeClick }) => {
 

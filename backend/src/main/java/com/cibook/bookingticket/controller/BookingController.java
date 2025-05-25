@@ -1,11 +1,15 @@
 package com.cibook.bookingticket.controller;
 
+import com.cibook.bookingticket.dto.BookingAdminDto;
 import com.cibook.bookingticket.dto.BookingRequestDto;
+import com.cibook.bookingticket.dto.BookingResponseDto;
 import com.cibook.bookingticket.model.Booking;
 import com.cibook.bookingticket.model.BookingDetail;
 import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.BookingDetailService;
 import com.cibook.bookingticket.service.BookingService;
+import com.cibook.bookingticket.service.SeatUnavailableException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -39,6 +45,15 @@ public class BookingController implements IController<Booking, String> {
         return ResponseEntity.ok(bookings);
     }
 
+    @GetMapping("/v2/")
+    public ResponseEntity<Page<BookingAdminDto>> getAllBooking(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BookingAdminDto> bookings = bookingService.findAllBooking(pageable, null, null, null);
+        return ResponseEntity.ok(bookings);
+    }
+
     @Override
     public ResponseEntity<Booking> getById(String id) {
         return bookingService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
@@ -56,7 +71,8 @@ public class BookingController implements IController<Booking, String> {
 
     @Override
     public ResponseEntity<Void> delete(String id) {
-        if (!bookingService.existsById(id)) return ResponseEntity.notFound().build();
+        if (!bookingService.existsById(id))
+            return ResponseEntity.notFound().build();
         bookingService.deleteById(id);
         return ResponseEntity.ok().build();
     }
@@ -78,9 +94,13 @@ public class BookingController implements IController<Booking, String> {
     }
 
     @PostMapping("/u/")
-    public ResponseEntity<Booking> createWithDetail(@RequestBody BookingRequestDto entity) {
-        bookingService.addWithDetail(entity);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> createWithDetail(@RequestBody BookingRequestDto entity) {
+        try {
+            Booking booking = bookingService.addWithDetail(entity);
+            return ResponseEntity.ok(booking);
+        } catch (SeatUnavailableException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
 }

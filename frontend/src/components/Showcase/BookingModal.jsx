@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'; // Import PropTypes
 import { Modal, Button, Divider, message, Tag } from 'antd'; // Added message, Tag
 import { CloseCircleFilled } from '@ant-design/icons';
 import { getAgeLimitColor, getEndTime, formatPrice } from '../../utils/dateUtils'; // Import helpers
-import PaymentModal from '../PaymentModal'; // <-- 1. Import PaymentModal (Adjust path if needed)
+import PaymentModal from '../common/PaymentModal'; // <-- 1. Import PaymentModal (Adjust path if needed)
 
 // --- Helper Functions (Moved outside component for better practice) ---
 const generateSeatGrid = (totalSeats, columns, startRow = 0) => {

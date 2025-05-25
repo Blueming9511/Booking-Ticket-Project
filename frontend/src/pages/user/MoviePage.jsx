@@ -1,6 +1,6 @@
 import React from 'react'
-import MovieCarousel from '../../components/Carousel'
-import PaginatedMovieList from '../../components/PaginatedMovieList'
+import MovieCarousel from '../../components/common/Carousel'
+import PaginatedMovieList from '../../components/common/PaginatedMovieList'
 // Example: src/data/movies.js
 const moviesData = [
   {

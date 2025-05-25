@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Menu, Select, Divider, Image } from 'antd';
 import DatePicker from './DatePicker';
 import BookingModal from './BookingModal';
-import ShowtimeButtons from '../ShowtimeButtons';
+import ShowtimeButtons from '../common/ShowtimeButtons';
 import { getAgeLimitColor, getNext7Days } from '../../utils/dateUtils';
 
 const { Option } = Select;

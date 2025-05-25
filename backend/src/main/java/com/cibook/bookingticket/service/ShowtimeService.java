@@ -13,8 +13,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -63,11 +66,37 @@ public class ShowtimeService implements IService<Showtime, String> {
         return showtimeRepository.findAll(pageable);
     }
 
-    public Page<ShowtimeResponseDto> findAllShowtimes(Pageable pageable) throws ParseException {
+    public Page<ShowtimeResponseDto> findAllShowtimes(Pageable pageable, String owner, String movie, String status,
+            String address, LocalDateTime startTime, LocalDateTime endTime, String type)
+            throws ParseException {
+
         MongoCollection<Document> collection = mongoTemplate.getCollection("showtimes");
 
-        // Build aggregation pipeline
         List<Document> pipeline = new ArrayList<>();
+
+        Document matchStage = new Document();
+        if (status != null && !status.isEmpty()) {
+            matchStage.append("status", status);
+        }
+        if (owner != null && !owner.isEmpty()) {
+            matchStage.append("owner", owner);
+        }
+        if (type != null && !type.isEmpty()) {
+            matchStage.append("type", type);
+        }
+        if (startTime != null || endTime != null) {
+            Document timeFilter = new Document();
+            if (startTime != null) {
+                timeFilter.append("$gte", Date.from(startTime.atZone(ZoneId.systemDefault()).toInstant()));
+            }
+            if (endTime != null) {
+                timeFilter.append("$lte", Date.from(endTime.atZone(ZoneId.systemDefault()).toInstant()));
+            }
+            matchStage.append("startTime", timeFilter);
+        }
+        if (!matchStage.isEmpty()) {
+            pipeline.add(new Document("$match", matchStage));
+        }
 
         pipeline.add(new Document("$lookup",
                 new Document("from", "cinemas")
@@ -80,23 +109,35 @@ public class ShowtimeService implements IService<Showtime, String> {
                                         new Document("location", 1L).append("_id", 0L))))
                         .append("as", "cinema")));
 
+        List<Document> movieLookupPipeline = new ArrayList<>();
+        movieLookupPipeline.add(new Document("$match",
+                new Document("$expr", new Document("$eq", Arrays.asList("$movieCode", "$$movieCode")))));
+
+        if (movie != null && !movie.trim().isEmpty()) {
+            movieLookupPipeline.add(new Document("$match", new Document("title",
+                    new Document("$regex", movie).append("$options", "i"))));
+        }
+
+        movieLookupPipeline.add(new Document("$project", new Document("name", 1L)
+                .append("rating", 1L)
+                .append("duration", 1L)
+                .append("thumbnail", 1L)
+                .append("title", 1L)
+                .append("_id", 0L)));
+
         pipeline.add(new Document("$lookup",
                 new Document("from", "movies")
                         .append("let", new Document("movieCode", "$movieCode"))
-                        .append("pipeline", Arrays.asList(
-                                new Document("$match",
-                                        new Document("$expr",
-                                                new Document("$eq", Arrays.asList("$movieCode", "$$movieCode")))),
-                                new Document("$project", new Document("name", 1L)
-                                        .append("rating", 1L)
-                                        .append("duration", 1L)
-                                        .append("thumbnail", 1L)
-                                        .append("title", 1L)
-                                        .append("_id", 0L))))
+                        .append("pipeline", movieLookupPipeline)
                         .append("as", "movie")));
 
         pipeline.add(new Document("$unwind", "$cinema"));
         pipeline.add(new Document("$unwind", "$movie"));
+
+        if (address != null && !address.trim().isEmpty()) {
+            pipeline.add(new Document("$match", new Document("cinema.location",
+                    new Document("$regex", address).append("$options", "i"))));
+        }
 
         pipeline.add(new Document("$project", new Document()
                 .append("_id", 1L)
@@ -110,6 +151,8 @@ public class ShowtimeService implements IService<Showtime, String> {
                 .append("endTime", 1L)
                 .append("price", 1L)
                 .append("showTimeCode", 1L)
+                .append("owner", 1L)
+                .append("type", 1L)
                 .append("data", 1L)
                 .append("movieName", "$movie.name")
                 .append("movieThumbnail", "$movie.thumbnail")
@@ -118,16 +161,29 @@ public class ShowtimeService implements IService<Showtime, String> {
                 .append("movieDuration", "$movie.duration")
                 .append("cinemaLocation", "$cinema.location")));
 
-        long total = collection.countDocuments();
+        List<Document> facetPipeline = new ArrayList<>();
+        facetPipeline.add(new Document("$skip", pageable.getOffset()));
+        facetPipeline.add(new Document("$limit", pageable.getPageSize()));
 
-        pipeline.add(new Document("$skip", pageable.getOffset()));
-        pipeline.add(new Document("$limit", pageable.getPageSize()));
+        List<Document> countPipeline = new ArrayList<>();
+        countPipeline.add(new Document("$count", "total"));
 
-        AggregateIterable<Document> results = collection.aggregate(pipeline);
+        pipeline.add(new Document("$facet", new Document()
+                .append("content", facetPipeline)
+                .append("count", countPipeline)));
+
+        AggregateIterable<Document> result = collection.aggregate(pipeline);
+        Document resultDoc = result.first();
+        if (resultDoc == null) {
+            return new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
+
+        List<Document> contentDocs = resultDoc.getList("content", Document.class);
+        List<Document> countDocs = resultDoc.getList("count", Document.class);
+        long total = countDocs.isEmpty() ? 0 : countDocs.get(0).getInteger("total");
 
         List<ShowtimeResponseDto> showtimes = new ArrayList<>();
-
-        for (Document doc : results) {
+        for (Document doc : contentDocs) {
             ShowtimeResponseDto dto = ShowtimeResponseDto.builder()
                     .id(doc.getObjectId("_id").toHexString())
                     .cinemaCode(doc.getString("cinemaCode"))
@@ -145,6 +201,7 @@ public class ShowtimeService implements IService<Showtime, String> {
                     .movieThumbnail(doc.getString("movieThumbnail"))
                     .movieDuration(doc.getInteger("movieDuration"))
                     .cinemaLocation(doc.getString("cinemaLocation"))
+                    .owner(doc.getString("owner"))
                     .build();
             showtimes.add(dto);
         }
@@ -179,5 +236,17 @@ public class ShowtimeService implements IService<Showtime, String> {
     @Override
     public boolean existsById(String id) {
         return showtimeRepository.existsById(id);
+    }
+
+    public Page<Showtime> findAllWithOwner(Pageable pageable, String owner) {
+        if (owner.isEmpty())
+            return showtimeRepository.findAll(pageable);
+        return showtimeRepository.findByOwner(owner, pageable);
+    }
+
+    public void updateStatus(String id, String status) {
+        Showtime showtime = findById(id).orElseThrow(() -> new NotFoundException("Showtime not found with ID: " + id));
+        showtime.setStatus(ShowTimeStatus.valueOf(status));
+        showtimeRepository.save(showtime);
     }
 }

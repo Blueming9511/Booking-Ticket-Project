@@ -22,6 +22,9 @@ public class Cinema {
     private CinemaStatus status;
 
     public enum CinemaStatus {
+        PENDING,
+        APPROVED,
+        REJECTED,
         OPEN,
         CLOSED,
         MAINTAINED

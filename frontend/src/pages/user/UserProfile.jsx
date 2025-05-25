@@ -15,11 +15,11 @@ import {
 } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';  // Make sure this import is correct
 
-import ProfileAvatar from '../../components/ProfileAvatar';
-import UserInfo from '../../components/UserInfo';
-import ProfileForm from '../../components/ProfileForm';
-import TicketTable from '../../components/TicketTable';
-import ChangePasswordModal from '../../components/ChangePasswordModal';
+import ProfileAvatar from '../../components/common/ProfileAvatar';
+import UserInfo from '../../components/common/UserInfo';
+import ProfileForm from '../../components/common/ProfileForm';
+import TicketTable from '../../components/common/TicketTable';
+import ChangePasswordModal from '../../components/common/ChangePasswordModal';
 
 const userData = {
   name: 'John Doe',

@@ -22,6 +22,7 @@ public class Screen {
     private int row;
     private int capacity;
     private String cinemaCode;
+    private String owner;
     @Builder.Default
     private ScreenStatus status = ScreenStatus.ACTIVE;
 
@@ -41,6 +42,8 @@ public class Screen {
     }
 
     public enum ScreenStatus {
+        MAINTAINED,
+        CLOSED,
         ACTIVE,
         FULL,
         INACTIVE,

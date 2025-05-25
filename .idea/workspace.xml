@@ -5,22 +5,55 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c0d8d85-1960-4433-b9a9-076fb0a0c051" name="Changes" comment="Add Cors config">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/order-confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/out/production/Final/src/main/resources/templates/order-confirmation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/BookingticketApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/BookingticketApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/NotificationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/config/NotificationConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/ShowtimeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/controller/ShowtimeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/ShowtimeResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/ShowtimeResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/ScreenWithLocationDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/dto/ScreenWithLocationDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Booking.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Cinema.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Cinema.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Coupon.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Coupon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Movie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Screen.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Screen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Showtime.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/Showtime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/MovieRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/MovieRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/ScreenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/ScreenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/ShowtimeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/ShowtimeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/CinemaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/CinemaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/MovieService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/MovieService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ScreenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ScreenService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ShowtimeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/ShowtimeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Showtime/ColumnsConfig.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Showtime/ColumnsConfig.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Showtime/ModalShowTimeForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Showtime/ModalShowTimeForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/provider/Showtime.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/provider/Showtime.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/cibook/bookingticket/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/CancelTicketModal.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Carousel.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ChangePasswordModal.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Login.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/MovieCard.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/MovieShowtimes.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/PaginatedMovieList.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/PaymentModal.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProfileAvatar.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProfileForm.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Cinema/ColumnsConfig.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Cinema/ColumnsConfig.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ScreenTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProviderManagement/Screen/ScreenTable.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Showcase/BookingModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Showcase/BookingModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Showcase/CinemaBooking.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Showcase/CinemaBooking.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Showcase/ShowcaseComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Showcase/ShowcaseComponent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ShowingMoviesList.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ShowtimeButtons.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/TicketTable.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/UserInfo.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/constants.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/layouts/LayoutAdmin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layouts/LayoutAdmin.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/Tag/TagStatus.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/Tag/TagStatus.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/admin/Cinemas.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/admin/Cinemas.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/admin/Movies.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/admin/Movies.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/admin/Users.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/admin/Users.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/user/HomePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/user/HomePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/user/MovieDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/user/MovieDetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/user/MoviePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/user/MoviePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/user/UserProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/user/UserProfile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/routes/AdminRoutes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/routes/AdminRoutes.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,6 +216,7 @@
       <workItem from="1747835197372" duration="7926000" />
       <workItem from="1747885539863" duration="6000" />
       <workItem from="1747891506808" duration="89000" />
+      <workItem from="1748062414985" duration="35000" />
     </task>
     <task id="LOCAL-00001" summary="init page login">
       <option name="closed" value="true" />

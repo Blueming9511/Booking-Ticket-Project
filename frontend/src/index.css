@@ -1,19 +1,12 @@
 @import "tailwindcss";
 
---var{
-  --primary-color: rgba(255, 0, 0, 0.782);
-  --text-primary-color: rgba(255, 0, 0, 0.468);
-  --background-color: #F1EFEC;
-  --black: #09122C; 
-  
-}
 :root {
-  --primary-color: #D84040;;
+  --primary-color: #D84040;
   --text-primary-color: #123458;
   --secondary-color: #F1EFE;
   --background-color: #F1EFEC;
-  --white: #F7F7F7; 
-  --black: #09122C; 
+  --white: #F7F7F7;
+  --black: #09122C;
 }
 
 .bg-primary {
@@ -52,7 +45,6 @@
   color: var(--black);
 }
 
-
 body {
   background: var(--background-color);
   overflow-x: hidden;
@@ -60,13 +52,7 @@ body {
 }
 
 .round-div {
-    width: 100%; /* Adjust size as needed */
-    height: 100%; /* Same as width to maintain round shape */
-    border-radius: 50%;
-   /* Example background color
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold; */
-  }
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}

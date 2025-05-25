@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import {Table, Divider, Modal} from 'antd';
-import {Monitor} from 'lucide-react';
+import React, { useState } from 'react';
+import { Table, Divider, Modal } from 'antd';
+import { Monitor } from 'lucide-react';
 
-import {Avatar, Tag, Dropdown, Button, Badge} from "antd";
-import {EnvironmentOutlined, EllipsisOutlined} from "@ant-design/icons";
+import { Avatar, Tag, Dropdown, Button, Badge } from "antd";
+import { EnvironmentOutlined, EllipsisOutlined } from "@ant-design/icons";
 import TagStatus from "../../ui/Tag/TagStatus";
 import TheaterLayoutView from "../Layout/TheaterLayoutView.jsx";
 
@@ -37,7 +37,7 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
                         #{record.screenCode}
                     </div>
                     <div className="flex items-center text-xs text-gray-500">
-                        <EnvironmentOutlined className="mr-1"/>
+                        <EnvironmentOutlined className="mr-1" />
                         <p className={"text-sm"}>{record.cinemaName}</p>
                     </div>
                 </div>
@@ -67,11 +67,11 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
             </Tag>
         ),
         filters: [
-            {text: "IMAX", value: "IMAX"},
-            {text: "VIP", value: "VIP"},
-            {text: "4DX", value: "4DX"},
-            {text: "Premium", value: "Premium"},
-            {text: "Standard", value: "Standard"},
+            { text: "IMAX", value: "IMAX" },
+            { text: "VIP", value: "VIP" },
+            { text: "4DX", value: "4DX" },
+            { text: "Premium", value: "Premium" },
+            { text: "Standard", value: "Standard" },
         ],
         onFilter: (value, record) => record.type === value,
         width: 150,
@@ -84,7 +84,7 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
             <Badge
                 count={`${capacity} seats`}
                 className="bg-gray-100 text-gray-800"
-                style={{padding: "0 8px"}}
+                style={{ padding: "0 8px" }}
             />
         ),
         sorter: (a, b) => a.capacity - b.capacity,
@@ -101,10 +101,10 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
         title: "Status",
         dataIndex: "status",
         key: "status",
-        render: (status) => <TagStatus status={status}/>,
+        render: (status) => <TagStatus status={status} />,
         filters: [
-            {text: "Active", value: "ACTIVE"},
-            {text: "Inactive", value: "INACTIVE"},
+            { text: "Active", value: "ACTIVE" },
+            { text: "Inactive", value: "INACTIVE" },
         ],
         onFilter: (value, record) => record.status === value,
         width: 150,
@@ -152,15 +152,15 @@ export const columns = (handleEdit, handleDelete, cinemaData) => [
 
 // Component chính
 const ScreenTable = ({
-                         data = sampleData,
-                         loading = false,
-                         cinemas = [],
-                         pagination = {page: 0, size: 10, totalElements: 5},
-                         onSetPage = () => {
-                         },
-                         onEdit,
-                         onDelete
-                     }) => {
+    data = sampleData,
+    loading = false,
+    cinemas = [],
+    pagination = { page: 0, size: 10, totalElements: 5 },
+    onSetPage = () => {
+    },
+    onEdit,
+    onDelete
+}) => {
     const [selectedScreen, setSelectedScreen] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -185,18 +185,18 @@ const ScreenTable = ({
                     onClick: () => handleRowClick(record),
                     className: 'cursor-pointer hover:bg-gray-50'
                 })}
-                scroll={{x: true}}
+                scroll={{ x: true }}
                 size="middle"
                 rowKey="key"
                 loading={loading}
             />
 
-            <Divider/>
+            <Divider />
 
             <div className="flex justify-between items-center text-sm text-gray-500">
-        <span>
-          Hiển thị {data.length || 0} rạp
-        </span>
+                <span>
+                    Hiển thị {data.length || 0} rạp
+                </span>
                 <span>Cập nhật lần cuối: {new Date().toLocaleString()}</span>
             </div>
 
@@ -204,7 +204,7 @@ const ScreenTable = ({
             <Modal
                 title={
                     <div className="flex items-center">
-                        <Monitor className="mr-2" size={20}/>
+                        <Monitor className="mr-2" size={20} />
                         <span>Sơ đồ rạp: {selectedScreen?.name}</span>
                     </div>
                 }

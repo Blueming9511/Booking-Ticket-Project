@@ -7,11 +7,13 @@ import com.cibook.bookingticket.repository.MovieRepository;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,23 @@ public class MovieService implements IService<Movie, String> {
         return movieRepository.findAll(pageable);
     }
 
+    public Page<Movie> findAllWithOwner(Pageable pageable, String owner, String status, String title) {
+        Query query = new Query();
+        if (owner != null && !owner.trim().isEmpty()) {
+            query.addCriteria(Criteria.where("owner").regex(owner, "i"));
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            query.addCriteria(Criteria.where("status").regex(status, "i"));
+        }
+        if (title != null && !title.trim().isEmpty()) {
+            query.addCriteria(Criteria.where("title").regex(".*" + title + ".*", "i"));
+        }
+        query.with(pageable);
+        List<Movie> results = mongoTemplate.find(query, Movie.class);
+        long count = mongoTemplate.count(query.skip(-1).limit(-1), Movie.class);
+        return new PageImpl<>(results, pageable, count);
+    }
+
     private Movie normalizeMovieStatus(Movie movie) {
         if (movie.getStatus() != null) {
             String normalizedStatus = movie.getStatus();
@@ -82,12 +101,14 @@ public class MovieService implements IService<Movie, String> {
 
     @Override
     public Map<String, String> findAllNamesWithID() {
-        return findAll().stream().filter(movie -> movie.getMovieCode() != null).collect(Collectors.toMap(Movie::getMovieCode, Movie::getTitle, (o1, o2) -> o2));
+        return findAll().stream().filter(movie -> movie.getMovieCode() != null)
+                .collect(Collectors.toMap(Movie::getMovieCode, Movie::getTitle, (o1, o2) -> o2));
     }
 
     @Override
     public Movie update(String id, Movie entity) {
-        if (!existsById(id)) return null;
+        if (!existsById(id))
+            return null;
         Movie movie = movieRepository.findById(id).get();
         entity.setMovieCode(movie.getMovieCode());
         entity.setId(movie.getId());
@@ -110,5 +131,11 @@ public class MovieService implements IService<Movie, String> {
         query.fields().include("duration").exclude("_id");
         Document result = mongoTemplate.findOne(query, Document.class, "movies");
         return result.getInteger("duration", 0);
+    }
+
+    public void updateStatus(String id, String string) {
+        Movie movie = findById(id).orElseThrow(() -> new NotFoundException("Movie not found with ID: " + id));
+        movie.setStatus(string);
+        movieRepository.save(movie);
     }
 }

@@ -1,20 +1,17 @@
 package com.cibook.bookingticket.service;
 
-import com.cibook.bookingticket.dto.ScreenWithLocationDto;
 import com.cibook.bookingticket.model.Seat;
-import com.cibook.bookingticket.repository.ScreenRepository;
 import com.cibook.bookingticket.repository.SeatRepository;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -35,12 +32,12 @@ public class SeatService implements IService<Seat, String> {
 
     @Override
     public Seat add(Seat entity) {
-        entity.setSeatCode(codeGenerator.generateSeatCode(entity.getScreenCode(), entity.getCinemaCode(), entity.getRow()));
+        entity.setSeatCode(
+                codeGenerator.generateSeatCode(entity.getScreenCode(), entity.getCinemaCode(), entity.getRow()));
         Map<String, Double> multipliers = Map.of(
                 "STANDARD", 1.0,
                 "COUPLE", 2.2,
-                "VIP", 1.5
-        );
+                "VIP", 1.5);
         entity.setMultiplier(multipliers.get(String.valueOf(entity.getType())));
         return seatRepository.save(entity);
     }
@@ -69,13 +66,15 @@ public class SeatService implements IService<Seat, String> {
         MongoCollection<Document> collection = mongoTemplate.getDb().getCollection("seats");
 
         Document match = new Document();
-        if (screenCode != null) match.append("screenCode", screenCode);
-        if (cinemaCode != null) match.append("cinemaCode", cinemaCode);
-        if (row != null) match.append("row", row);
+        if (screenCode != null)
+            match.append("screenCode", screenCode);
+        if (cinemaCode != null)
+            match.append("cinemaCode", cinemaCode);
+        if (row != null)
+            match.append("row", row);
 
         AggregateIterable<Document> results = collection.aggregate(List.of(
-                new Document("$match", match)
-        ));
+                new Document("$match", match)));
 
         List<Seat> seats = new ArrayList<>();
         for (Document doc : results) {
@@ -93,7 +92,8 @@ public class SeatService implements IService<Seat, String> {
 
     @Override
     public Seat update(String id, Seat entity) {
-        if (!existsById(id)) return null;
+        if (!existsById(id))
+            return null;
         Seat seat = seatRepository.findById(id).get();
         entity.setSeatCode(seat.getSeatCode());
         entity.setId(seat.getId());
@@ -114,8 +114,7 @@ public class SeatService implements IService<Seat, String> {
         Map<String, Double> multipliers = Map.of(
                 "STANDARD", 1.0,
                 "COUPLE", 2.2,
-                "VIP", 1.5
-        );
+                "VIP", 1.5);
         seats.forEach(seat -> {
             System.out.println(seat.getRow());
         });
@@ -132,4 +131,40 @@ public class SeatService implements IService<Seat, String> {
     public void deleteByScreenAndCinema(String cinemaCode, String screenCode) {
         seatRepository.deleteAllByCinemaCodeAndScreenCode(cinemaCode, screenCode);
     }
+
+    public Double getMultiplierByCode(String code, String screenCode, String cinemaCode) {
+        Query query = new Query();
+        query.addCriteria(
+                Criteria.where("seatCode").is(code)
+                        .and("cinemaCode").is(cinemaCode)
+                        .and("screenCode").is(screenCode));
+        query.fields().include("multiplier").exclude("_id");
+        Document result = mongoTemplate.findOne(query, Document.class, "seats");
+        return result.getDouble("multiplier");
+    }
+
+    public Map<String, Double> getMultipliersByCodes(List<String> seats, String screenCode, String cinemaCode) {
+        Query query = new Query();
+        query.addCriteria(
+                Criteria.where("seatCode").in(seats)
+                        .and("cinemaCode").is(cinemaCode)
+                        .and("screenCode").is(screenCode)
+                        .and("status").is("AVAILABLE"));
+        query.fields().include("seatCode").include("multiplier").exclude("_id");
+
+        List<Document> results = mongoTemplate.find(query, Document.class, "seats");
+
+        return results.stream().collect(Collectors.toMap(
+                doc -> doc.getString("seatCode"),
+                doc -> doc.getDouble("multiplier")));
+    }
+
+    public void updateSeatStatus(List<String> seatCodes, String screenCode, String cinemaCode, String newStatus) {
+        Query query = new Query(Criteria.where("seatCode").in(seatCodes)
+                .and("screenCode").is(screenCode)
+                .and("cinemaCode").is(cinemaCode));
+        Update update = new Update().set("status", newStatus);
+        mongoTemplate.updateMulti(query, update, "seats");
+    }
+
 }

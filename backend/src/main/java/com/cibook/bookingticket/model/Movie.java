@@ -1,13 +1,9 @@
 package com.cibook.bookingticket.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.util.Date;
 
 @Data
 @Document(collection = "movies")
@@ -38,10 +34,14 @@ public class Movie {
     private String description;
     private String status;
 
-//    public enum MovieStatus {
-//        COMMING_SOOM,
-//        NOW_SHOWING,
-//        CLOSED,
-//        POSTPONE
-//    }
+    private String owner;
+
+    public enum MovieStatus {
+        PENDING,
+        APPROVED,
+        COMING_SOON,
+        NOW_SHOWING,
+        CLOSED,
+        POSTPONE
+    }
 }

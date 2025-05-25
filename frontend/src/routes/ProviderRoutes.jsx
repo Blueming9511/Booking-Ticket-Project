@@ -8,6 +8,7 @@ import Coupon from '../pages/provider/Coupon'
 import Payment from '../pages/provider/Payment'
 import Screens from '../pages/provider/Screens'
 import ShowTime from '../pages/provider/Showtime'
+import Booking from '../pages/provider/Booking'
 
 const ProviderRoutes = () => {
   return (
@@ -18,9 +19,10 @@ const ProviderRoutes = () => {
         <Route path='/movies' element={<Movies />} />
         <Route path='/coupons' element={<Coupon />} />
         <Route path='/payments' element={<Payment />} />
-        <Route path='/screens' element={<Screens />} />
-        <Route path='/payments' element={<Payment />} />
         <Route path='/showtimes' element={<ShowTime />} />
+        <Route path='/screens' element={<Screens />} />
+        <Route path='/bookings' element={<Booking />} />
+        <Route path='/payments' element={<Payment />} />
       </Route>
     </Routes>
   )

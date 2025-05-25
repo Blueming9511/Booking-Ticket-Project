@@ -195,7 +195,7 @@ const ShowcaseComponent = () => {
       return allCinemas; // Show all branches if 'all' is selected
     }
     return allCinemas.filter(cinema => cinema.brand === selectedBrand);
-  }, [selectedBrand]); // Recalculate only when selectedBrand changes
+  }, [selectedBrand]);
 
   // Handler for changing the brand
   const handleBrandChange = (brandId) => {
