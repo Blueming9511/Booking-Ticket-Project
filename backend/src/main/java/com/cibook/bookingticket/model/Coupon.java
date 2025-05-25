@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Builder.Default;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.annotation.CreatedDate;

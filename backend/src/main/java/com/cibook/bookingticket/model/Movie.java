@@ -39,7 +39,7 @@ public class Movie {
     public enum MovieStatus {
         PENDING,
         APPROVED,
-        COMMING_SOOM,
+        COMING_SOON,
         NOW_SHOWING,
         CLOSED,
         POSTPONE

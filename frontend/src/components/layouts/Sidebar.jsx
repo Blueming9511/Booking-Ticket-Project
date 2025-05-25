@@ -19,7 +19,7 @@ const Sidebar = ({ role, items }) => {
     const currentPath = location.pathname;
     const selectedItem = items.find(item => currentPath === item.path);
     console.log(selectedItem)
-    return selectedItem ? [String(selectedItem.key)] : [];
+    return selectedItem ? [String(selectedItem.key)] : ["1"];
   };
 
   const siderStyle = {

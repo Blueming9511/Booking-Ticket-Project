@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,7 +60,8 @@ public class PaymentService implements IService<Payment, String> {
         return paymentRepository.findAll(pageable);
     }
 
-    public Page<Payment> findByOwnerAndStatus(Pageable pageable, String owner, String status) {
+    public Page<Payment> findByOwnerAndStatus(Pageable pageable, String owner, String status, String method,
+            LocalDateTime startDate, LocalDateTime endDate, Double maxPrice, Double minPrice) {
         Query query = new Query();
         if (owner != null && !owner.trim().isEmpty()) {
             query.addCriteria(Criteria.where("owner").regex(owner, "i"));
@@ -65,7 +69,23 @@ public class PaymentService implements IService<Payment, String> {
         if (status != null && !status.trim().isEmpty()) {
             query.addCriteria(Criteria.where("status").regex(status, "i"));
         }
-
+        if (method != null && !method.trim().isEmpty()) {
+            query.addCriteria(Criteria.where("method").regex(method, "i"));
+        }
+        if (startDate != null) {
+            query.addCriteria(Criteria.where("date").gte(startDate));
+        }
+        if (endDate != null) {
+            query.addCriteria(Criteria.where("endDate").lte(endDate));
+        }
+        if (maxPrice != null && maxPrice > 0) {
+            query.addCriteria(Criteria.where("price").lte(maxPrice));
+        }
+        if (minPrice != null && minPrice > 0) {
+            query.addCriteria(Criteria.where("price").gte(minPrice));
+        }
+        query.with(pageable);
+        query.with(Sort.by("date").descending());
         List<Payment> results = mongoTemplate.find(query, Payment.class);
         long count = mongoTemplate.count(query.skip(-1).limit(-1), Payment.class);
 

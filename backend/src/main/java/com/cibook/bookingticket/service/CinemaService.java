@@ -72,6 +72,7 @@ public class CinemaService implements IService<Cinema, String> {
         if (status != null && !status.trim().isEmpty()) {
             query.addCriteria(Criteria.where("status").is(status));
         }
+        query.with(pageable);
         List<Cinema> results = mongoTemplate.find(query, Cinema.class);
         long count = mongoTemplate.count(query.skip(-1).limit(-1), Cinema.class);
         return new PageImpl<>(results, pageable, count);

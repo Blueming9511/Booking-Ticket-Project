@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Card, Space, Button, Input, message, Table, Badge, Select, Divider } from "antd";
-import { BankOutlined, CheckCircleOutlined, CloseCircleOutlined, CreditCardOutlined, DeleteOutlined, PlusOutlined, QrcodeOutlined, QuestionOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { Card, Space, Button, Input, message, Table, Badge, Select, Divider, DatePicker } from "antd";
+import { BankOutlined, CheckCircleOutlined, CloseCircleOutlined, CreditCardOutlined, DeleteOutlined, FilterOutlined, PlusOutlined, QrcodeOutlined, QuestionOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { Dropdown, Tag } from "antd";
 import Title from "antd/es/typography/Title";
@@ -174,7 +174,17 @@ const columns = (handleStatusChange) => [
 
 const { Search } = Input;
 
+const statusOptions = [
+    { value: "PENDING", label: "Pending" },
+    { value: "APPROVED", label: "Confirmed" },
+    { value: "REJECTED", label: "Rejected" },
+]
 
+const methodOptions = [
+    { value: "VISA", label: "Credit Card" },
+    { value: "MOMO", label: "Momo" },
+    { value: "BANK", label: "Bank Transfer" },
+]
 
 const Payments = () => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -190,6 +200,13 @@ const Payments = () => {
     });
     const [owners, setOwners] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState(null);
+    const [search, setSearch] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [method, setMethod] = useState(null);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [maxPrice, setMaxPrice] = useState(null);
+    const [minPrice, setMinPrice] = useState(null);
 
     useEffect(() => {
         const fetchOwners = async () => {
@@ -206,13 +223,25 @@ const Payments = () => {
     }, [])
 
 
-    const fetchData = async (page = 1, pageSize = 5) => {
+    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null, status = null, method = null, search = null, startDate = null, endDate = null, minPrice = null, maxPrice = null) => {
         try {
             setLoading(true);
-            const url = `http://localhost:8080/api/admin/payments?page=${page - 1}&size=${pageSize}` + (selectedOwner ? `&owner=${selectedOwner}` : '');
+            const params = new URLSearchParams({
+                page: page - 1,
+                size: pageSize,
+            })
+            if (selectedOwner) params.append('owner', selectedOwner);
+            if (status) params.append('status', status);
+            if (method) params.append('method', method);
+            if (search) params.append('search', search);
+            if (startDate) params.append('startTime', dayjs(startDate).format("YYYY-MM-DDTHH:MM:ss"));
+            if (endDate) params.append('endTime', dayjs(endDate).format("YYYY-MM-DDTHH:MM:ss"));
+            if (minPrice) params.append('minPrice', minPrice);
+            if (maxPrice) params.append('maxPrice', maxPrice);
+            const url = `http://localhost:8080/api/admin/payments?${params.toString()}`
             const response = await axios.get(url, {
                 withCredentials: true,
-            })
+            });
             setPayments(response.data.content);
             setPagination({
                 ...pagination,
@@ -229,8 +258,8 @@ const Payments = () => {
     };
 
     useEffect(() => {
-        fetchData(pagination.current, pagination.pageSize, selectedOwner);
-    }, [selectedOwner]);
+        fetchData(pagination.current, pagination.pageSize, selectedOwner, status, method, search);
+    }, [selectedOwner, status, method, search]);
 
     const handleSubmit = async (values) => {
         const isEdit = !!selectedPayment;
@@ -271,6 +300,22 @@ const Payments = () => {
         }
     }
 
+    const handleApplyFilters = () => {
+        fetchData(pagination.current, pagination.pageSize, selectedOwner, status, method, search, startDate, endDate, minPrice, maxPrice);
+    }
+
+    const handleResetFilters = () => {
+        setSelectedOwner(null);
+        setStatus(null);
+        setMethod(null);
+        setSearch(null);
+        setStartDate(null);
+        setEndDate(null);
+        setMinPrice(null);
+        setMaxPrice(null);
+        fetchData(pagination.current, pagination.pageSize);
+    }
+
     return (
         <>
             {contextHolder}
@@ -284,29 +329,121 @@ const Payments = () => {
                     </span>
                 </div>
                 <Divider />
-                <div className="flex flex-col justify-between mb-5 gap-3 lg:flex-row">
-                    <div>
-                        <Select
-                            allowClear
-                            options={owners.map(o => ({ value: o, label: o }))}
-                            placeholder="Select Owner"
-                            onChange={(value) => setSelectedOwner(value)}
-                            className="w-48"
-                        />
-                    </div>
-                    <div className="flex gap-2">
-                        <Search
-                            placeholder="Search payment..."
-                            allowClear
-                            enterButton={<SearchOutlined />}
-                            style={{ width: 300 }}
-                        />
+                <div className="flex flex-col gap-4 mb-5">
+                    <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center gap-2">
+                            <Search
+                                placeholder="Search by code"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                style={{ width: 200 }}
+                                allowClear
+                            />
+
+                            <Button
+                                type="primary"
+                                icon={<ReloadOutlined />}
+                                onClick={() => fetchData(pagination.current, pagination.pageSize)}
+                            />
+                        </div>
+
+                        <Dropdown
+                            overlay={
+                                <div className="bg-white p-4 shadow-lg rounded-md">
+                                    <div className="flex flex-col gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Price Range</label>
+                                            <div className="flex items-center gap-2">
+                                                <Input
+                                                    placeholder="Min price"
+                                                    type="number"
+                                                    value={minPrice}
+                                                    onChange={(e) => setMinPrice(e.target.value)}
+                                                    style={{ width: 100 }}
+                                                />
+                                                <span>-</span>
+                                                <Input
+                                                    placeholder="Max price"
+                                                    type="number"
+                                                    value={maxPrice}
+                                                    onChange={(e) => setMaxPrice(e.target.value)}
+                                                    style={{ width: 100 }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Owner</label>
+                                            <Select
+                                                placeholder="Select owner"
+                                                options={owners.map(owner => ({ label: owner, value: owner }))}
+                                                onChange={(value) => setSelectedOwner(value)}
+                                                style={{ width: '100%' }}
+                                                allowClear
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Status</label>
+                                            <Select
+                                                placeholder="Select status"
+                                                options={statusOptions}
+                                                onChange={(value) => setStatus(value)}
+                                                style={{ width: '100%' }}
+                                                allowClear
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Method</label>
+                                            <Select
+                                                placeholder="Select method"
+                                                options={methodOptions}
+                                                onChange={(value) => setMethod(value)}
+                                                style={{ width: '100%' }}
+                                                allowClear
+                                            />
+
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Date Range</label>
+                                            <DatePicker.RangePicker
+                                                onChange={(dates) => {
+                                                    if (dates) {
+                                                        setStartDate(dates[0]);
+                                                        setEndDate(dates[1]);
+                                                    }
+                                                    else {
+                                                        setStartDate(null);
+                                                        setEndDate(null);
+                                                    }
+                                                }}
+                                                style={{ width: '100%' }}
+                                            />
+                                        </div>
+
+                                        <Button
+                                            type="primary"
+                                            onClick={handleApplyFilters}
+                                            block
+                                        >
+                                            Apply Filters
+                                        </Button>
+                                    </div>
+                                </div>
+                            }
+                            trigger={['click']}
+                            placement="bottomRight"
+                        >
+                            <Button icon={<FilterOutlined />}>Filters</Button>
+                        </Dropdown>
+
 
                         <Button
-                            type="primary"
-                            icon={<ReloadOutlined />}
-                            onClick={() => fetchData(pagination.current, pagination.pageSize)}
-                        />
+                            onClick={handleResetFilters}
+                        >
+                            Reset Filters
+                        </Button>
                     </div>
                 </div>
 

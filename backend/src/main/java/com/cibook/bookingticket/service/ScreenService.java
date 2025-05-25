@@ -123,7 +123,7 @@ public class ScreenService implements IService<Screen, String> {
     }
 
     public Page<ScreenWithLocationDto> getScreensWithLocation(Pageable pageable, String cinema, String owner,
-            String address, String status) {
+            String address, String status, String type) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("screens");
         List<Document> pipeline = new ArrayList<>();
         if (status != null && !status.isEmpty()) {
@@ -131,6 +131,10 @@ public class ScreenService implements IService<Screen, String> {
         }
         if (owner != null && !owner.isEmpty()) {
             pipeline.add(new Document("$match", new Document("owner", owner)));
+        }
+
+        if (type != null && !type.isEmpty()) {
+            pipeline.add(new Document("$match", new Document("type", type)));
         }
 
         if (cinema != null && !cinema.isEmpty()) {

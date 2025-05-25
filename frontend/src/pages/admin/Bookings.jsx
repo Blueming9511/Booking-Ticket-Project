@@ -181,6 +181,13 @@ const columns = (handleEdit, handleDelete) => [
 const { Search } = Input;
 
 
+const statusOptions = [
+    { value: "PENDING", label: "Pending" },
+    { value: "CONFIRMED", label: "Confirmed" },
+    { value: "CANCELLED", label: "Cancelled" },
+    { value: "EXPIRED", label: "Expired" },
+]
+
 
 const Bookings = () => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -193,6 +200,8 @@ const Bookings = () => {
     });
     const [owners, setOwners] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [search, setSearch] = useState(null);
 
     useEffect(() => {
         const fetchOwners = async () => {
@@ -209,13 +218,20 @@ const Bookings = () => {
     }, [])
 
 
-    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null) => {
+    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null, status = null, search = null) => {
         try {
             setLoading(true);
-            const url = `http://localhost:8080/api/admin/bookings?page=${page - 1}&size=${pageSize}` + (selectedOwner ? `&owner=${selectedOwner}` : '');
+            const params = new URLSearchParams({
+                page: page - 1,
+                size: pageSize,
+            })
+            if (selectedOwner) params.append('owner', selectedOwner);
+            if (status) params.append('status', status);
+            if (search) params.append('movie', search);
+            const url = `http://localhost:8080/api/admin/bookings?${params.toString()}`
             const response = await axios.get(url, {
                 withCredentials: true,
-            })
+            });
             setBookings(response.data.content);
             setPagination({
                 ...pagination,
@@ -232,8 +248,8 @@ const Bookings = () => {
     };
 
     useEffect(() => {
-        fetchData(pagination.current, pagination.pageSize, selectedOwner);
-    }, [selectedOwner]);
+        fetchData(pagination.current, pagination.pageSize, selectedOwner, status, search);
+    }, [selectedOwner, status, search]);
 
 
     return (
@@ -250,12 +266,20 @@ const Bookings = () => {
                 </div>
                 <Divider />
                 <div className="flex flex-col justify-between mb-5 gap-3 lg:flex-row">
-                    <div>
+                    <div className="flex flex-wrap gap-4">
                         <Select
                             allowClear
                             options={owners.map(o => ({ value: o, label: o }))}
                             placeholder="Select Owner"
                             onChange={(value) => setSelectedOwner(value)}
+                            className="w-48"
+                        />
+
+                        <Select
+                            allowClear
+                            options={statusOptions}
+                            placeholder="Select Status"
+                            onChange={(value) => setStatus(value)}
                             className="w-48"
                         />
                     </div>
@@ -264,6 +288,7 @@ const Bookings = () => {
                             placeholder="Search booking..."
                             allowClear
                             enterButton={<SearchOutlined />}
+                            onSearch={(e) => setSearch(e.target.value)}
                             style={{ width: 300 }}
                         />
 

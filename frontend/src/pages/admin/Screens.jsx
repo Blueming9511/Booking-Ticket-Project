@@ -146,6 +146,22 @@ const columns = (handleStatusChange) => [
     },
 ];
 
+const statusOptions = [
+    { value: "MAINTAINED", label: "Maintenance" },
+    { value: "CLOSED", label: "Closed" },
+    { value: "ACTIVE", label: "Active" },
+    { value: "INACTIVE", label: "Inactive" },
+]
+
+const screenType = [
+    { value: "STANDARD", label: "Standard" },
+    { value: "DELUXE", label: "Deluxe" },
+    { value: "PREMIUM", label: "Premium" },
+    { value: "IMAX", label: "IMAX" },
+    { value: "THREE_D", label: "3D" },
+    { value: "FOUR_DX", label: "4DX" }
+]
+
 const Screens = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [Screens, setScreens] = useState([]);
@@ -160,6 +176,9 @@ const Screens = () => {
     });
     const [owners, setOwners] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [type, setType] = useState(null);
+    const [search, setSearch] = useState(null);
 
     useEffect(() => {
         const fetchOwners = async () => {
@@ -176,13 +195,20 @@ const Screens = () => {
     }, [])
 
 
-    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null) => {
+    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null, status = null, type = null, search = null) => {
         try {
             setLoading(true);
-            const url = `http://localhost:8080/api/admin/screens?page=${page - 1}&size=${pageSize}`;
-            if (selectedOwner) {
-                url += `&owner=${selectedOwner}`;
-            }
+            const params = new URLSearchParams({
+                page: page - 1,
+                size: pageSize,
+            });
+            if (selectedOwner) params.append('owner', selectedOwner);
+            if (status) params.append('status', status);
+            if (type) params.append('type', type);
+            if (search) params.append('address', search);
+
+            const url = `http://localhost:8080/api/admin/screens?${params.toString()}`;
+
             const response = await axios.get(url, {
                 withCredentials: true,
             });
@@ -202,8 +228,8 @@ const Screens = () => {
     };
 
     useEffect(() => {
-        fetchData(pagination.current, pagination.pageSize);
-    }, []);
+        fetchData(pagination.current, pagination.pageSize, selectedOwner, status, type, search);
+    }, [selectedOwner, status, type, search]);
 
     const handleStatusChange = async (id, status) => {
         try {
@@ -234,12 +260,28 @@ const Screens = () => {
                 </div>
                 <Divider />
                 <div className="flex flex-col justify-between mb-5 gap-3 lg:flex-row">
-                    <div>
+                    <div className="flex flex-wrap gap-2">
                         <Select
                             allowClear
                             options={owners.map(o => ({ value: o, label: o }))}
                             placeholder="Select Owner"
                             onChange={(value) => setSelectedOwner(value)}
+                            className="w-48"
+                        />
+
+                        <Select
+                            allowClear
+                            options={statusOptions}
+                            placeholder="Select Status"
+                            onChange={(value) => setStatus(value)}
+                            className="w-48"
+                        />
+
+                        <Select
+                            allowClear
+                            options={screenType}
+                            placeholder="Select Screen Type"
+                            onChange={(value) => setType(value)}
                             className="w-48"
                         />
                     </div>
@@ -248,6 +290,7 @@ const Screens = () => {
                             placeholder="Search screen..."
                             allowClear
                             enterButton={<SearchOutlined />}
+                            onSearch={(value) => setSearch(value)}
                             style={{ width: 300 }}
                         />
 

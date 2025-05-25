@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Space, Button, Input, message, Table, Badge, Select, Divider } from "antd";
+import { Card, Space, Button, Input, message, Table, Badge, Select, Divider, DatePicker } from "antd";
 import { DeleteOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { Dropdown, Tag } from "antd";
@@ -203,6 +203,25 @@ const columns = (handleStatusChange) => [
 ];
 
 const { Search } = Input;
+const statusOptions = [
+    { value: "PENDING", label: "Pending" },
+    { value: "APPROVED", label: "Confirmed" },
+    { value: "REJECTED", label: "Rejected" },
+    { value: "MAINTAINED", label: "Maintenance" },
+    { value: "CLOSED", label: "Closed" },
+    { value: "IN_COMING", label: "Coming Soon" },
+    { value: "AVAILABLE", label: "Available" },
+    { value: "FULL", label: "Full" }
+]
+
+const screenType = [
+    { value: "STANDARD", label: "Standard" },
+    { value: "DELUXE", label: "Deluxe" },
+    { value: "PREMIUM", label: "Premium" },
+    { value: "IMAX", label: "IMAX" },
+    { value: "THREE_D", label: "3D" },
+    { value: "FOUR_DX", label: "4DX" }
+]
 
 const Showtimes = () => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -218,6 +237,11 @@ const Showtimes = () => {
     });
     const [owners, setOwners] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [search, setSearch] = useState(null);
+    const [type, setType] = useState(null);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     useEffect(() => {
         const fetchOwners = async () => {
@@ -234,13 +258,23 @@ const Showtimes = () => {
     }, [])
 
 
-    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null) => {
+    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null, status = null, search = null, type = null, startDate = null, endDate = null) => {
         try {
             setLoading(true);
-            const url = `http://localhost:8080/api/admin/showtimes?page=${page - 1}&size=${pageSize}` + (selectedOwner ? `&owner=${selectedOwner}` : '');
+            const params = new URLSearchParams({
+                page: page - 1,
+                size: pageSize,
+            })
+            if (selectedOwner) params.append('owner', selectedOwner);
+            if (status) params.append('status', status);
+            if (search) params.append('title', search);
+            if (type) params.append('type', type);
+            if (startDate) params.append('startTime', dayjs(startDate).format("YYYY-MM-DDTHH:MM:ss"));
+            if (endDate) params.append('endTime', dayjs(endDate).format("YYYY-MM-DDTHH:MM:ss"));
+            const url = `http://localhost:8080/api/admin/showtimes?${params.toString()}`
             const response = await axios.get(url, {
                 withCredentials: true,
-            })
+            });
             setShowtimes(response.data.content);
             setPagination({
                 ...pagination,
@@ -257,13 +291,8 @@ const Showtimes = () => {
     };
 
     useEffect(() => {
-        fetchData(pagination.current, pagination.pageSize);
-    }, []);
-
-    const handleEdit = (record) => {
-        setSelectedShowtime(record);
-        setIsModalOpen(true);
-    }
+        fetchData(pagination.current, pagination.pageSize, selectedOwner, status, search, type, startDate, endDate);
+    }, [selectedOwner, status, search, type, startDate, endDate]);
 
     const handleSubmit = async (values) => {
         const isEdit = !!selectedShowtime;
@@ -318,20 +347,48 @@ const Showtimes = () => {
                 </div>
                 <Divider />
                 <div className="flex flex-col justify-between mb-5 gap-3 lg:flex-row">
-                    <div>
+                    <div className="flex flex-wrap gap-3">
                         <Select
                             allowClear
                             options={owners.map(o => ({ value: o, label: o }))}
                             placeholder="Select Owner"
                             onChange={(value) => setSelectedOwner(value)}
-                            className="w-48"
+                            className="w-32"
                         />
+                        <Select
+                            allowClear
+                            options={statusOptions}
+                            placeholder="Select Status"
+                            onChange={(value) => setStatus(value)}
+                            className="w-32"
+                        />
+                        <Select
+                            allowClear
+                            options={screenType}
+                            placeholder="Select Type"
+                            onChange={(value) => setType(value)}
+                            className="w-32"
+                        />
+                        <DatePicker.RangePicker
+                            allowClear
+                            onChange={(value) => {
+                                if (!value) {
+                                    setStartDate(null);
+                                    setEndDate(null);
+                                } else {
+                                    setStartDate(value[0]);
+                                    setEndDate(value[1]);
+                                }
+                            }}
+                        />
+
                     </div>
                     <div className="flex gap-2">
                         <Search
                             placeholder="Search screen..."
                             allowClear
                             enterButton={<SearchOutlined />}
+                            onSearch={(value) => setSearch(value)}
                             style={{ width: 300 }}
                         />
 

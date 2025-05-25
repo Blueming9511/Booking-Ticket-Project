@@ -20,6 +20,7 @@ public class Payment {
     private String paymentCode;
     private PaymentMethod method;
     private Double amount;
+    private String owner;
 
     @CreatedDate
     private LocalDateTime date;

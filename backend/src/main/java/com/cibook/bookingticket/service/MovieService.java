@@ -7,6 +7,7 @@ import com.cibook.bookingticket.repository.MovieRepository;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -61,10 +62,21 @@ public class MovieService implements IService<Movie, String> {
         return movieRepository.findAll(pageable);
     }
 
-    public Page<Movie> findAllWithOwner(Pageable pageable, String owner) {
-        if (owner.isEmpty())
-            return movieRepository.findAll(pageable);
-        return movieRepository.findByOwner(owner, pageable);
+    public Page<Movie> findAllWithOwner(Pageable pageable, String owner, String status, String title) {
+        Query query = new Query();
+        if (owner != null && !owner.trim().isEmpty()) {
+            query.addCriteria(Criteria.where("owner").regex(owner, "i"));
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            query.addCriteria(Criteria.where("status").regex(status, "i"));
+        }
+        if (title != null && !title.trim().isEmpty()) {
+            query.addCriteria(Criteria.where("title").regex(".*" + title + ".*", "i"));
+        }
+        query.with(pageable);
+        List<Movie> results = mongoTemplate.find(query, Movie.class);
+        long count = mongoTemplate.count(query.skip(-1).limit(-1), Movie.class);
+        return new PageImpl<>(results, pageable, count);
     }
 
     private Movie normalizeMovieStatus(Movie movie) {

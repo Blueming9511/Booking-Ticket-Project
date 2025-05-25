@@ -176,7 +176,7 @@ const Cinemas = () => {
 
 
 
-    const fetchData = async (page = 1, pageSize = 5, selectedRole = null) => {
+    const fetchData = async (page = 1, pageSize = 5, selectedRole = null, searchKeyword = null, statusFilter = null) => {
         try {
             setLoading(true);
             let url = `http://localhost:8080/api/admin/cinemas?page=${page - 1}&size=${pageSize}`;
@@ -208,8 +208,8 @@ const Cinemas = () => {
     };
 
     useEffect(() => {
-        fetchData(pagination.current, pagination.pageSize, selectedRole);
-    }, [selectedRole, statusFilter]);
+        fetchData(pagination.current, pagination.pageSize, selectedRole, searchKeyword, statusFilter);
+    }, [selectedRole, statusFilter, searchKeyword]);
 
     const handleEdit = (cinema) => {
         setSelectedCinema(cinema);

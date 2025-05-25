@@ -12,10 +12,8 @@ import com.cibook.bookingticket.model.Notification;
 import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.observer.NotificationSubject;
 import com.cibook.bookingticket.model.Booking.BookingStatus;
-import com.cibook.bookingticket.repository.BookingDetailRepository;
 import com.cibook.bookingticket.repository.BookingRepository;
 import com.cibook.bookingticket.service.BookingDetailService;
-import com.cibook.bookingticket.service.BookingService;
 import com.cibook.bookingticket.service.SeatService;
 import com.cibook.bookingticket.service.ShowtimeService;
 
@@ -39,7 +37,7 @@ public class BookingTimeoutScheduler {
 
         for (Booking booking : expiredBookings) {
             // 1. Update status booking -> CANCELLED
-            booking.setStatus(BookingStatus.CANCELLED);
+            booking.setStatus(BookingStatus.EXPIRED);
             bookingRepository.save(booking);
 
             // 2. Get all seats by booking detail

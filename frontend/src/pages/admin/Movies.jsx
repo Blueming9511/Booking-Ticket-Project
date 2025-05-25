@@ -189,7 +189,15 @@ const columns = (handleEdit, handleStatusChange) => [
 
 const { Search } = Input;
 
-
+const statusOptions = [
+  { value: "PENDING", label: "Pending" },
+  { value: "APPROVED", label: "Confirmed" },
+  { value: "REJECTED", label: "Rejected" },
+  { value: "POSTPONE", label: "Postpone" },
+  { value: "CLOSED", label: "Closed" },
+  { value: "COMING_SOON", label: "Coming Soon" },
+  { value: "NOW_SHOWING", label: "Now Showing" }
+]
 
 const Movies = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -205,6 +213,8 @@ const Movies = () => {
   });
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [owners, setOwners] = useState([]);
+  const [search, setSearch] = useState(null);
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
     const fetchOwners = async () => {
@@ -221,13 +231,17 @@ const Movies = () => {
   }, [])
 
 
-  const fetchData = async (page = 1, pageSize = 5, selectedOwner = null) => {
+  const fetchData = async (page = 1, pageSize = 5, selectedOwner = null, status = null, search = null) => {
     try {
       setLoading(true);
-      const url = `http://localhost:8080/api/admin/movies?page=${page - 1}&size=${pageSize}`;
-      if (selectedOwner) {
-        url += `&owner=${selectedOwner}`;
-      }
+      const params = new URLSearchParams({
+        page: page - 1,
+        size: pageSize,
+      })
+      if (selectedOwner) params.append('owner', selectedOwner);
+      if (status) params.append('status', status);
+      if (search) params.append('title', search);
+      const url = `http://localhost:8080/api/admin/movies?${params.toString()}`
       const response = await axios.get(url, {
         withCredentials: true,
       });
@@ -247,8 +261,8 @@ const Movies = () => {
   };
 
   useEffect(() => {
-    fetchData(pagination.current, pagination.pageSize, selectedOwner);
-  }, [selectedOwner]);
+    fetchData(pagination.current, pagination.pageSize, selectedOwner, status, search);
+  }, [selectedOwner, status, search]);
 
   const handleEdit = (record) => {
     setSelectedMovie(record);
@@ -308,7 +322,7 @@ const Movies = () => {
         </div>
         <Divider />
         <div className="flex flex-col justify-between mb-5 gap-3 lg:flex-row">
-          <div>
+          <div className="flex flex-wrap gap-2">
             <Select
               allowClear
               options={owners.map(o => ({ value: o, label: o }))}
@@ -316,12 +330,21 @@ const Movies = () => {
               onChange={(value) => setSelectedOwner(value)}
               className="w-48"
             />
+
+            <Select
+              allowClear
+              options={statusOptions}
+              placeholder="Select Status"
+              onChange={(value) => setStatus(value)}
+              className="w-48"
+            />
           </div>
           <div className="flex gap-2">
             <Search
-              placeholder="Search cinema..."
+              placeholder="Search screen..."
               allowClear
               enterButton={<SearchOutlined />}
+              onSearch={(value) => setSearch(value)}
               style={{ width: 300 }}
             />
 

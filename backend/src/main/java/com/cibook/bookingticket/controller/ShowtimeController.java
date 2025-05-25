@@ -45,7 +45,7 @@ public class ShowtimeController implements IController<Showtime, String> {
             @RequestParam(name = "status", defaultValue = "") String status
     ) throws ParseException {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ShowtimeResponseDto> showtimes = showtimeService.findAllShowtimes(pageable, null, movie, status);
+        Page<ShowtimeResponseDto> showtimes = showtimeService.findAllShowtimes(pageable, null, movie, status, null, null, null, null);
         return ResponseEntity.ok(showtimes);
     }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Card, Space, Button, Input, message, Table, Badge, Popconfirm, Tooltip, Progress, Select, Divider } from "antd";
-import { CalendarOutlined, DeleteOutlined, DollarOutlined, EditOutlined, FrownOutlined, PercentageOutlined, PlusOutlined, ReloadOutlined, SearchOutlined, TeamOutlined } from "@ant-design/icons";
+import { Card, Space, Button, Input, message, Table, Badge, Popconfirm, Tooltip, Progress, Select, Divider, DatePicker } from "antd";
+import { CalendarOutlined, DeleteOutlined, DollarOutlined, EditOutlined, FilterOutlined, FrownOutlined, PercentageOutlined, PlusOutlined, ReloadOutlined, SearchOutlined, TeamOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { Dropdown, Tag } from "antd";
 import Title from "antd/es/typography/Title";
@@ -220,8 +220,6 @@ const columns = (handleEdit, handleDelete, handleStatusChange) => [
 
 const { Search } = Input;
 
-
-
 const Coupons = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [coupons, setCoupons] = useState([]);
@@ -236,6 +234,13 @@ const Coupons = () => {
     });
     const [selectedOwner, setSelectedOwner] = useState(null);
     const [owners, setOwners] = useState([]);
+    const [search, setSearch] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [type, setType] = useState(null);
+    const [minPrice, setMinPrice] = useState(null);
+    const [maxPrice, setMaxPrice] = useState(null);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     useEffect(() => {
         const fetchOwners = async () => {
@@ -252,10 +257,22 @@ const Coupons = () => {
     }, [])
 
 
-    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null) => {
+    const fetchData = async (page = 1, pageSize = 5, selectedOwner = null, status = null, search = null, type = null, minPrice = null, maxPrice = null, startDate = null, endDate = null) => {
         try {
             setLoading(true);
-            const url = `http://localhost:8080/api/admin/coupons?page=${page - 1}&size=${pageSize}` + (selectedOwner ? `&owner=${selectedOwner}` : '');
+            const params = new URLSearchParams({
+                page: page - 1,
+                size: pageSize,
+            })
+            if (selectedOwner) params.append('owner', selectedOwner);
+            if (status) params.append('status', status);
+            if (search) params.append('code', search);
+            if (type) params.append('type', type);
+            if (minPrice) params.append('minPrice', minPrice);
+            if (maxPrice) params.append('maxPrice', maxPrice);
+            if (startDate) params.append('startTime', dayjs(startDate).format("YYYY-MM-DDTHH:MM:ss"));
+            if (endDate) params.append('endTime', dayjs(endDate).format("YYYY-MM-DDTHH:MM:ss"));
+            const url = `http://localhost:8080/api/admin/coupons?${params.toString()}`
             const response = await axios.get(url, {
                 withCredentials: true,
             })
@@ -325,6 +342,22 @@ const Coupons = () => {
         }
     };
 
+    const handleApplyFilters = () => {
+        fetchData(pagination.current, pagination.pageSize, selectedOwner, status, search, type, minPrice, maxPrice, startDate, endDate);
+    }
+
+    const handleResetFilters = () => {
+        setSelectedOwner(null);
+        setStatus(null);
+        setSearch(null);
+        setType(null);
+        setMinPrice(null);
+        setMaxPrice(null);
+        setStartDate(null);
+        setEndDate(null);
+        fetchData(pagination.current, pagination.pageSize);
+    }
+
     const handleStatusChange = async (id, newStatus) => {
         try {
             await axios.put(`http://localhost:8080/api/admin/coupons/${id}/status`, { status: newStatus }, {
@@ -352,29 +385,119 @@ const Coupons = () => {
                     </span>
                 </div>
                 <Divider />
-                <div className="flex flex-col justify-between mb-5 gap-3 lg:flex-row">
-                    <div>
-                        <Select
-                            allowClear
-                            options={owners.map(o => ({ value: o, label: o }))}
-                            placeholder="Select Owner"
-                            onChange={(value) => setSelectedOwner(value)}
-                            className="w-48"
-                        />
-                    </div>
-                    <div className="flex gap-2">
-                        <Search
-                            placeholder="Search screen..."
-                            allowClear
-                            enterButton={<SearchOutlined />}
-                            style={{ width: 300 }}
-                        />
+                <div className="flex flex-col gap-4 mb-5">
+                    <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center gap-2">
+                            <Search
+                                placeholder="Search by code"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                style={{ width: 200 }}
+                                allowClear
+                            />
+
+                            <Button
+                                type="primary"
+                                icon={<ReloadOutlined />}
+                                onClick={() => fetchData(pagination.current, pagination.pageSize)}
+                            />
+                        </div>
+
+                        <Dropdown
+                            overlay={
+                                <div className="bg-white p-4 shadow-lg rounded-md">
+                                    <div className="flex flex-col gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Price Range</label>
+                                            <div className="flex items-center gap-2">
+                                                <Input
+                                                    placeholder="Min price"
+                                                    type="number"
+                                                    value={minPrice}
+                                                    onChange={(e) => setMinPrice(e.target.value)}
+                                                    style={{ width: 100 }}
+                                                />
+                                                <span>-</span>
+                                                <Input
+                                                    placeholder="Max price"
+                                                    type="number"
+                                                    value={maxPrice}
+                                                    onChange={(e) => setMaxPrice(e.target.value)}
+                                                    style={{ width: 100 }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Status</label>
+                                            <Select
+                                                placeholder="Select status"
+                                                value={status}
+                                                onChange={(value) => setStatus(value)}
+                                                style={{ width: '100%' }}
+                                                allowClear
+                                            >
+                                                <Option value="ACTIVE">Active</Option>
+                                                <Option value="INACTIVE">Inactive</Option>
+                                                <Option value="EXPIRED">Expired</Option>
+                                                <Option value="FULL">Full</Option>
+                                            </Select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Type</label>
+                                            <Select
+                                                placeholder="Select type"
+                                                value={type}
+                                                onChange={(value) => setType(value)}
+                                                style={{ width: '100%' }}
+                                                allowClear
+                                            >
+                                                <Option value="FIXED">Fixed</Option>
+                                                <Option value="PERCENTAGE">Percentage</Option>
+                                            </Select>
+                                        </div>
+
+
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Date Range</label>
+                                            <DatePicker.RangePicker
+                                                onChange={(dates) => {
+                                                    if (dates) {
+                                                        setStartDate(dates[0]);
+                                                        setEndDate(dates[1]);
+                                                    }
+                                                    else {
+                                                        setStartDate(null);
+                                                        setEndDate(null);
+                                                    }
+                                                }}
+                                                style={{ width: '100%' }}
+                                            />
+                                        </div>
+
+                                        <Button
+                                            type="primary"
+                                            onClick={handleApplyFilters}
+                                            block
+                                        >
+                                            Apply Filters
+                                        </Button>
+                                    </div>
+                                </div>
+                            }
+                            trigger={['click']}
+                            placement="bottomRight"
+                        >
+                            <Button icon={<FilterOutlined />}>Filters</Button>
+                        </Dropdown>
+
 
                         <Button
-                            type="primary"
-                            icon={<ReloadOutlined />}
-                            onClick={() => fetchData(pagination.current, pagination.pageSize)}
-                        />
+                            onClick={handleResetFilters}
+                        >
+                            Reset Filters
+                        </Button>
                     </div>
                 </div>
 

@@ -21,6 +21,8 @@ import com.cibook.bookingticket.service.ScreenService;
 import com.cibook.bookingticket.service.ShowtimeService;
 import com.cibook.bookingticket.service.UserService;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,7 +69,7 @@ public class AdminController {
     public ResponseEntity<?> getUsers(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
-            @RequestParam(name = "role", defaultValue = "") String role) {
+            @RequestParam(name = "role", required = false) String role) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users = userService.findAllWithRole(pageable, role);
         return ResponseEntity.ok(users);
@@ -106,9 +109,9 @@ public class AdminController {
     public ResponseEntity<?> getCinemas(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
-            @RequestParam(name = "owner", defaultValue = "") String owner,
-            @RequestParam(name = "address", defaultValue = "") String address,
-            @RequestParam(name = "status", defaultValue = "") String status) {
+            @RequestParam(name = "owner", required = false) String owner,
+            @RequestParam(name = "address", required = false) String address,
+            @RequestParam(name = "status", required = false) String status) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cinema> cinemas = cinemaService.findAllWithOwner(pageable, owner, address, status);
         return ResponseEntity.ok(cinemas);
@@ -158,12 +161,14 @@ public class AdminController {
     public ResponseEntity<Page<ScreenWithLocationDto>> findAllWithLocation(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
-            @RequestParam(name = "cinema", defaultValue = "") String cinema,
-            @RequestParam(name = "status", defaultValue = "") String status,
-            @RequestParam(name = "owner", defaultValue = "") String owner,
-            @RequestParam(name = "address", defaultValue = "") String address) {
+            @RequestParam(name = "cinema", required = false) String cinema,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "owner", required = false) String owner,
+            @RequestParam(name = "address", required = false) String address,
+            @RequestParam(name = "type", required = false) String type) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ScreenWithLocationDto> screens = screenService.getScreensWithLocation(pageable, cinema, owner, address, status);
+        Page<ScreenWithLocationDto> screens = screenService.getScreensWithLocation(pageable, cinema, owner, address,
+                status, type);
         return ResponseEntity.ok(screens);
     }
 
@@ -183,9 +188,11 @@ public class AdminController {
     public ResponseEntity<?> getMovies(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
-            @RequestParam(name = "owner", defaultValue = "") String owner) {
+            @RequestParam(name = "owner", required = false) String owner,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "title", required = false) String title) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Movie> movies = movieService.findAllWithOwner(pageable, owner);
+        Page<Movie> movies = movieService.findAllWithOwner(pageable, owner, status, title);
         return ResponseEntity.ok(movies);
     }
 
@@ -217,17 +224,21 @@ public class AdminController {
     public ResponseEntity<?> getShowtimes(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
-            @RequestParam(name = "owner", defaultValue = "") String owner,
-            @RequestParam(name = "movie", defaultValue = "") String movie,
-            @RequestParam(name = "status", defaultValue = "") String status) {
+            @RequestParam(name = "owner", required = false) String owner,
+            @RequestParam(name = "movie", required = false) String movie,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "address", required = false) String address,
+            @RequestParam(name = "startTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam(name = "endTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
+            @RequestParam(name = "type", required = false) String type) {
 
         Pageable pageable = PageRequest.of(page, size);
         try {
-            Page<ShowtimeResponseDto> showtimes;
-            showtimes = showtimeService.findAllShowtimes(pageable, owner, movie, status);
+            Page<ShowtimeResponseDto> showtimes = showtimeService.findAllShowtimes(
+                    pageable, owner, movie, status, address, startTime, endTime, type);
             return ResponseEntity.ok(showtimes);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -261,15 +272,16 @@ public class AdminController {
     public ResponseEntity<Page<Coupon>> getAll(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
-            @RequestParam(name = "code", defaultValue = "") String code,
-            @RequestParam(name = "minPrice", defaultValue = "0.0") Double minPrice,
-            @RequestParam(name = "maxPrice", defaultValue = "0.0") Double maxPrice,
-            @RequestParam(name = "status", defaultValue = "") String status,
-            @RequestParam(name = "type", defaultValue = "") String type,
-            @RequestParam(name="startDate", defaultValue = "") String startDate,
-            @RequestParam(name = "endDate", defaultValue = "") String endDate) {
+            @RequestParam(name = "code", required = false) String code,
+            @RequestParam(name = "minPrice", required = false) Double minPrice,
+            @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "type", required = false) String type,
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Coupon> coupons = couponService.findAllWithCriteria(pageable, code, minPrice, maxPrice, status, type, startDate, endDate);
+        Page<Coupon> coupons = couponService.findAllWithCriteria(pageable, code, minPrice, maxPrice, status, type,
+                startDate, endDate);
         return ResponseEntity.ok(coupons);
     }
 
@@ -313,9 +325,9 @@ public class AdminController {
     public ResponseEntity<Page<BookingAdminDto>> getAllBookings(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
-            @RequestParam(name = "owner", defaultValue = "") String owner,
-            @RequestParam(name = "status", defaultValue = "") String status,
-            @RequestParam(name = "movie", defaultValue = "") String movie) {
+            @RequestParam(name = "owner", required = false) String owner,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "movie", required = false) String movie) {
         Pageable pageable = PageRequest.of(page, size);
         Page<BookingAdminDto> bookings = bookingService.findAllBooking(pageable, owner, status, movie);
         return ResponseEntity.ok(bookings);
@@ -325,10 +337,15 @@ public class AdminController {
     public ResponseEntity<Page<Payment>> getAllPayments(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
-            @RequestParam(name = "owner", defaultValue = "") String owner,
-            @RequestParam(name = "status", defaultValue = "") String status) {
+            @RequestParam(name = "owner", required = false) String owner,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "method", required = false) String method,
+            @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(name = "minPrice", required = false) Double minPrice,
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Payment> payments = paymentService.findByOwnerAndStatus(pageable, owner, status);
+        Page<Payment> payments = paymentService.findByOwnerAndStatus(pageable, owner, status, method, startDate, endDate, maxPrice, minPrice);
         return ResponseEntity.ok(payments);
     }
 

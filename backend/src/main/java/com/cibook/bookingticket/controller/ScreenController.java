@@ -61,9 +61,10 @@ public class ScreenController implements IController<Screen, String> {
             @RequestParam(name = "cinema", defaultValue = "") String cinema,
             @RequestParam(name = "status", defaultValue = "") String status,
             @RequestParam(name = "owner", defaultValue = "") String owner,
-            @RequestParam(name = "address", defaultValue = "") String address) {
+            @RequestParam(name = "address", defaultValue = "") String address,
+            @RequestParam(name = "type", defaultValue = "") String type) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ScreenWithLocationDto> screens = screenService.getScreensWithLocation(pageable, cinema, owner, address, status);
+        Page<ScreenWithLocationDto> screens = screenService.getScreensWithLocation(pageable, cinema, owner, address, status, type);
         Map<String, String> cinemaOptions = cinemaService.findAllNamesWithID();
         ScreenLocationWithOptionsResponse response = new ScreenLocationWithOptionsResponse();
         response.setCinemaOptions(cinemaOptions);

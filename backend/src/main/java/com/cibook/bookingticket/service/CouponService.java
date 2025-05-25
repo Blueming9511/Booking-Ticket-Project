@@ -108,12 +108,12 @@ public class CouponService implements IService<Coupon, String> {
     }
 
     public Page<Coupon> findAllWithCriteria(Pageable pageable, String code, Double minPrice, Double maxPrice,
-    String status, String type, String startDate, String endDate) {
-        try {        
+            String status, String type, Date startDate, Date endDate) {
+        try {
             Query query = new Query();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
             if (code != null && !code.trim().isEmpty()) {
-                query.addCriteria(Criteria.where("couponCode").regex(code, "i"));
+                query.addCriteria(Criteria.where("couponCode").regex(".*" + code + ".*", "i"));
             }
             if (minPrice != null && minPrice > 0) {
                 query.addCriteria(Criteria.where("price").gte(minPrice));
@@ -127,14 +127,14 @@ public class CouponService implements IService<Coupon, String> {
             if (type != null && !type.trim().isEmpty()) {
                 query.addCriteria(Criteria.where("type").is(type));
             }
-            if (startDate != null && !startDate.trim().isEmpty()) {
-                Date start = sdf.parse(startDate);
-                query.addCriteria(Criteria.where("startDate").gte(start));
+
+            if (startDate != null) {
+                query.addCriteria(Criteria.where("startDate").gte(startDate));
             }
-            if (endDate != null && !endDate.trim().isEmpty()) {
-                Date end = sdf.parse(endDate);
-                query.addCriteria(Criteria.where("endDate").lte(end));
+            if (endDate != null) {
+                query.addCriteria(Criteria.where("endDate").lte(endDate));
             }
+            query.with(pageable);
             List<Coupon> results = mongoTemplate.find(query, Coupon.class);
             long count = mongoTemplate.count(query.skip(-1).limit(-1), Coupon.class);
             return new PageImpl<>(results, pageable, count);
@@ -142,4 +142,5 @@ public class CouponService implements IService<Coupon, String> {
             throw new NotFoundException("Error");
         }
     }
+
 }
