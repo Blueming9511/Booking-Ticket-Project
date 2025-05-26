@@ -29,23 +29,22 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                                .anyRequest().permitAll()
-//                        .requestMatchers("/oauth2/**", "/swagger-ui/**", "/v3/**").permitAll()
-//                        .requestMatchers("/api/auth/**", "/api/auth/reset-password", "/api/auth/reset-password/**").permitAll()
-//                        .requestMatchers("/reset-password**").permitAll()
-//
-//                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
-//
-//                        .requestMatchers(HttpMethod.GET, "/api/bookingdetails").hasRole("CUSTOMER")
-//                        .requestMatchers(HttpMethod.GET, "/api/bookings").hasRole("CUSTOMER")
-//
-//                        .requestMatchers(HttpMethod.POST,   "/api/**").hasAnyRole("ADMIN", "PROVIDER")
-//                        .requestMatchers(HttpMethod.PUT,    "/api/**").hasAnyRole("ADMIN", "PROVIDER")
-//                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("ADMIN", "PROVIDER")
+                       .requestMatchers("/oauth2/**", "/swagger-ui/**", "/v3/**").permitAll()
+                       .requestMatchers("/api/auth/**", "/api/auth/reset-password", "/api/auth/reset-password/**").permitAll()
+                       .requestMatchers("/reset-password**").permitAll()
+
+                       .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                       .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
+
+                       .requestMatchers(HttpMethod.GET, "/api/bookingdetails").hasRole("CUSTOMER")
+                       .requestMatchers(HttpMethod.GET, "/api/bookings").hasRole("CUSTOMER")
+
+                       .requestMatchers(HttpMethod.POST,   "/api/**").hasAnyRole("ADMIN", "PROVIDER")
+                       .requestMatchers(HttpMethod.PUT,    "/api/**").hasAnyRole("ADMIN", "PROVIDER")
+                       .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("ADMIN", "PROVIDER")
 
 
-//                        .anyRequest().authenticated()
+                       .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler));
 

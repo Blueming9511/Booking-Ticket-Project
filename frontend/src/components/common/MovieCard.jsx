@@ -9,6 +9,7 @@ const { Meta } = Card;
 
 // Add 'theme' prop with a default value
 const MovieCard = ({ movie, theme = 'light' }) => {
+  console.log("movie", movie);
   // Keep existing validation
   if (!movie || !movie.id || !movie.title || !movie.img) {
     console.warn('Incomplete movie data passed to MovieCard:', movie);

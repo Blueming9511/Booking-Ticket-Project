@@ -1,41 +1,83 @@
-import React, { useState } from 'react'; // Use React import
-import { Layout, Menu, Dropdown, Avatar, Drawer, Button, Grid, message } from 'antd'; // Added message
+import React, { useState, useEffect } from 'react';
+import { Layout, Menu, Dropdown, Avatar, Drawer, Button, theme, message } from 'antd';
 import { UserOutlined, DownOutlined, MenuOutlined, LoginOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 
-const { useBreakpoint } = Grid;
 const { Header } = Layout;
+
+// Define the cookie name
+const ACCESS_TOKEN_COOKIE_NAME = 'accessToken';
 
 // --- Component ---
 const AppHeader = () => {
   // --- State ---
   const [drawerVisible, setDrawerVisible] = useState(false);
-  // ** Simulate Authentication State **
-  // !! In a real app, replace this with your actual auth check !!
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // <-- Set to false to test logged-out behaviour
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
   const screens = useBreakpoint();
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
+  const { token } = theme.useToken();
+
+  // Effect to update isLoggedIn if the cookie changes
+  useEffect(() => {
+    const decodeJWT = (token) => {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => 
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (error) {
+        console.error('Error decoding JWT:', error);
+        return null;
+      }
+    };
+
+    const checkAuthStatus = () => {
+      const token = Cookies.get(ACCESS_TOKEN_COOKIE_NAME);
+      console.log('Current token:', token);
+      if (token) {
+        const decoded = decodeJWT(token);
+        if (decoded && decoded.name) {
+          setUserName(decoded.name);
+        }
+      }
+      setIsLoggedIn(!!token);
+    };
+
+    // Initial check
+    checkAuthStatus();
+
+    // Set up interval to check periodically (every 30 seconds)
+    const interval = setInterval(checkAuthStatus, 30000);
+
+    // Clean up interval on unmount
+    return () => clearInterval(interval);
+  }, []);
 
   // --- Handlers ---
   const showDrawer = () => setDrawerVisible(true);
   const closeDrawer = () => setDrawerVisible(false);
 
-  // Placeholder for actual logout function
   const handleLogout = () => {
     console.log('Logging out...');
-    setIsLoggedIn(false); // Simulate logout
+    Cookies.remove(ACCESS_TOKEN_COOKIE_NAME, { path: '/' }); // Ensure same path as when cookie was set
+    setIsLoggedIn(false);
+    setUserName('');
     closeDrawer();
     message.success('Logged out successfully.');
     navigate('/login');
   };
 
   // --- Menu Definitions ---
-  // Define main menu items as an array of objects for the Menu component's `items` prop
   const mainMenuItemsConfig = [
     {
       key: 'home',
       label: <Link to='/' onClick={closeDrawer}>Home</Link>,
-      style: styles.menuItem // Apply style here if needed per item
+      style: styles.menuItem
     },
     {
       key: 'booking',
@@ -49,7 +91,6 @@ const AppHeader = () => {
     }
   ];
 
-  // User Dropdown Menu (Only used when logged in)
   const userMenu = (
     <Menu>
       <Menu.Item key='profile' icon={<UserOutlined />}>
@@ -73,32 +114,27 @@ const AppHeader = () => {
 
   // --- Account Trigger Area (Conditional Logic Inside) ---
   const renderAccountTrigger = () => {
-    // The visual trigger element is always rendered
     const userTriggerElement = (
       <div style={{ ...styles.userSection, gap: '8px' }} className="hover:bg-[rgba(255,255,255,0.1)] transition-colors px-2 py-1 rounded">
         <Avatar size="small" icon={<UserOutlined />} style={styles.avatar} />
-        {/* Show 'Account' if not logged in or on small screens */}
         {!screens.sm || !isLoggedIn ? (
              <span style={styles.username}>Account</span>
         ) : (
-             // Show placeholder username only if logged in AND on larger screens
-             <span style={styles.username}>John Doe</span>
+             <span style={styles.username}>{userName || 'User'}</span>
         )}
         <DownOutlined style={styles.icon} />
       </div>
     );
 
     if (isLoggedIn) {
-      // Logged In: Wrap trigger in Dropdown
       return (
         <Dropdown overlay={userMenu} trigger={['click']}>
           {userTriggerElement}
         </Dropdown>
       );
     } else {
-      // Logged Out: Wrap trigger in Link to login page
       return (
-        <Link to="/login">
+        <Link to="/login" onClick={closeDrawer}> {/* Added closeDrawer here too for consistency */}
           {userTriggerElement}
         </Link>
       );
@@ -108,15 +144,12 @@ const AppHeader = () => {
   // --- Drawer Menu Content (Account section is conditional inside) ---
   const renderDrawerMenuItems = () => (
     <>
-      {/* Map main menu items for the drawer */}
       {mainMenuItemsConfig.map(item => (
         <Menu.Item key={`${item.key}Drawer`} style={item.style}>
-            {/* Ensure the label (Link) itself handles closeDrawer */}
             {item.label}
         </Menu.Item>
       ))}
       <Menu.Divider style={styles.divider} />
-      {/* Always render Account SubMenu */}
       <Menu.SubMenu
         key='userSubMenuDrawer'
         title='Account'
@@ -124,7 +157,6 @@ const AppHeader = () => {
         style={styles.menuItem}
       >
         {isLoggedIn ? (
-          // Logged In Drawer Items
           <>
             <Menu.Item key='profileDrawer' icon={<UserOutlined />}>
               <Link to='/profile' onClick={closeDrawer}>Profile</Link>
@@ -141,7 +173,6 @@ const AppHeader = () => {
             </Menu.Item>
           </>
         ) : (
-          // Logged Out Drawer Item
           <Menu.Item key='loginRedirectDrawer' icon={<LoginOutlined />}>
             <Link to='/login' onClick={closeDrawer}>Login / Sign Up</Link>
           </Menu.Item>
@@ -154,20 +185,15 @@ const AppHeader = () => {
   return (
     <>
       <Header style={styles.header}>
-        {/* Logo */}
         <div className='logo'>
           <Link to='/' style={styles.logoText}>
             Cinemaxx
           </Link>
         </div>
 
-        {/* Conditional Rendering: Mobile Menu Button or Desktop Menu + Right Content */}
         {isMobile ? (
-          // --- Mobile View ---
           <div className='flex items-center gap-x-4'>
-             {/* Render Account trigger on mobile */}
              {renderAccountTrigger()}
-             {/* Render Drawer button */}
              <Button
                 type='text'
                 icon={<MenuOutlined style={styles.menuIcon} />}
@@ -176,22 +202,17 @@ const AppHeader = () => {
              />
           </div>
         ) : (
-          // --- Desktop View ---
           <div className='flex items-center gap-x-5'>
-            {/* Always render main navigation menu */}
             <Menu
               mode='horizontal'
               style={styles.menu}
-              items={mainMenuItemsConfig} // Use the items prop
-              // selectedKeys={...} // Add logic to determine selected key based on route
+              items={mainMenuItemsConfig}
             />
-            {/* Render the dynamic account trigger */}
             {renderAccountTrigger()}
           </div>
         )}
       </Header>
 
-      {/* Drawer for Mobile */}
       <Drawer
         title={
           <Link to='/' style={styles.logoText} onClick={closeDrawer}>
@@ -214,7 +235,7 @@ const AppHeader = () => {
   );
 };
 
-// --- Styles --- (Using previous refined styles)
+// --- Styles --- (Keep your existing styles)
 const styles = {
     header: {
       display: 'flex',
@@ -227,57 +248,51 @@ const styles = {
       width: '100%',
       position: 'fixed',
       top: 0,
-      padding: '0 50px', // Base padding
-    // Responsive padding can be handled via media queries in CSS/SCSS or Tailwind classes if preferred
+      padding: '0 50px', 
     '@media (min-width: 768px)': { padding: '0 20px' },
       zIndex: 1000,
       height: '68px'
     },
     logoText: {
-      color: '#E50914', // Netflix Red
+      color: '#E50914',
       fontSize: '24px',
       fontWeight: 'bold',
       textDecoration: 'none',
       textTransform: 'uppercase',
       letterSpacing: '-1px',
     },
-    menu: { // Styles for the main desktop navigation menu container
+    menu: { 
       background: 'transparent',
       borderBottom: 'none',
-      lineHeight: '68px', // Align items vertically with header height
-      flex: 1, // Allow menu to take up space
+      lineHeight: '68px', 
+      flex: 1, 
       display: 'flex',
-      justifyContent: 'flex-end', // Push menu items to the right before the account trigger
-      marginRight: '20px', // Space between main menu and account trigger
+      justifyContent: 'flex-end', 
+      marginRight: '20px', 
     },
-    menuItem: { // Style for individual items within the <Menu> component (applies to desktop/drawer unless overridden)
+    menuItem: { 
       color: '#E5E5E5',
       fontWeight: 500,
-      // AntD's Menu applies its own hover styles based on theme
     },
-    userSection: { // Base style for the div containing avatar/text/icon
+    userSection: { 
       display: 'flex',
       alignItems: 'center',
       cursor: 'pointer',
       color: 'white',
     },
-    avatar: {
-      // Style for the avatar itself
-    },
+    avatar: {},
     username: {
       color: 'white',
       fontSize: '14px',
-      marginLeft: '8px', // Add space if gap isn't sufficient or not using flex gap
+      marginLeft: '8px', 
       marginRight: '4px',
     },
-    icon: { // Style for the DownOutlined icon
+    icon: { 
       color: 'rgba(255, 255, 255, 0.8)',
       fontSize: '12px',
     },
-    menuButton: { // Style for the mobile drawer toggle button
-      // Keep simple or add specific needs
-    },
-    menuIcon: { // Style for the MenuOutlined icon itself
+    menuButton: {},
+    menuIcon: { 
       color: 'white',
       fontSize: '24px'
     },
@@ -289,11 +304,11 @@ const styles = {
       padding: 0,
       background: '#141414'
     },
-    drawerMenu: { // Style for the Menu component *inside* the drawer
+    drawerMenu: { 
       background: 'transparent',
       borderRight: 'none',
     },
-    divider: { // Style for dividers in menus/drawers
+    divider: { 
         borderColor: 'rgba(255, 255, 255, 0.15)',
         margin: '12px 0'
     }

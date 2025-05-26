@@ -106,7 +106,6 @@ public class BookingService implements IService<Booking, String> {
         List<BookingDetail> details = dto.getSeats().stream().map(seatId -> BookingDetail.builder()
                 .bookingId(finalBooking.getId())
                 .seatCode(seatId)
-                .price(seatMultipliers.get(seatId) * showtime.getPrice())
                 .build()).toList();
         details = bookingDetailRepository.saveAll(details);
 
