@@ -19,6 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.webjars.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -201,4 +205,24 @@ public class UserService implements IService<User, String> {
         return results.stream().map(doc -> doc.getString("name")).collect(Collectors.toList());
     }
 
+    private int getNewCustomers(LocalDateTime startMonth, LocalDateTime endMonth) {
+        Query query = new Query(Criteria
+                .where("createdAt").gte(Date.from(startMonth.atZone(ZoneId.systemDefault()).toInstant()))
+                .lte(Date.from(endMonth.atZone(ZoneId.systemDefault()).toInstant()))
+                .and("role").is("CUSTOMER"));
+        return (int) mongoTemplate.count(query, "users");
+    }
+
+    private int getAllCustomers() {
+        Query query = new Query(Criteria.where("role").is("CUSTOMER"));
+        return (int) mongoTemplate.count(query, "users");
+    }
+
+    public Map<String, Integer> getUserStatAMonth() {
+        LocalDateTime now = LocalDateTime.now();
+        return Map.of(
+                "total", getAllCustomers(),
+                "thisMonth", getNewCustomers(now.withDayOfMonth(1), now),
+                "lastMonth", getNewCustomers(now.withDayOfMonth(1).minusMonths(1), now.minusMonths(1)));
+    }
 }

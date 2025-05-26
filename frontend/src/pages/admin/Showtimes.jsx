@@ -46,6 +46,16 @@ const getStatusOptions = (currentStatus) => {
 };
 const columns = (handleStatusChange) => [
     {
+        title: "Code",
+        dataIndex: "showTimeCode",
+        key: "showTimeCode",
+        render: (text) => (
+            <div className="text-base  font-black text-gray-600">
+                #{text}
+            </div>
+        ),
+    },
+    {
         title: "Movie",
         dataIndex: "movie",
         key: "movie",

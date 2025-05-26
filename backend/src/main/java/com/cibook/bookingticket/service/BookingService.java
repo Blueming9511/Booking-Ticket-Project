@@ -20,9 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,11 +78,19 @@ public class BookingService implements IService<Booking, String> {
 
     @Transactional
     public Booking addWithDetail(BookingRequestDto dto) {
+        Coupon coupon =  couponService.findByCode(dto.getCouponCode()).orElseThrow(() -> new NoSuchElementException("Coupon not found with code: " + dto.getCouponCode()));
+        Double amount = dto.getTotalAmount();
+        if (coupon.getType() == Coupon.CouponType.PERCENTAGE) {
+            amount = dto.getTotalAmount() * (1 - coupon.getDiscountValue() / 100);
+        } else if (coupon.getType() == Coupon.CouponType.FIXED) {
+            amount = dto.getTotalAmount() - coupon.getDiscountValue();
+        }
+
         // 1.Create booking
         Booking booking = Booking.builder()
                 .bookingCode(codeGenerator.generateBookingCode())
                 .userId(dto.getUserId())
-                .totalAmount(dto.getTotalAmount())
+                .totalAmount(amount)
                 .showTimeCode(dto.getShowtimeId())
                 .couponCode(dto.getCouponCode())
                 .status(BookingStatus.PENDING)
@@ -88,12 +99,11 @@ public class BookingService implements IService<Booking, String> {
 
         // 2. Update showtime booked seats
         Showtime showtime = showtimeService.findByCode(booking.getShowTimeCode()).orElseThrow();
-        showtime.setBookedSeats(showtime.getBookedSeats() + dto.getSeats().size());
-        showtimeRepository.save(showtime);
 
         // 3. Create booking details
         Booking finalBooking = booking;
         // 3.1 Check seat availability
+        System.out.println("Showtime: " + showtime);
         Map<String, Double> seatMultipliers = seatService.getMultipliersByCodes(dto.getSeats(),
                 showtime.getScreenCode(), showtime.getCinemaCode());
         List<String> unavailableSeats = dto.getSeats().stream()
@@ -102,6 +112,10 @@ public class BookingService implements IService<Booking, String> {
         if (!unavailableSeats.isEmpty()) {
             throw new SeatUnavailableException("Booked seats: " + unavailableSeats);
         }
+
+        showtime.setBookedSeats(showtime.getBookedSeats() + dto.getSeats().size());
+        showtimeRepository.save(showtime);
+
         // 3.2 Create booking details
         List<BookingDetail> details = dto.getSeats().stream().map(seatId -> BookingDetail.builder()
                 .bookingId(finalBooking.getId())
@@ -115,6 +129,8 @@ public class BookingService implements IService<Booking, String> {
                 .paymentCode(codeGenerator.generatePaymentCode())
                 .bookingID(booking.getId())
                 .method(Payment.PaymentMethod.valueOf(dto.getPaymentMethod().toUpperCase()))
+                .amount(dto.getTotalAmount())
+                .owner(dto.getUserId())
                 .build();
         payment = paymentRepository.save(payment);
 
@@ -124,7 +140,6 @@ public class BookingService implements IService<Booking, String> {
         // 6. Send notification
         Movie movie = movieService.findByCode(showtime.getMovieCode()).orElseThrow();
         Cinema cinema = cinemaService.findByCode(showtime.getCinemaCode()).orElseThrow();
-        Coupon coupon = couponService.findByCode(booking.getCouponCode()).orElse(null);
         Map<String, Object> data = new HashMap<>();
         data.put("Booking", booking);
         data.put("BookingDetail", details);
@@ -264,6 +279,8 @@ public class BookingService implements IService<Booking, String> {
                 new Document("$unwind",
                         new Document("path", "$user")
                                 .append("preserveNullAndEmptyArrays", true)),
+                new Document("$sort",
+                        new Document("createdAt", -1L)),
                 new Document("$project",
                         new Document("bookingCode", 1L)
                                 .append("createdAt", 1L)
@@ -392,4 +409,24 @@ public class BookingService implements IService<Booking, String> {
         return dto;
     }
 
+    private int getTotalBookingThisMonth(LocalDateTime startMonth, LocalDateTime endMonth) {
+        Query query = new Query(Criteria
+                .where("createdAt").gte(Date.from(startMonth.atZone(ZoneId.systemDefault()).toInstant()))
+                .lte(Date.from(endMonth.atZone(ZoneId.systemDefault()).toInstant()))
+                .and("status").is("CONFIRMED"));
+        return (int) mongoTemplate.count(query, "bookings");
+    }
+
+    private int getTotalBooking() {
+        Query query = new Query(Criteria.where("status").is("CONFIRMED"));
+        return (int) mongoTemplate.count(query, "bookings");
+    }
+
+    public Map<String, Integer> getOrderStatAMonth() {
+        LocalDateTime now = LocalDateTime.now();
+        return Map.of(
+                "total", getTotalBooking(),
+                "thisMonth", getTotalBookingThisMonth(now.withDayOfMonth(1), now),
+                "lastMonth", getTotalBookingThisMonth(now.withDayOfMonth(1).minusMonths(1), now.minusMonths(1)));
+    }
 }
