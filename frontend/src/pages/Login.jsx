@@ -6,8 +6,7 @@ import {
 import {FcGoogle} from "react-icons/fc";
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import {Link, useNavigate} from 'react-router-dom';
-import axios from "axios";
-
+import {useAuth} from "../context/AuthContext.jsx";
 const {Title, Text, Paragraph} = Typography;
 
 // --- Helper Styles (Red & White Theme) ---
@@ -19,24 +18,18 @@ const sideImageUrl = 'https://i.pinimg.com/736x/62/74/e2/6274e27e43cfb816c6fcfea
 const Login = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
+    const {login} = useAuth();
     const [messageApi, contextHolder] = message.useMessage();
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
 
     const onFinish = async (values) => {
         setLoading(true);
-        console.log("Success (Form values):", values);
         try {
-            const response = await axios.post(`${API_URL}/auth/login`, values, {
-                withCredentials: true
-            });
-            console.log(response.data)
-            const name = response?.data?.name ?? "Anonymous";
-            messageApi.success(`Welcome back, ${name}!`);
-            navigate('/dashboard');
+            await login(values);
         } catch (error) {
             console.error("Login failed:", error);
-            messageApi.error("Login failed. Please check credentials.");
+            messageApi.error("Login failed. Please check your credentials.");
         } finally {
             setLoading(false);
         }

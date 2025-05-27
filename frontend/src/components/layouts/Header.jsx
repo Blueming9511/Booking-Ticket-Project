@@ -2,7 +2,7 @@ import React, { useState } from 'react'; // Use React import
 import { Layout, Menu, Dropdown, Avatar, Drawer, Button, Grid, message } from 'antd'; // Added message
 import { UserOutlined, DownOutlined, MenuOutlined, LoginOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
-
+import { useAuth } from '../../context/AuthContext';
 const { useBreakpoint } = Grid;
 const { Header } = Layout;
 
@@ -15,6 +15,8 @@ const AppHeader = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true); // <-- Set to false to test logged-out behaviour
   const screens = useBreakpoint();
   const navigate = useNavigate(); // Hook for navigation
+
+  const {user} = useAuth(); // Get user from AuthContext
 
   // --- Handlers ---
   const showDrawer = () => setDrawerVisible(true);
@@ -82,13 +84,13 @@ const AppHeader = () => {
              <span style={styles.username}>Account</span>
         ) : (
              // Show placeholder username only if logged in AND on larger screens
-             <span style={styles.username}>John Doe</span>
+             <span style={styles.username}>{user.name}</span>
         )}
         <DownOutlined style={styles.icon} />
       </div>
     );
 
-    if (isLoggedIn) {
+    if (user) {
       // Logged In: Wrap trigger in Dropdown
       return (
         <Dropdown overlay={userMenu} trigger={['click']}>

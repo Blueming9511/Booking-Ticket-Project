@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -45,6 +46,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendLoginNotification(String to, LocalDateTime loginTime) {
         try {
             Map<String, Object> templateModel = new HashMap<>();
@@ -67,6 +69,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendOtpVerification(String to, String otp) {
         try {
             Map<String, Object> templateModel = new HashMap<>();
@@ -90,6 +93,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendVerificationSuccess(String to) {
         try {
             Map<String, Object> templateModel = new HashMap<>();
@@ -111,6 +115,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendPasswordResetEmail(String to, String resetCode, String resetLink) {
         try {
             Map<String, Object> templateModel = new HashMap<>();
@@ -135,6 +140,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendPasswordResetSuccessEmail(String to) {
         try {
             Map<String, Object> templateModel = new HashMap<>();
@@ -156,13 +162,15 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendOrderConfirmationEmail(String to, BookingResponseDto response) {
         try {
             Map<String, Object> templateModel = new HashMap<>();
             templateModel.put("applicationName", applicationName);
             templateModel.put("applicationUrl", applicationUrl);
             templateModel.put("booking", response);
-            templateModel.put("customerName", response.getUser().getName() != null ? response.getUser().getName() : "Valued Customer");
+            templateModel.put("customerName",
+                    response.getUser().getName() != null ? response.getUser().getName() : "Valued Customer");
 
             String htmlContent = processTemplate("order-confirmation", templateModel);
             MimeMessage mimeMessage = mailSender.createMimeMessage();
