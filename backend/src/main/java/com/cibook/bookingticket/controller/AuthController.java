@@ -2,6 +2,7 @@ package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.dto.*;
 import com.cibook.bookingticket.model.User;
+import com.cibook.bookingticket.security.CustomUserDetails;
 import com.cibook.bookingticket.service.Auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,12 +12,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,11 +35,10 @@ public class AuthController {
         this.authService = authService;
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         try {
-            UserResponseDto userResponse = authService.login(loginRequest, response);
+            UserDto userResponse = authService.login(loginRequest, response);
             return ResponseEntity.ok(userResponse);
         } catch (UsernameNotFoundException e) {
             return ResponseEntity
@@ -42,7 +46,7 @@ public class AuthController {
                     .body(Map.of("message", e.getMessage()));
         } catch (BadCredentialsException e) {
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("message", e.getMessage()));
         }
     }
@@ -74,7 +78,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refresh(@CookieValue("refreshToken") String refreshToken, @RequestBody String id, HttpServletResponse response) {
+    public ResponseEntity<?> refresh(@CookieValue("refreshToken") String refreshToken, @RequestBody String id,
+            HttpServletResponse response) {
         try {
             authService.refreshToken(refreshToken, id, response);
             return ResponseEntity.ok().build();
@@ -102,7 +107,8 @@ public class AuthController {
     }
 
     @PostMapping("/verify-code")
-    public ResponseEntity<?> verifyResetCode(@Valid @RequestBody PasswordVerificationDto verificationDto, HttpServletResponse r) {
+    public ResponseEntity<?> verifyResetCode(@Valid @RequestBody PasswordVerificationDto verificationDto,
+            HttpServletResponse r) {
         System.out.println("hiii");
         boolean isValid = authService.verifyResetCode(verificationDto.getEmail(), verificationDto.getOtp(), r);
 
@@ -119,7 +125,8 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDto passwordResetDto, HttpServletRequest request, HttpServletResponse r) {
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDto passwordResetDto,
+            HttpServletRequest request, HttpServletResponse r) {
         boolean success = false;
         if (passwordResetDto.getToken() == null || passwordResetDto.getToken().isEmpty()) {
             System.out.println("hiii");
@@ -139,5 +146,22 @@ public class AuthController {
             response.put("success", false);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new UserDto(
+                userDetails.getId(),
+                userDetails.getName(),
+                userDetails.getUsername(),
+                roles));
     }
 }

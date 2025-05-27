@@ -14,4 +14,5 @@ public class BookingDetail {
     private String id;
     private String bookingId;
     private String seatCode;
+    private double price;
 }

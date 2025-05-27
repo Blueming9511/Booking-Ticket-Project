@@ -29,31 +29,35 @@ const providerItems = [
 
 const LayoutProvider = () => {
   return (
-    <Layout className="min-h-screen bg-gray-100">
-      <Sidebar role={"provider"} items={providerItems} />
-
-      <Layout>
+    <>
+      <div className='min-h-15'>
         <Header />
+      </div>
+      <Layout className="min-h-screen bg-gray-100">
+        <Sidebar items={providerItems} />
+        <Layout>
 
-        <Content className="p-6">
-          <div className="bg-white rounded-2xl p-6 min-h-screen mt-15" id='shadow-content'>
-            <Outlet />
-          </div>
-        </Content>
+          <Content className="p-6">
+            <div className="bg-white rounded-2xl p-6 min-h-screen" id='shadow-content'>
+              <Outlet />
+            </div>
+          </Content>
 
-        <Footer className="bg-white mt-4 px-4 py-6 text-center text-sm text-gray-500">
-          <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-2">
-            <div>
-              © {dayjs().format("YYYY")} Movie Management Platform. All rights reserved.
+          <Footer className="bg-white mt-4 px-4 py-6 text-center text-sm text-gray-500">
+            <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-2">
+              <div>
+                © {dayjs().format("YYYY")} Movie Management Platform. All rights reserved.
+              </div>
+              <div>
+                <span className="text-gray-400 mr-1">Last updated:</span>
+                <span className="font-medium text-gray-600">{dayjs().format("DD/MM/YYYY HH:mm")}</span>
+              </div>
             </div>
-            <div>
-              <span className="text-gray-400 mr-1">Last updated:</span>
-              <span className="font-medium text-gray-600">{dayjs().format("DD/MM/YYYY HH:mm")}</span>
-            </div>
-          </div>
-        </Footer>
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
+    </>
+
   )
 }
 

@@ -62,6 +62,7 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
+    @SuppressWarnings("deprecation")
     private Claims extractAllClaims(String token, SecretKey key) {
         return Jwts.parser()
                 .setSigningKey(key)
@@ -72,7 +73,16 @@ public class JWTService {
 
     public boolean isAccessTokenValid(String token, String id) {
         final String extractedId = getIdFromAccessToken(token);
-        return (extractedId.equals(id) && isTokenExpired(token, jwtSecret));
+        return extractedId.equals(id) && !isTokenExpired(token, jwtSecret);
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            extractAllClaims(token, jwtSecret);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean isRefreshTokenValid(String token, String id) {

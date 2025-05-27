@@ -3,6 +3,7 @@ package com.cibook.bookingticket.service.Auth;
 import com.cibook.bookingticket.dto.LoginRequest;
 import com.cibook.bookingticket.dto.UserRegisterDto;
 import com.cibook.bookingticket.dto.UserResponseDto;
+import com.cibook.bookingticket.dto.UserDto;
 import com.cibook.bookingticket.mapper.UserRegisterMapper;
 import com.cibook.bookingticket.mapper.UserResponseMapper;
 import com.cibook.bookingticket.model.User;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,7 +43,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserResponseDto login(LoginRequest loginRequest, HttpServletResponse response) {
+    public UserDto login(LoginRequest loginRequest, HttpServletResponse response) {
         User user = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
         String accessToken = jwtService.generateToken(user);
         String refreshToken = null;
@@ -49,12 +51,22 @@ public class AuthService {
             refreshToken = jwtService.generateRefreshToken(user);
         }
         cookieService.addAuthCookies(response, accessToken, refreshToken);
-        UserResponseDto userResponse = userResponseMapper.toDto(user);
 
         emailService.sendLoginNotification(user.getEmail(), LocalDateTime.now());
 
-        return userResponse;
+        List<String> roles = user.getRole() == User.Role.ADMIN
+                ? List.of("ROLE_ADMIN")
+                : user.getRole() == User.Role.CUSTOMER
+                ? List.of("ROLE_CUSTOMER") 
+                : List.of("ROLE_PROVIDER");
+        UserDto userDto = new UserDto(
+            user.getId(),
+            user.getName(),
+            user.getEmail(),
+            roles);
+        return userDto;
     }
+
 
     public User register(UserRegisterDto userRegisterDto) {
         User user = userRegisterMapper.toEntity(userRegisterDto);

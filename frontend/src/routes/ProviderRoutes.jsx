@@ -9,8 +9,18 @@ import Payment from '../pages/provider/Payment'
 import Screens from '../pages/provider/Screens'
 import ShowTime from '../pages/provider/Showtime'
 import Booking from '../pages/provider/Booking'
+import { useAuth } from '../context/AuthContext'
 
 const ProviderRoutes = () => {
+  const { user } = useAuth()
+  if (!user || user.roles.indexOf('ROLE_PROVIDER') === -1) {
+    return (
+      <div className="flex flex-col gap-4 items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold text-red-500">Access Denied</h1>
+        <p className="text-gray-600">You do not have permission to access this page.</p>
+      </div>
+    )
+  }
   return (
     <Routes>
       <Route path='/' element={<LayoutProvider />}>
