@@ -33,7 +33,7 @@ const Login = () => {
             console.log(response.data)
             const name = response?.data?.name ?? "Anonymous";
             messageApi.success(`Welcome back, ${name}!`);
-            navigate('/dashboard');
+            navigate('/');
         } catch (error) {
             console.error("Login failed:", error);
             messageApi.error("Login failed. Please check credentials.");

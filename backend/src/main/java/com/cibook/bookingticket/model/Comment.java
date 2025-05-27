@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -25,6 +26,10 @@ public class Comment {
     
     @Schema(description = "ID of the user who made the comment", example = "60b9b4a7e6c2f32b8c4d9a1f", required = true)
     private String userId;
+    
+    @Schema(description = "Name of the user who made the comment", example = "John Doe")
+    @Transient
+    private String userName;
     
     @Schema(description = "ID of the movie being commented on", example = "60b9b4a7e6c2f32b8c4d9a2a", required = true)
     private String movieId;

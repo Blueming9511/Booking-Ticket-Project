@@ -35,10 +35,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuth2User user = (OAuth2User) authentication.getPrincipal();
         User u = userService.findByEmail(user.getAttribute("email")).orElseGet(() -> {
             User newUser = new User();
-            newUser.setId(user.getName());
             newUser.setEmail(user.getAttribute("email"));
             newUser.setName(user.getAttribute("name"));
             newUser.setAvatar(user.getAttribute("picture"));
+            newUser.setDateOfBirth(user.getAttribute("dob"));
+            newUser.setPhoneNumber(user.getAttribute("phoneNumber"));
             newUser.setRole(User.Role.CUSTOMER);
             return userService.save(newUser);
         });

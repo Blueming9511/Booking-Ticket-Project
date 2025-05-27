@@ -38,6 +38,18 @@ const decodeJWT = (token) => {
   }
 };
 
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A';
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'N/A';
+    return date.toISOString().split('T')[0];
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'N/A';
+  }
+};
+
 const ticketData = [
   {
     key: '1',
@@ -239,7 +251,7 @@ const UserProfile = () => {
           name: decoded.name || 'N/A',
           email: decoded.email || 'N/A',
           phone: decoded.phoneNumber || 'N/A',
-          DOB: new Date(decoded.dob).toISOString().split('T')[0] || 'N/A',
+          DOB: formatDate(decoded.dob),
           gender: 'N/A', // Not included in token
           avatar: 'https://randomuser.me/api/portraits/men/1.jpg' // Default avatar
         });

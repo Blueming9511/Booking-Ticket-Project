@@ -7,8 +7,12 @@ import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -143,18 +147,17 @@ public class SeatService implements IService<Seat, String> {
         return result.getDouble("multiplier");
     }
 
-    public Map<String, Double> getMultipliersByCodes(List<String> seats, String screenCode, String cinemaCode) {
+    public Map<String, Double> getMultipliersByCodes(List<String> seats, String screenCode,
+            String cinemaCode) {
         Query query = new Query();
         query.addCriteria(
                 Criteria.where("seatCode").in(seats)
                         .and("cinemaCode").is(cinemaCode)
-                        .and("screenCode").is(screenCode)
-                        .and("status").is("AVAILABLE"));
-        query.fields().include("seatCode").include("multiplier").exclude("_id");
-
-        List<Document> results = mongoTemplate.find(query, Document.class, "seats");
-
-        return results.stream().collect(Collectors.toMap(
+                        .and("screenCode").is(screenCode));
+        query.fields().include("seatCode", "multiplier").exclude("_id");
+        List<Document> resultList = mongoTemplate.find(query, Document.class, "seats");
+        
+        return resultList.stream().collect(Collectors.toMap(
                 doc -> doc.getString("seatCode"),
                 doc -> doc.getDouble("multiplier")));
     }

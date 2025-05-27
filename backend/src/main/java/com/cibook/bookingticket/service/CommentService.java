@@ -22,22 +22,31 @@ import java.util.HashMap;
 public class CommentService implements IService<Comment, String> {
 
     private final CommentRepository commentRepository;
+    private final UserService userService;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository, UserService userService) {
         this.commentRepository = commentRepository;
+        this.userService = userService;
+    }
+
+    private Comment enrichCommentWithUserInfo(Comment comment) {
+        userService.findById(comment.getUserId()).ifPresent(user -> {
+            comment.setUserName(user.getName());
+        });
+        return comment;
     }
 
     @Override
     public Comment add(Comment entity) {
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
-        return commentRepository.save(entity);
+        return enrichCommentWithUserInfo(commentRepository.save(entity));
     }
 
     @Override
     public Optional<Comment> findById(String id) {
-        return commentRepository.findById(id);
+        return commentRepository.findById(id).map(this::enrichCommentWithUserInfo);
     }
 
     @Override
@@ -52,7 +61,9 @@ public class CommentService implements IService<Comment, String> {
 
     @Override
     public Page<Comment> findAll(Pageable pageable) {
-        return commentRepository.findAll(pageable);
+        Page<Comment> comments = commentRepository.findAll(pageable);
+        comments.getContent().forEach(this::enrichCommentWithUserInfo);
+        return comments;
     }
 
     @Override
@@ -73,7 +84,7 @@ public class CommentService implements IService<Comment, String> {
                     entity.setCreatedAt(existingComment.getCreatedAt());
                     entity.setUpdatedAt(LocalDateTime.now());
                     entity.setEdited(true);
-                    return commentRepository.save(entity);
+                    return enrichCommentWithUserInfo(commentRepository.save(entity));
                 })
                 .orElseThrow(() -> new NoSuchElementException("Comment not found with ID: " + id));
     }
@@ -94,9 +105,8 @@ public class CommentService implements IService<Comment, String> {
     }
 
     public Page<Comment> findByMovieId(String movieId, Pageable pageable) {
-        log.debug("Finding comments for movieId: {}", movieId);
         Page<Comment> comments = commentRepository.findByMovieId(movieId, pageable);
-        log.debug("Found {} comments", comments.getTotalElements());
+        comments.getContent().forEach(this::enrichCommentWithUserInfo);
         return comments;
     }
 
@@ -105,7 +115,9 @@ public class CommentService implements IService<Comment, String> {
     }
 
     public List<Comment> findActiveCommentsByMovieId(String movieId) {
-        return commentRepository.findByMovieIdAndStatus(movieId, Comment.CommentStatus.ACTIVE);
+        List<Comment> comments = commentRepository.findByMovieIdAndStatus(movieId, Comment.CommentStatus.ACTIVE);
+        comments.forEach(this::enrichCommentWithUserInfo);
+        return comments;
     }
 
     public void updateStatus(String id, Comment.CommentStatus status) {
