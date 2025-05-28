@@ -270,8 +270,8 @@ const CommentSection = ({ movieId }) => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-red-600 mb-4">Reviews</h2>
-      </div>
+        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+      </div>  
 
       {isLoggedIn ? (
         <Form
@@ -293,6 +293,7 @@ const CommentSection = ({ movieId }) => {
             <Button
               type="primary"
               htmlType="submit"
+              danger={true}
               loading={submitting}
               className="bg-red-500 hover:bg-red-600 border-red-500 hover:border-red-600"
             >

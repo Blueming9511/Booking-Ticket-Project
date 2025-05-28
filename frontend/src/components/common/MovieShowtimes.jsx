@@ -223,7 +223,7 @@ export default function SingleMovieShowtimes() {
   }
 
   return (
-    <div className='m-3 sm:m-5'>
+    <div className='my-3 sm:my-5'>
       {/* Header - Show Movie Title */}
       <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center flex-wrap mb-4 gap-y-3'>
           <div>

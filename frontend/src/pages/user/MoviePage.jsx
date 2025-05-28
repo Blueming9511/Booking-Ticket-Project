@@ -21,7 +21,7 @@ export default function MoviePage() {
             status: 'NOW_SHOWING'
           }
         })
-
+        
 
         // Fetch all movies for the paginated list
         const allMoviesResponse = await axios.get(`${API_URL}/movies`, {
