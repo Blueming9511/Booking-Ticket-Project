@@ -4,19 +4,18 @@ import MovieShowtimes from '../../components/common/MovieShowtimes'
 import ShowingMoviesList from '../../components/common/ShowingMoviesList'
 import CommentSection from '../../components/common/CommentSection'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../../utils/axiosInstance'
 
 export default function MovieDetails() {
   const { id } = useParams()
   const [movie, setMovie] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
   
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
-        const response = await axios.get(`${API_URL}/movies/code/${id}`)
+        const response = await axiosInstance.get(`/movies/code/${id}`)
         console.log("Movie data from API:", response.data);
         console.log("Movie ID:", response.data.id);
         console.log("Movie Code:", response.data.movieCode);

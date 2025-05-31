@@ -33,23 +33,31 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(auth -> auth
-                       .requestMatchers("/oauth2/**", "/swagger-ui/**", "/v3/**").permitAll()
-                       .requestMatchers("/api/auth/**", "/api/auth/reset-password", "/api/auth/reset-password/**").permitAll()
-                       .requestMatchers("/reset-password**").permitAll()
+                        // .anyRequest().permitAll()
+                        .requestMatchers("/oauth2/**", "/swagger-ui/**", "/v3/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/auth/reset-password", "/api/auth/reset-password/**")
+                        .permitAll()
+                        .requestMatchers("/reset-password**").permitAll()
+                        
+                        // .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        // .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
 
-                       .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                       .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/bookingdetails").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/bookings").hasRole("CUSTOMER")
 
-                       .requestMatchers(HttpMethod.GET, "/api/bookingdetails").hasRole("CUSTOMER")
-                       .requestMatchers(HttpMethod.GET, "/api/bookings").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/providers/**").hasRole("PROVIDER")
+                        .requestMatchers(HttpMethod.POST, "/api/providers/**").hasRole("PROVIDER")
+                        .requestMatchers(HttpMethod.PUT, "/api/providers/**").hasRole("PROVIDER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/providers/**").hasRole("PROVIDER")
 
-                       .requestMatchers(HttpMethod.POST,   "/api/**").hasAnyRole("ADMIN", "PROVIDER")
-                       .requestMatchers(HttpMethod.PUT,    "/api/**").hasAnyRole("ADMIN", "PROVIDER")
-                       .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("ADMIN", "PROVIDER")
+                        .requestMatchers(HttpMethod.GET, "/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/admin/**").hasRole("ADMIN")
 
-
-                       .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
+                .formLogin(d -> d.disable()) 
+                .logout(logout -> logout.logoutUrl("/api/auth/logout"))
                 .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler));
 
         return http.build();
@@ -58,11 +66,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedOrigins(List.of("http://localhost:5173", "https://accounts.google.com"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
-        config.setExposedHeaders(List.of("Authorization", "Location"));
+        config.setExposedHeaders(List.of("Authorization", "Location", "Access-Control-Allow-Origin"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

@@ -16,19 +16,24 @@ const Header = () => {
 
   const title = pageTitles[location.pathname] || "Admin Panel";
 
-  const userMenu = (
-    <Menu>
-      <Menu.Item key="profile" icon={<UserOutlined />}>Profile</Menu.Item>
-      <Menu.Item key="logout">Logout</Menu.Item>
-    </Menu>
-  );
+  const menuItems = [
+    {
+      key: "profile",
+      icon: <UserOutlined />,
+      label: "Profile"
+    },
+    {
+      key: "logout",
+      label: "Logout"
+    }
+  ];
 
   return (
     <div className="flex justify-between items-center p-5 border-b border-gray-400 bg-white text-sm font-semibold ">
       <span>{title}</span>
 
       {/* User Dropdown */}
-      <Dropdown overlay={userMenu} trigger={["click"]}>
+      <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
         <div style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
           <Avatar icon={<UserOutlined />} />
           <span style={{ marginLeft: 8 }}>John Doe</span>

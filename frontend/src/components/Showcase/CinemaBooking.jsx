@@ -79,19 +79,16 @@ const CinemaBooking = ({ movies = [], cinemas = [] }) => {
          ) : (
             <Menu
               mode='vertical'
-              // Ensure selectedKeys uses the current state `selectedCinema`
               selectedKeys={selectedCinema ? [String(selectedCinema)] : []}
-              onClick={e => setSelectedCinema(e.key)} // Set selected branch ID
+              onClick={e => setSelectedCinema(e.key)}
               style={{ borderRight: 0 }}
               className="cinema-menu"
-            >
-              {/* Map over the received (potentially filtered) cinemas list */}
-              {cinemas.map(cinema => (
-                <Menu.Item key={String(cinema.id)} className="text-sm lg:text-base">
-                  {cinema.name}
-                </Menu.Item>
-              ))}
-            </Menu>
+              items={cinemas.map(cinema => ({
+                key: String(cinema.id),
+                label: cinema.name,
+                className: "text-sm lg:text-base"
+              }))}
+            />
          )}
       </div>
 

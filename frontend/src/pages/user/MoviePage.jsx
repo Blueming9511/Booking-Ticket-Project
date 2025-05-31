@@ -1,35 +1,33 @@
 import React, { useState, useEffect } from 'react'
 import MovieCarousel from '../../components/common/Carousel'
 import PaginatedMovieList from '../../components/common/PaginatedMovieList'
-import axios from 'axios'
 import { Spin } from 'antd'
+import axiosInstance from '../../utils/axiosInstance'
 
 export default function MoviePage() {
   const [nowShowingMovies, setNowShowingMovies] = useState([])
   const [allMovies, setAllMovies] = useState([])
   const [loading, setLoading] = useState(true)
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         // Fetch movies with NOW_SHOWING status for carousel
-        const nowShowingResponse = await axios.get(`${API_URL}/movies`, {
+        const nowShowingResponse = await axiosInstance.get('/movies', {
           params: {
             page: 0,
             size: 10,
             status: 'NOW_SHOWING'
           }
-        })
-        
+        });
 
         // Fetch all movies for the paginated list
-        const allMoviesResponse = await axios.get(`${API_URL}/movies`, {
+        const allMoviesResponse = await axiosInstance.get('/movies', {
           params: {
             page: 0,
             size: 100 // Adjust size as needed
           }
-        })
+        });
 
         // Transform the data to match the expected format
         const transformMovie = (movie) => ({
@@ -40,7 +38,7 @@ export default function MoviePage() {
           rate: movie.rating?.toString(),
           description: movie.description,
           trailer: movie.trailer
-        })
+        });
 
         setNowShowingMovies(nowShowingResponse.data.content.map(transformMovie))
         setAllMovies(allMoviesResponse.data.content.map(transformMovie))
@@ -53,7 +51,6 @@ export default function MoviePage() {
 
     fetchMovies()
   }, [])
-
 
   if (loading) {
     return (

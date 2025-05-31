@@ -206,7 +206,7 @@ const ShowcaseComponent = () => {
 
   return (
     <div className='center flex-col text-primary h-screen flex'>
-      <h1 className='text-2xl sm:text-3xl font-extrabold my-4 flex-shrink-0'>SHOWTIMES</h1>
+      <h1 className='text-2xl sm:text-3xl font-extrabold my-4 flex-shrink-0 text-center'>SHOWTIMES</h1>
 
       <div className='showcase flex-grow rounded-lg p-3 sm:p-5 flex flex-col gap-3 border border-gray-200 shadow-lg bg-white w-full max-w-7xl mx-auto overflow-hidden'>
         {/* Location Selector */}
