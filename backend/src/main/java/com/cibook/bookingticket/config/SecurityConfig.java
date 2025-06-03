@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/oauth2/**", "/swagger-ui/**", "/v3/**").permitAll()
                         .requestMatchers("/api/auth/**", "/api/auth/reset-password", "/api/auth/reset-password/**")
                         .permitAll()
+                        .requestMatchers("/api/guest/**").permitAll()
                         .requestMatchers("/reset-password**").permitAll()
                         
                         // .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
@@ -45,10 +46,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/bookingdetails").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.GET, "/api/bookings").hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.GET, "/api/providers/**").hasRole("PROVIDER")
-                        .requestMatchers(HttpMethod.POST, "/api/providers/**").hasRole("PROVIDER")
-                        .requestMatchers(HttpMethod.PUT, "/api/providers/**").hasRole("PROVIDER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/providers/**").hasRole("PROVIDER")
+                        .requestMatchers(HttpMethod.GET, "/api/provider/**").hasRole("PROVIDER")
+                        .requestMatchers(HttpMethod.POST, "/api/provider/**").hasRole("PROVIDER")
+                        .requestMatchers(HttpMethod.PUT, "/api/provider/**").hasRole("PROVIDER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/provider/**").hasRole("PROVIDER")
 
                         .requestMatchers(HttpMethod.GET, "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")

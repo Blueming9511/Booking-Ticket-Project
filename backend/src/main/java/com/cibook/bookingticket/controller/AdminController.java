@@ -235,7 +235,7 @@ public class AdminController {
         Pageable pageable = PageRequest.of(page, size);
         try {
             Page<ShowtimeResponseDto> showtimes = showtimeService.findAllShowtimes(
-                    pageable, owner, movie, status, address, startTime, endTime, type);
+                    pageable, owner, movie, status, address, startTime, endTime, type, null);
             return ResponseEntity.ok(showtimes);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

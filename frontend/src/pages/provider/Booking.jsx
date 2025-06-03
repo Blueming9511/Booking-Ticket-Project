@@ -62,7 +62,7 @@ const Payment = () => {
             messageApi.loading("Fetching data...");
 
             const bookingsRes = await axios.get(
-                `http://localhost:8080/api/bookings/v2/?page=${page}&size=${size}`,
+                `http://localhost:8080/api/provider/bookings/?page=${page}&size=${size}`,
                 {
                     withCredentials: true,
                 }

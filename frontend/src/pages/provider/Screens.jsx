@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useCallback} from "react";
-import {Card, Button, Space, Input, Select, message} from "antd";
-import {PlusOutlined, ReloadOutlined, SearchOutlined} from "@ant-design/icons";
+import React, { useState, useEffect, useCallback } from "react";
+import { Card, Button, Space, Input, Select, message } from "antd";
+import { PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import ModalScreenAdd from "../../components/ProviderManagement/Screen/ModalScreenAdd";
 import ModalScreenEdit from "../../components/ProviderManagement/Screen/ModalScreenEdit";
 import ScreenStatistics from "../../components/ProviderManagement/Screen/ScreenStatistics";
@@ -20,9 +20,9 @@ const Screen = () => {
             cinemaOptions: {},
             typeOptions: [],
             statusOptions: [
-                {value: "ACTIVE", label: "Active"},
-                {value: "INACTIVE", label: "Inactive"},
-                {value: "MAINTENANCE", label: "Maintenance"},
+                { value: "ACTIVE", label: "Active" },
+                { value: "INACTIVE", label: "Inactive" },
+                { value: "MAINTENANCE", label: "Maintenance" },
             ],
         },
         pagination: {
@@ -39,17 +39,29 @@ const Screen = () => {
         loading: false,
     });
 
-    const fetchScreen = async (page = 0, size = 5, cinema="") => {
+    useEffect(() => {
+        const fetchCinemaOptions = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/api/provider/cinemaOptions", { withCredentials: true });
+                setState(prev => ({
+                    ...prev,
+                    filters: { ...prev.filters, cinemaOptions: response.data },
+                }));
+            } catch (error) {
+                messageApi.error("Failed to fetch data", 2);
+                console.error("Fetch error:", error);
+            }
+        };
+        fetchCinemaOptions();
+    }, [])
+
+    const fetchScreen = async (page = 0, size = 5, cinema = "") => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/screens/v2/?page=${page}&size=${size}&cinema=${cinema ? cinema : ""}`, {withCredentials: true});
+            const response = await axios.get(`http://localhost:8080/api/provider/screens?page=${page}&size=${size}&cinema=${cinema ? cinema : ""}`, { withCredentials: true });
             setState(prev => ({
                 ...prev,
-                screens: response.data.screens.content,
-                filters: {
-                    ...prev.filters,
-                    cinemaOptions: response.data.cinemaOptions
-                },
-                pagination: {...prev.pagination, totalElements: response.data.screens.totalElements}
+                screens: response.data.content,
+                pagination: { ...prev.pagination, totalElements: response.data.totalElements }
             }));
         } catch (error) {
             messageApi.error("Failed to fetch data", 2);
@@ -64,14 +76,14 @@ const Screen = () => {
     const handleFilterChange = (field, value) => {
         setState(prev => ({
             ...prev,
-            filters: {...prev.filters, [field]: value},
+            filters: { ...prev.filters, [field]: value },
         }));
     };
 
     const toggleModal = (modalName, isOpen, screen = null) => {
         setState(prev => ({
             ...prev,
-            modals: {...prev.modals, [modalName]: isOpen},
+            modals: { ...prev.modals, [modalName]: isOpen },
             selectedScreen: isOpen ? screen : null,
         }));
     };
@@ -81,24 +93,24 @@ const Screen = () => {
         const config = {
             add: {
                 method: "post",
-                url: "http://localhost:8080/api/screens/v2",
+                url: "http://localhost:8080/api/provider/screens/v2",
                 data: values,
             },
             edit: {
                 method: "put",
-                url: `http://localhost:8080/api/screens/v2/${state.selectedScreen?.id}`,
+                url: `http://localhost:8080/api/provider/screens/v2/${state.selectedScreen?.id}`,
                 data: values,
             },
             delete: {
                 method: "delete",
-                url: `http://localhost:8080/api/screens/${state.selectedScreen}`,
+                url: `http://localhost:8080/api/provider/screens/${state.selectedScreen}`,
             },
         };
 
         try {
-            setState(prev => ({...prev, loading: true}));
+            setState(prev => ({ ...prev, loading: true }));
             // console.log(values)
-            await axios({...config[action], withCredentials: true});
+            await axios({ ...config[action], withCredentials: true });
             await fetchScreen(0, 5, "");
             messageApi.success(`Screen ${action}ed successfully`, 2);
             toggleModal(action, false);
@@ -106,7 +118,7 @@ const Screen = () => {
             messageApi.error(`Failed to ${action} screen`, 2);
             console.error(`${action} error:`, error);
         } finally {
-            setState(prev => ({...prev, loading: false}));
+            setState(prev => ({ ...prev, loading: false }));
         }
     };
 
@@ -124,8 +136,8 @@ const Screen = () => {
             <Card
                 title={<span className="text-xl font-bold">Screen Management</span>}
                 variant="borderless"
-                styles={{header: {borderBottom: 'none'}}}
-                style={{boxShadow: 'none'}}
+                styles={{ header: { borderBottom: 'none' } }}
+                style={{ boxShadow: 'none' }}
             >
                 {/* <ScreenStatistics data={state.screens} loading={loading} /> */}
                 <div className="flex mb-5">
@@ -134,7 +146,7 @@ const Screen = () => {
                             placeholder="Cinema"
                             value={filters.cinema}
                             onChange={v => handleFilterChange("cinema", v)}
-                            style={{width: 200}}
+                            style={{ width: 200 }}
                             allowClear
                             options={Object.entries(filters.cinemaOptions).map(([value, label]) => ({
                                 label,
@@ -149,7 +161,7 @@ const Screen = () => {
                         />
                         <Button
                             type="primary"
-                            icon={<PlusOutlined/>}
+                            icon={<PlusOutlined />}
                             onClick={() => toggleModal("add", true)}
                             loading={loading}
                             disabled={loading}
@@ -165,7 +177,7 @@ const Screen = () => {
                     loading={loading}
                     cinemas={state.cinemas || []}
                     pagination={state.pagination}
-                    onSetPage={page => setState(prev => ({...prev, pagination: {...prev.pagination, page}}))}
+                    onSetPage={page => setState(prev => ({ ...prev, pagination: { ...prev.pagination, page } }))}
                 />
             </Card>
 

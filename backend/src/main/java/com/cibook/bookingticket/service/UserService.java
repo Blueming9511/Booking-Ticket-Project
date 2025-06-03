@@ -1,5 +1,6 @@
 package com.cibook.bookingticket.service;
 
+import com.cibook.bookingticket.dto.UserProviderDto;
 import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -222,5 +223,12 @@ public class UserService implements IService<User, String> {
                 "total", getAllCustomers(),
                 "thisMonth", getNewCustomers(now.withDayOfMonth(1), now),
                 "lastMonth", getNewCustomers(now.withDayOfMonth(1).minusMonths(1), now.minusMonths(1)));
+    }
+
+    public Object getAllBrands() {
+        Query query = new Query(Criteria.where("role").is("PROVIDER"));
+        List<Document> result = mongoTemplate.find(query, Document.class, "users");
+        return result.stream().map(doc -> new UserProviderDto(doc.getObjectId("_id").toString(), doc.getString("name")))
+                .collect(Collectors.toList());
     }
 }

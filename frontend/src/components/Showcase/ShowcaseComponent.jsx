@@ -1,42 +1,43 @@
 // src/components/ShowcaseComponent/ShowcaseComponent.js
-import React, { useState, useMemo } from 'react'; // Import useState, useMemo
+import React, { useState, useMemo, useEffect } from 'react'; // Import useState, useMemo
 import './showcase.css';
 import LocationSelector from './LocationSelector';
 import CinemaSelector from './CinemaSelector'; // Re-import CinemaSelector
 import { Divider } from 'antd';
 import CinemaBooking from './CinemaBooking';
+import axios from 'axios';
 
 // --- Data Definitions ---
 
 // Cinema BRANCHES Data - Expanded with more brands and branches
-const allCinemas = [
-  // CGV branches
-  { id: 'cgv-aeon', name: 'CGV Aeon Long Biên', brand: 'cgv' },
-  { id: 'cgv-xuan-dieu', name: 'CGV Xuân Diệu', brand: 'cgv' },
-  { id: 'cgv-tran-duy-hung', name: 'CGV Trần Duy Hưng', brand: 'cgv' },
-  { id: 'cgv-lieu-giai', name: 'CGV Liễu Giai', brand: 'cgv' },
-  { id: 'cgv-long-bien', name: 'CGV Long Biên', brand: 'cgv' },
-  { id: 'cgv-ocean-park', name: 'CGV Ocean Park', brand: 'cgv' },
-  { id: 'cgv-vincom-ba-trieu', name: 'CGV Vincom Bà Triệu', brand: 'cgv' },
-  { id: 'cgv-vincom-nguyen-chi-thanh', name: 'CGV Vincom Nguyễn Chí Thanh', brand: 'cgv' },
-  
-  // Lotte branches
-  { id: 'lotte-cau-giay', name: 'Lotte Cầu Giấy', brand: 'lotte' },
-  { id: 'lotte-thang-long', name: 'Lotte Thăng Long', brand: 'lotte' },
-  { id: 'lotte-my-dinh', name: 'Lotte Mỹ Đình', brand: 'lotte' },
-  
-  // Galaxy branches
-  { id: 'galaxy-quang-trung', name: 'Galaxy Quang Trung', brand: 'galaxy' },
-  { id: 'galaxy-kinh-duong-vuong', name: 'Galaxy Kinh Dương Vương', brand: 'galaxy' },
-  { id: 'galaxy-tan-binh', name: 'Galaxy Tân Bình', brand: 'galaxy' },
-  
-  // BHD branches
-  { id: 'bhd-star-vincom-pham-ngoc-thach', name: 'BHD Star Vincom Phạm Ngọc Thạch', brand: 'bhd' },
-  { id: 'bhd-star-bitexco', name: 'BHD Star Bitexco', brand: 'bhd' },
-  
-  // Mega GS branches
-  { id: 'mega-gs-cao-thang', name: 'Mega GS Cao Thắng', brand: 'mega' }
-];
+// const allCinemas = [
+//   // CGV branches
+//   { id: 'cgv-aeon', name: 'CGV Aeon Long Biên', brand: 'cgv' },
+//   { id: 'cgv-xuan-dieu', name: 'CGV Xuân Diệu', brand: 'cgv' },
+//   { id: 'cgv-tran-duy-hung', name: 'CGV Trần Duy Hưng', brand: 'cgv' },
+//   { id: 'cgv-lieu-giai', name: 'CGV Liễu Giai', brand: 'cgv' },
+//   { id: 'cgv-long-bien', name: 'CGV Long Biên', brand: 'cgv' },
+//   { id: 'cgv-ocean-park', name: 'CGV Ocean Park', brand: 'cgv' },
+//   { id: 'cgv-vincom-ba-trieu', name: 'CGV Vincom Bà Triệu', brand: 'cgv' },
+//   { id: 'cgv-vincom-nguyen-chi-thanh', name: 'CGV Vincom Nguyễn Chí Thanh', brand: 'cgv' },
+
+//   // Lotte branches
+//   { id: 'lotte-cau-giay', name: 'Lotte Cầu Giấy', brand: 'lotte' },
+//   { id: 'lotte-thang-long', name: 'Lotte Thăng Long', brand: 'lotte' },
+//   { id: 'lotte-my-dinh', name: 'Lotte Mỹ Đình', brand: 'lotte' },
+
+//   // Galaxy branches
+//   { id: 'galaxy-quang-trung', name: 'Galaxy Quang Trung', brand: 'galaxy' },
+//   { id: 'galaxy-kinh-duong-vuong', name: 'Galaxy Kinh Dương Vương', brand: 'galaxy' },
+//   { id: 'galaxy-tan-binh', name: 'Galaxy Tân Bình', brand: 'galaxy' },
+
+//   // BHD branches
+//   { id: 'bhd-star-vincom-pham-ngoc-thach', name: 'BHD Star Vincom Phạm Ngọc Thạch', brand: 'bhd' },
+//   { id: 'bhd-star-bitexco', name: 'BHD Star Bitexco', brand: 'bhd' },
+
+//   // Mega GS branches
+//   { id: 'mega-gs-cao-thang', name: 'Mega GS Cao Thắng', brand: 'mega' }
+// ];
 
 // Movie Data with real image URLs and more showtimes
 const movies = [
@@ -119,30 +120,30 @@ const movies = [
     categories: ['Action', 'Drama'],
     ageLimit: '13+',
     showtimes: [
-      { 
-        cinema: 'cgv-vincom-ba-trieu', 
-        room: 'Room V3', 
-        date: '2025-04-21', 
-        time: '18:00', 
-        seats: { 
-          types: { 
-            Standard: { price: 120000, available: 45 }, 
-            VIP: { price: 180000, available: 25 } 
-          }, 
-          bookedSeats: ['V3_A2', 'V3_B4'] 
+      {
+        cinema: 'cgv-vincom-ba-trieu',
+        room: 'Room V3',
+        date: '2025-04-21',
+        time: '18:00',
+        seats: {
+          types: {
+            Standard: { price: 120000, available: 45 },
+            VIP: { price: 180000, available: 25 }
+          },
+          bookedSeats: ['V3_A2', 'V3_B4']
         }
       },
-      { 
-        cinema: 'lotte-my-dinh', 
-        room: 'Room L6', 
-        date: '2025-04-22', 
-        time: '20:30', 
-        seats: { 
-          types: { 
-            Standard: { price: 110000, available: 60 }, 
-            VIP: { price: 160000, available: 40 } 
-          }, 
-          bookedSeats: ['LM_D3'] 
+      {
+        cinema: 'lotte-my-dinh',
+        room: 'Room L6',
+        date: '2025-04-22',
+        time: '20:30',
+        seats: {
+          types: {
+            Standard: { price: 110000, available: 60 },
+            VIP: { price: 160000, available: 40 }
+          },
+          bookedSeats: ['LM_D3']
         }
       }
     ]
@@ -155,29 +156,29 @@ const movies = [
     categories: ['Action', 'Adventure', 'Sci-Fi'],
     ageLimit: '13+',
     showtimes: [
-      { 
-        cinema: 'cgv-long-bien', 
-        room: 'Room LB1', 
-        date: '2025-04-07', 
-        time: '19:15', 
-        seats: { 
-          types: { 
-            Standard: { price: 95000, available: 50 }, 
-            VIP: { price: 145000, available: 30 } 
-          }, 
-          bookedSeats: ['LB_C2'] 
+      {
+        cinema: 'cgv-long-bien',
+        room: 'Room LB1',
+        date: '2025-04-07',
+        time: '19:15',
+        seats: {
+          types: {
+            Standard: { price: 95000, available: 50 },
+            VIP: { price: 145000, available: 30 }
+          },
+          bookedSeats: ['LB_C2']
         }
       },
-      { 
-        cinema: 'cgv-long-bien', 
-        room: 'Room G5', 
-        date: '2025-04-07', 
-        time: '17:45', 
-        seats: { 
-          types: { 
-            Standard: { price: 85000, available: 70 } 
-          }, 
-          bookedSeats: ['GK_B1', 'GK_B2'] 
+      {
+        cinema: 'cgv-long-bien',
+        room: 'Room G5',
+        date: '2025-04-07',
+        time: '17:45',
+        seats: {
+          types: {
+            Standard: { price: 85000, available: 70 }
+          },
+          bookedSeats: ['GK_B1', 'GK_B2']
         }
       }
     ]
@@ -186,22 +187,43 @@ const movies = [
 
 // --- Component Definition ---
 const ShowcaseComponent = () => {
-  // State for the selected cinema brand ('all', 'cgv', 'lotte', etc.)
+  const [brands, setBrands] = useState([]);
+  const [cinemas, setCinemas] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('all');
 
-  // Filter the list of cinema branches based on the selected brand
-  const filteredCinemas = useMemo(() => {
-    if (selectedBrand === 'all') {
-      return allCinemas; // Show all branches if 'all' is selected
+  useEffect(() => {
+    const getBrands = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/api/guest/all-brands");
+        setBrands(res.data);
+      } catch (error) {
+        console.error('Error fetching brands:', error);
+      }
     }
-    return allCinemas.filter(cinema => cinema.brand === selectedBrand);
-  }, [selectedBrand]);
 
-  // Handler for changing the brand
+    getBrands();
+  }, []);
+
+  useEffect(() => {
+    const getCinemas = async () => {
+      try {
+        const url = 'http://localhost:8080/api/guest/all-cinemas';
+        const params = new URLSearchParams();
+        params.append('brand', selectedBrand);
+        params.append('page', 0);
+        params.append('size', 100);
+        const res = await axios.get(`${url}?${params.toString()}`);
+        setCinemas(res.data.content);
+      } catch (error) {
+        console.error('Error fetching cinemas:', error);
+      }
+    }
+
+    getCinemas();
+  }, [selectedBrand])
+
   const handleBrandChange = (brandId) => {
     setSelectedBrand(brandId);
-    // Note: CinemaBooking will automatically update its selected cinema
-    // via its useEffect hook when filteredCinemas changes.
   };
 
   return (
@@ -217,19 +239,20 @@ const ShowcaseComponent = () => {
 
         {/* Cinema Brand Selector */}
         <div className="flex-shrink-0">
-            <span className="font-medium text-gray-700 block mb-2">Cinema Brand:</span>
-             <CinemaSelector
-               selectedBrand={selectedBrand}
-               onBrandChange={handleBrandChange}
-             />
+          <span className="font-medium text-gray-700 block mb-2">Cinema Brand:</span>
+          <CinemaSelector
+            selectedBrand={selectedBrand}
+            onBrandChange={handleBrandChange}
+            cinemaBrands={brands}
+          />
         </div>
 
 
-        <Divider className='m-0 flex-shrink-0'/>
+        <Divider className='m-0 flex-shrink-0' />
 
         {/* Cinema Booking Area */}
         {/* Pass down the *filtered* branch list and movie data */}
-        <CinemaBooking movies={movies} cinemas={filteredCinemas} />
+        <CinemaBooking cinemas={cinemas} />
 
       </div>
     </div>

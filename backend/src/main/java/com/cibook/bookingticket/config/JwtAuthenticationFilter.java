@@ -34,7 +34,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String accessToken = cookieService.getCookieValue(request, "accessToken");
-        System.out.println("Access Token: " + accessToken);
         String userId = null;
         if (accessToken != null && jwtService.isTokenValid(accessToken)) {
             userId = jwtService.getIdFromAccessToken(accessToken);
@@ -46,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (refreshToken != null) {
                     userId = jwtService.getIdFromRefreshToken(refreshToken);
-
+                    System.out.println("User ID from refresh token: " + userId);
                     if (userId != null && jwtService.isRefreshTokenValid(refreshToken, userId)) {
                         userService.findById(userId).ifPresent(user -> {
                             String newAccessToken = jwtService.generateToken(user);
@@ -55,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             CustomUserDetails userDetails = new CustomUserDetails(user);
                             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                                     userDetails, null, userDetails.getAuthorities());
-
+                            System.out.println(auth.getCredentials());
                             SecurityContextHolder.getContext().setAuthentication(auth);
                         });
                     }

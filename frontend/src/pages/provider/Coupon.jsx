@@ -63,7 +63,7 @@ const Coupon = () => {
   const fetchCoupon = async (page = 0, size = 5) => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:8080/api/coupons?page=${page}&size=${size}`);
+      const res = await axios.get(`http://localhost:8080/api/provider/coupons?page=${page}&size=${size}`);
       setState((prev) => ({
         ...prev,
         coupons: res.data.content,
@@ -131,17 +131,17 @@ const Coupon = () => {
     const config = {
       add: {
         method: "post",
-        url: "http://localhost:8080/api/coupons",
+        url: "http://localhost:8080/api/provider/coupons",
         data: values,
       },
       edit: {
         method: "put",
-        url: `http://localhost:8080/api/coupons/${state.selectedCoupon?.id}`,
+        url: `http://localhost:8080/api/provider/coupons/${state.selectedCoupon?.id}`,
         data: values,
       },
       delete: {
         method: "delete",
-        url: `http://localhost:8080/api/coupons/${state.selectedCoupon?.id}`,
+        url: `http://localhost:8080/api/provider/coupons/${state.selectedCoupon?.id}`,
       },
     };
 

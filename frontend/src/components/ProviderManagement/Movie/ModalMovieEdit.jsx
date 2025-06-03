@@ -1,6 +1,6 @@
 import { Modal, Form, message } from "antd";
-import ModalMovie from "./ModalMovie";
 import { isString } from "antd/es/button";
+import ModalMovie from "./ModalMovie";
 
 const MovieEditModal = ({ visible, initialValues, onCancel, onSuccess, loading }) => {
   const [form] = Form.useForm();

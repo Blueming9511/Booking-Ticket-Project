@@ -40,14 +40,7 @@ const Showtime = () => {
     const fetchShowtime = async (page = 0, size = 5) => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:8080/api/showtimes?page=${page}&size=${size}`, 
-                {
-                    headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    },
-                    withCredentials: true,
-                }
-            );
+            const res = await axios.get(`http://localhost:8080/api/provider/showtimes?page=${page}&size=${size}`, {withCredentials: true});
             setState((prev) => ({
                 ...prev,
                 showtimes: res.data.content,
@@ -67,16 +60,16 @@ const Showtime = () => {
             try {
                 const [cinemasRes, roomsRes, moviesRes, movies] =
                     await Promise.all([
-                        axios.get("http://localhost:8080/api/cinemas/names", {
+                        axios.get("http://localhost:8080/api/provider/cinemas/names", {
                             withCredentials: true,
                         }),
-                        axios.get("http://localhost:8080/api/screens/v2/names", {
+                        axios.get("http://localhost:8080/api/provider/screens/v2/names", {
                             withCredentials: true,
                         }),
-                        axios.get("http://localhost:8080/api/movies/names", {
+                        axios.get("http://localhost:8080/api/provider/movies/names", {
                             withCredentials: true,
                         }),
-                        axios.get("http://localhost:8080/api/movies", {
+                        axios.get("http://localhost:8080/api/provider/movies", {
                             withCredentials: true,
                         }),
                     ]);
@@ -163,17 +156,17 @@ const Showtime = () => {
         const config = {
             add: {
                 method: "post",
-                url: "http://localhost:8080/api/showtimes",
+                url: "http://localhost:8080/api/provider/showtimes",
                 data: values,
             },
             edit: {
                 method: "put",
-                url: `http://localhost:8080/api/showtimes/${state.selectedShowtime?.id}`,
+                url: `http://localhost:8080/api/provider/showtimes/${state.selectedShowtime?.id}`,
                 data: values,
             },
             delete: {
                 method: "delete",
-                url: `http://localhost:8080/api/showtimes/${state.selectedShowtime}`,
+                url: `http://localhost:8080/api/provider/showtimes/${state.selectedShowtime}`,
             },
         };
 
@@ -206,7 +199,7 @@ const Showtime = () => {
                 style={{boxShadow: "none"}}
                 styles={{header: {borderBottom: "none"}}}
                 extra={
-                    <Space>
+                    <div className="flex flex-wrap gap-3">
                         <Select
                             placeholder="Cinema"
                             value={filters.cinema}
@@ -238,10 +231,9 @@ const Showtime = () => {
                         >
                             Add Showtime
                         </Button>
-                    </Space>
+                    </div>
                 }
             >
-                <ShowTimeStatistics data={filteredShowtimes}/>
                 <ShowTimeTable
                     data={state.showtimes}
                     loading={loading}

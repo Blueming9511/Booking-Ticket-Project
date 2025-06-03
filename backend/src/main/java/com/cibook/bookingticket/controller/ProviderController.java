@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/providers")
+@RequestMapping("/api/provider")
 public class ProviderController {
     private final BookingService bookingService;
     private final MovieService movieService;
@@ -139,6 +139,7 @@ public class ProviderController {
         }
         String providerName = userDetails.getName();
         Pageable pageable = PageRequest.of(page, size);
+
         return ResponseEntity.ok(movieService.findAllWithOwner(pageable, providerName, status, title));
     }
 
@@ -165,7 +166,12 @@ public class ProviderController {
         return ResponseEntity.ok(movieService.update(id, movie));
     }
 
-    // Screen endpoints
+    @GetMapping("/cinemaOptions")
+    public Map<String, String> getCinemaOptions() {
+        return cinemaService.findAllNamesWithID();
+    }
+
+    // Screen endpoints 
     @GetMapping("/screens")
     public ResponseEntity<?> getScreens(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -178,6 +184,7 @@ public class ProviderController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
         }
         String providerName = userDetails.getName();
+        System.out.println(providerName);
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(screenService.getScreensWithLocation(pageable, cinema, providerName, null, status, type));
     }
@@ -216,9 +223,10 @@ public class ProviderController {
         }
         String providerName = userDetails.getName();
         Pageable pageable = PageRequest.of(page, size);
+        System.out.println("Provider name: " + providerName);
         try {
             Page<ShowtimeResponseDto> showtimes = showtimeService.findAllShowtimes(
-                    pageable, providerName, movie, status, null, null, null, null);
+                    pageable, providerName, movie, status, null, null, null, null, null);
             return ResponseEntity.ok(showtimes);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

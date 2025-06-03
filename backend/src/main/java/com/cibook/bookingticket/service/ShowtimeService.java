@@ -67,7 +67,7 @@ public class ShowtimeService implements IService<Showtime, String> {
     }
 
     public Page<ShowtimeResponseDto> findAllShowtimes(Pageable pageable, String owner, String movie, String status,
-            String address, LocalDateTime startTime, LocalDateTime endTime, String type)
+            String address, LocalDateTime startTime, LocalDateTime endTime, String type, String cinemaCode)
             throws ParseException {
 
         MongoCollection<Document> collection = mongoTemplate.getCollection("showtimes");
@@ -78,6 +78,11 @@ public class ShowtimeService implements IService<Showtime, String> {
         if (status != null && !status.isEmpty()) {
             matchStage.append("status", status);
         }
+
+        if (cinemaCode != null && !cinemaCode.isEmpty()) {
+            matchStage.append("cinemaCode", cinemaCode);
+        }
+
         if (owner != null && !owner.isEmpty()) {
             matchStage.append("owner", owner);
         }
@@ -248,5 +253,9 @@ public class ShowtimeService implements IService<Showtime, String> {
         Showtime showtime = findById(id).orElseThrow(() -> new NotFoundException("Showtime not found with ID: " + id));
         showtime.setStatus(ShowTimeStatus.valueOf(status));
         showtimeRepository.save(showtime);
+    }
+
+    public List<Showtime> findByCinemaId(String id) {
+        return showtimeRepository.findByCinemaCode(id);
     }
 }

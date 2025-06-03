@@ -25,9 +25,10 @@ export const AuthProvider = ({ children }) => {
           withCredentials: true,
         });
         setUser(res.data);
+
       } catch (err) {
         setUser(null);
-        redirectToLogin();
+        // redirectToLogin();
       } finally {
         setLoading(false);
       }
@@ -39,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (values) => {
     try {
       const res = await axios.post("http://localhost:8080/api/auth/login",
-        values,{  withCredentials: true});
+        values, { withCredentials: true });
       setUser(res.data);
       if (res.data.roles.includes("ROLE_ADMIN")) {
         navigate("/admin", { replace: true });
@@ -57,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   // Logout
   const logout = async () => {
-    await axios.post("localhost:8080/api/auth/logout", null, { withCredentials: true });
+    await axios.post("http://localhost:8080/api/auth/logout", { withCredentials: true });
     setUser(null);
   };
 

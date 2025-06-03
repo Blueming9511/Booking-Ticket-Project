@@ -21,6 +21,7 @@ public class Booking {
     private String showTimeCode;
     private Double totalAmount;
     private String couponCode;
+    private String owner;
     @Builder.Default
     private Double taxAmount = 0.1;
     @CreatedDate
@@ -30,7 +31,7 @@ public class Booking {
 
     public enum BookingStatus {
         PENDING,
-        CONFIRMED,
+        APPROVED,
         CANCELLED,
         EXPIRED
     }

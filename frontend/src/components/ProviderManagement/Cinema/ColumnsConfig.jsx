@@ -1,6 +1,6 @@
-import { Avatar, Tag, Dropdown, Button } from "antd";
-import { EnvironmentOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { Avatar, Tag, Button, Dropdown, Menu, Modal } from "antd";
 import TagStatus from "../../ui/Tag/TagStatus";
+import { EllipsisOutlined, DeleteOutlined, EditOutlined, EnvironmentOutlined } from "@ant-design/icons";
 
 export const columns = (handleEdit, handleDelete) => [
   {

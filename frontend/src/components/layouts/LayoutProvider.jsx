@@ -22,7 +22,6 @@ const providerItems = [
   { key: 3, label: "Screens", path: "/provider/screens", icon: <BankOutlined /> },
   { key: 4, label: "Movies", path: "/provider/movies", icon: <VideoCameraOutlined /> },
   { key: 5, label: "Showtime", path: "/provider/showtimes", icon: <UserOutlined /> },
-  { key: 6, label: "Coupon", path: "/provider/coupons", icon: <GiftOutlined /> },
   { key: 7, label: "Booking", path: "/provider/bookings", icon: <UserOutlined /> },
   { key: 8, label: "Payment", path: "/provider/payments", icon: <CreditCardOutlined /> },
 ];

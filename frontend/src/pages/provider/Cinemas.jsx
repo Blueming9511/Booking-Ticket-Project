@@ -36,7 +36,7 @@ const Cinemas = ({ role = "Admin" }) => {
         setState((prev) => ({ ...prev, loading: true }));
         showSuccess && messageApi.loading("Fetching data...");
 
-        const response = await axios.get(`http://localhost:8080/api/cinemas?page=${page}&size=${size}`, {
+        const response = await axios.get(`http://localhost:8080/api/provider/cinemas?page=${page}&size=${size}`, {
           withCredentials: true,
         });
 
@@ -86,17 +86,17 @@ const Cinemas = ({ role = "Admin" }) => {
     const config = {
       add: {
         method: "post",
-        url: "http://localhost:8080/api/cinemas",
+        url: "http://localhost:8080/api/provider/cinemas",
         data: values,
       },
       edit: {
         method: "put",
-        url: `http://localhost:8080/api/cinemas/${state.selectedCinema?.id}`,
+        url: `http://localhost:8080/api/provider/cinemas/${state.selectedCinema?.id}`,
         data: values,
       },
       delete: {
         method: "delete",
-        url: `http://localhost:8080/api/cinemas/${state.selectedCinema}`,
+        url: `http://localhost:8080/api/provider/cinemas/${state.selectedCinema}`,
       },
     };
 
@@ -136,33 +136,29 @@ const Cinemas = ({ role = "Admin" }) => {
         style={{ boxShadow: "none" }}
         styles={{ header: { borderBottom: "none" } }}
       >
+        <div className="flex flex-wrap gap-3 mb-5">
+          <Search
+            placeholder="Search cinemas..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            onChange={(e) => handleFilterChange("search", e.target.value)}
+            style={{ width: 300 }}
+          />
 
-        <CinemaStatistics data={state.cinemas} />
-        <div className="flex justify-end mb-5">
-          <Space>
-            <Search
-              placeholder="Search cinemas..."
-              allowClear
-              enterButton={<SearchOutlined />}
-              onChange={(e) => handleFilterChange("search", e.target.value)}
-              style={{ width: 300 }}
-            />
+          <Button
+            type="primary"
+            icon={<ReloadOutlined />}
+            onClick={() => setState((prev) => ({ ...prev, pagination: { ...prev.pagination, page: 0 } }))}
+          >
+          </Button>
 
-            <Button
-              type="primary"
-              icon={<ReloadOutlined />}
-              onClick={() => setState((prev) => ({ ...prev, pagination: { ...prev.pagination, page: 0 } }))}
-            >
-            </Button>
-
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => toggleModal("add", true)}
-            >
-              Add Cinema
-            </Button>
-          </Space>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => toggleModal("add", true)}
+          >
+            Add Cinema
+          </Button>
         </div>
 
         <CinemaTable
@@ -173,7 +169,7 @@ const Cinemas = ({ role = "Admin" }) => {
           pagination={state.pagination}
           onPageChange={handlePageChange}
         />
-      </Card>
+      </Card >
 
       <ModalCinemaAdd
         visible={modals.add}

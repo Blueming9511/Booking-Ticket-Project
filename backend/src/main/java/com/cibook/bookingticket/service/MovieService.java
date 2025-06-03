@@ -1,6 +1,7 @@
 package com.cibook.bookingticket.service;
 
 import com.cibook.bookingticket.config.MongoConfig;
+import com.cibook.bookingticket.dto.MovieGuestCarouselDto;
 import com.cibook.bookingticket.model.Movie;
 import com.cibook.bookingticket.repository.MovieRepository;
 
@@ -8,7 +9,9 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -137,5 +140,22 @@ public class MovieService implements IService<Movie, String> {
         Movie movie = findById(id).orElseThrow(() -> new NotFoundException("Movie not found with ID: " + id));
         movie.setStatus(string);
         movieRepository.save(movie);
+    }
+
+    public List<MovieGuestCarouselDto> getMoviesCarousel() {
+        Page<Movie> movies = movieRepository.findAll(PageRequest.of(0, 5, Sort.by("releaseDate").descending()));
+        return movies
+                .getContent().stream().map(movie -> new MovieGuestCarouselDto(movie.getId(), movie.getTitle(),
+                        movie.getThumbnail(), movie.getGenre(), movie.getDuration(), movie.getTrailer(),
+                        movie.getDescription()))
+                .collect(Collectors.toList());
+    }
+
+    public Object getMoviesUpComming() {
+        Page<Movie> movies = movieRepository.findByStatus("COMMING_SOON", PageRequest.of(0, 5, Sort.by("releaseDate").descending()));
+        return movies.getContent().stream().map(movie -> new MovieGuestCarouselDto(movie.getId(), movie.getTitle(),
+                movie.getThumbnail(), movie.getGenre(), movie.getDuration(), movie.getTrailer(),
+                movie.getDescription()))
+                .collect(Collectors.toList());
     }
 }

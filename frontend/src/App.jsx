@@ -1,5 +1,5 @@
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import {ToastContainer} from 'react-toastify';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import MainRoutes from './routes/MainRoutes';
@@ -36,13 +36,13 @@ function App() {
             {/* Application Routes */}
             <Routes>
                 {/* User Routes */}
-                <Route path="/*" element={<MainRoutes/>}/>
+                <Route path="/*" element={<MainRoutes />} />
 
                 {/* Admin Routes */}
-                <Route path="/admin/*" element={<AdminRoutes/>}/>
+                <Route path="/admin/*" element={<AdminRoutes />} />
 
                 {/* Provider Routes */}
-                <Route path="/provider/*" element={<ProviderRoutes/>}/>
+                <Route path="/provider/*" element={<ProviderRoutes />} />
             </Routes>
         </>
     );

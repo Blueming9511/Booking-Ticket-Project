@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cibook.bookingticket.dto.RevenueDTO;
+import com.cibook.bookingticket.security.CustomUserDetails;
 import com.cibook.bookingticket.service.BookingService;
 import com.cibook.bookingticket.service.MovieService;
 import com.cibook.bookingticket.service.PaymentService;
@@ -32,28 +34,9 @@ public class DashboardController {
         this.movieService = movieService;
     }
 
-    // @GetMapping("/customers")
-    // public ResponseEntity<?> getNewCustomers() {
-    // return ResponseEntity.ok(userService.getUserStatAMonth());
-    // }
-
-    // @GetMapping("/orders")
-    // public ResponseEntity<?> getNewOrders() {
-    // return ResponseEntity.ok(bookingService.getOrderStatAMonth());
-    // }
-
-    // @GetMapping("/revenues")
-    // public ResponseEntity<?> getNewRevenues() {
-    // return ResponseEntity.ok(paymentService.getRevenueStatAMonth());
-    // }
-
-    // @GetMapping("/conversion-rate")
-    // public ResponseEntity<?> getConversionRate() {
-    // return ResponseEntity.ok(paymentService.getConversionRate());
-    // }
-
     @GetMapping("/sales")
-    public ResponseEntity<?> getSales() {
+    public ResponseEntity<?> getSales(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String role = userDetails.getAuthorities().iterator().next().getAuthority();
         Map<String, Object> response = new HashMap<>();
         response.put("newCustomers", userService.getUserStatAMonth());
         response.put("newOrders", bookingService.getOrderStatAMonth());

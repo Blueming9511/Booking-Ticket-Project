@@ -62,7 +62,7 @@ const Payment = () => {
       messageApi.loading("Fetching data...");
 
       const paymentsRes = await axios.get(
-        `http://localhost:8080/api/payments?page=${page}&size=${size}`,
+        `http://localhost:8080/api/provider/payments?page=${page}&size=${size}`,
         {
           withCredentials: true,
         }
@@ -133,17 +133,17 @@ const Payment = () => {
     const config = {
       add: {
         method: "post",
-        url: "http://localhost:8080/api/payments",
+        url: "http://localhost:8080/api/provider/payments",
         data: values,
       },
       edit: {
         method: "put",
-        url: `http://localhost:8080/api/payments/${state.selectedPayment?.id}`,
+        url: `http://localhost:8080/api/provider/payments/${state.selectedPayment?.id}`,
         data: values,
       },
       delete: {
         method: "delete",
-        url: `http://localhost:8080/api/payments/${state.selectedPayment?.id}`,
+        url: `http://localhost:8080/api/provider/payments/${state.selectedPayment?.id}`,
       },
     };
 
@@ -175,7 +175,7 @@ const Payment = () => {
         style={{ boxShadow: "none" }}
         styles={{ header: { borderBottom: "none" } }}
         extra={
-          <Space>
+          <div className="flex flex-wrap gap-3">
             <RangePicker
               style={{ width: 250 }}
               format="DD/MM/YYYY"
@@ -198,10 +198,9 @@ const Payment = () => {
             >
               Add Payment
             </Button>
-          </Space>
+          </div>
         }
       >
-        <PaymentStatistics data={filteredPayments} />
         <PaymentTable
           data={state.payments}
           onEdit={(payment) => toggleModal("edit", true, payment)}

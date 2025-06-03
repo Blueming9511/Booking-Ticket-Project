@@ -21,7 +21,6 @@ import 'slick-carousel/slick/slick-theme.css'
 
 // RENAMED component to MovieCarousel and accepting props
 const MovieCarousel = ({ movies = [] }) => {
-  // Accept movies as a prop, default to empty array
 
   const settings = {
     // --- Base Settings ---

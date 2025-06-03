@@ -139,7 +139,7 @@ public class ScreenService implements IService<Screen, String> {
 
         if (cinema != null && !cinema.isEmpty()) {
             pipeline.add(new Document("$match",
-                    new Document("cinemaCode", new Document("$regex", ".*" + cinema + ".*").append("options", "i"))));
+                    new Document("cinemaCode", new Document("$regex", ".*" + cinema + ".*").append("$options", "i"))));
         }
         pipeline.addAll(Arrays.asList(
                 new Document("$lookup",

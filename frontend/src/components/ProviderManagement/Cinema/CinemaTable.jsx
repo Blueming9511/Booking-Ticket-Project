@@ -18,6 +18,7 @@ export const CinemaTable = ({ data, onEdit, onDelete, pagination, onPageChange }
         rowKey="id"
         className="rounded-lg"
         rowClassName="hover:bg-gray-50 cursor-pointer"
+        scroll={{ x: "max-content" }}
       />
       <Divider />
       <div className="flex justify-between text-sm text-gray-500">

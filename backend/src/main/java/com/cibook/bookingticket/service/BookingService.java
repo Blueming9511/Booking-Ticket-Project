@@ -232,8 +232,9 @@ public class BookingService implements IService<Booking, String> {
         if (status != null && !status.isEmpty()) {
             pipeline.add(new Document("$match", new Document("status", status)));
         }
+
         if (owner != null && !owner.isEmpty()) {
-            pipeline.add(new Document("$match", new Document("userId", owner)));
+            pipeline.add(new Document("$match", new Document("owner", owner)));
         }
 
         pipeline.addAll(Arrays.asList(
