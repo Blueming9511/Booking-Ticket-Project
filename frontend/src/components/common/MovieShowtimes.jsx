@@ -219,7 +219,6 @@ export default function SingleMovieShowtimes({ movieDetails }) {
           ),
           children: (
             <div className='flex flex-col gap-4 pb-4'>
-              {/* Showtimes */}
               <div className='flex-grow'>
                 <div className='flex flex-wrap gap-2 justify-start'>
                   {sessions
@@ -234,7 +233,7 @@ export default function SingleMovieShowtimes({ movieDetails }) {
                         >
                           <div className='flex flex-col items-center'>
                             <span className='font-medium'>{session.time}</span>
-                            <span className='text-xs text-gray-400'>
+                            <span className='text-xs text-gray-400 ml-1'>
                               ~ {session.endTime}
                             </span>
                           </div>
@@ -248,12 +247,11 @@ export default function SingleMovieShowtimes({ movieDetails }) {
                 </div>
               </div>
             </div>
-          ),
+          )
         };
       })
-      .filter(item => item !== null); // Filter out null items if a cinema had no valid sessions
-  // Dependencies: Re-run when movie data changes OR when filters change
-  }, [movieDetails, showtimes, selectedDate, selectedBrandId]); // Depend on the single 'movie' object now
+      .filter(item => item !== null);
+  }, [movieDetails, showtimes, selectedDate, selectedBrandId]);
 
   // Handle case where the movie data itself might be loading or invalid
   if (!movieDetails) {

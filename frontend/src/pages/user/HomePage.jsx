@@ -31,7 +31,9 @@ const HomePage = () => {
         <MovieCarousel movies={movies}/>
       </div>
 
-      <ShowcaseComponent />
+      <div className='pb-10'>
+        <ShowcaseComponent />
+      </div>
     </div>
   )
 }
