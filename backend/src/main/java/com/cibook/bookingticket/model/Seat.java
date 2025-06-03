@@ -34,6 +34,7 @@
         }
 
         public enum SeatStatus {
+            PENDING,
             BOOKED,
             AVAILABLE,
             MAINTENANCE,

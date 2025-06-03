@@ -1,5 +1,6 @@
 package com.cibook.bookingticket.config;
 
+import com.cibook.bookingticket.controller.ProviderController;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -20,9 +21,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     @Lazy
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,6 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/guest/**").permitAll()
                         .requestMatchers("/reset-password**").permitAll()
                         
+                        .requestMatchers("/api/movies**", "/api/movies/**").permitAll()
+                        .requestMatchers("/api/showtimes**").permitAll()
                         // .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         // .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
 
@@ -56,6 +61,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/admin/**").hasRole("ADMIN")
 
+
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(d -> d.disable()) 
                 .logout(logout -> logout.logoutUrl("/api/auth/logout"))

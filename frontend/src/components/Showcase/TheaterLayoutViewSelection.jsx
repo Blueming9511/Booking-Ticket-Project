@@ -8,17 +8,17 @@ const SEAT_TYPES = {
     DISABLED: { label: "Booked", color: "bg-gray-500" },
 };
 
-const TheaterLayoutViewSelection = ({ 
-    screen, 
-    selectedSeats = [], 
+const TheaterLayoutViewSelection = ({
+    screen,
+    selectedSeats = [],
     onSeatClick,
     maxSeats = 8,
-    showLegend = true 
+    showLegend = true
 }) => {
     const [seatMap, setSeatMap] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    
+
 
     useEffect(() => {
         const getSeats = async (screenCode, cinemaCode) => {
@@ -61,7 +61,7 @@ const TheaterLayoutViewSelection = ({
                                 seatCode: seat.seatCode,
                                 number: col,
                                 row: rowLabel,
-                                price: seat.price || 0
+                                multipler: seat.multiplier
                             });
                             col++; // Skip next column for couple seats
                             continue;
@@ -74,7 +74,7 @@ const TheaterLayoutViewSelection = ({
                             seatCode: seat.seatCode,
                             number: col,
                             row: rowLabel,
-                            price: seat.price || 0
+                            multipler: seat.multiplier
                         });
                     }
                     return rowSeats;
@@ -90,20 +90,19 @@ const TheaterLayoutViewSelection = ({
             }
         };
 
-        if (screen?.screenCode && screen?.cinemaCode) {
-            getSeats(screen.screenCode, screen.cinemaCode);
-        }
-    }, [screen, selectedSeats]);
+        getSeats(screen.screenCode, screen.cinemaCode);
+    }, [screen]);
 
     const handleSeatClick = (seat) => {
         if (seat.disabled || !onSeatClick) return;
-        
+
         if (!seat.selected && selectedSeats.length >= maxSeats) {
             // Show warning about max seats
             return;
         }
-        
-        onSeatClick(seat.seatCode);
+
+        // console.log(seat);
+        onSeatClick(seat);
     };
 
     if (loading) {
@@ -160,7 +159,7 @@ const TheaterLayoutViewSelection = ({
                                             key={seatIndex}
                                             className={`${seatSpan} h-8 rounded flex items-center justify-center text-xs cursor-pointer transition-all duration-200 ${color} ${!seat.disabled && 'hover:scale-105'}`}
                                             onClick={() => handleSeatClick(seat)}
-                                            title={`${rowLabel}${seat.number} - ${seat.type} - ${seat.price.toLocaleString()}đ`}
+                                            title={`${rowLabel}${seat.number} - ${seat.type}`}
                                         >
                                             {seat.number}
                                         </div>

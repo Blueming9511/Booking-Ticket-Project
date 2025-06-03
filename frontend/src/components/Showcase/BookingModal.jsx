@@ -37,30 +37,17 @@ const BookingModal = ({ visible, onClose, showtime }) => {
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
   const [currentBookingDetails, setCurrentBookingDetails] = useState(null);
   const [screenData, setScreenData] = useState(null);
-
+  console.log(showtime)
   useEffect(() => {
     if (visible && showtime) {
       setSelectedSeats([]);
       setCurrentBookingDetails(null);
       setPaymentModalVisible(false);
 
-      // Transform showtime data into screen data format
-      const { seats = {}, room: screenCode = '', cinemaId: cinemaCode = '' } = showtime;
-      const { bookedSeats = [], types = {} } = seats;
-
-      // Create screen data object that matches TheaterLayoutView expectations
-      const transformedScreen = {
-        screenCode,
-        cinemaCode,
-        row: 10, // Default values, adjust based on your needs
-        col: 10,
-        seats: bookedSeats.map(seatId => ({
-          seatCode: seatId,
-          status: 'BOOKED'
-        }))
-      };
-
-      setScreenData(transformedScreen);
+      setScreenData({
+        screenCode: showtime.room,
+        cinemaCode: showtime.cinema
+      });
     }
   }, [visible, showtime]);
 
@@ -96,17 +83,9 @@ const BookingModal = ({ visible, onClose, showtime }) => {
     });
   };
 
-  const totalPrice = selectedSeats.reduce((total, seatId) => {
-    let seatType = 'Standard';
-    // Determine seat type based on your logic
-    if (seatId.startsWith('CP')) {
-      seatType = 'Couple';
-    } else {
-      const seatNumber = parseInt(seatId.slice(1));
-      const standardCount = seats.types?.Standard?.available || 0;
-      seatType = seatNumber > standardCount ? 'VIP' : 'Standard';
-    }
-    return total + (seats.types?.[seatType]?.price || 0);
+  const totalPrice = selectedSeats.reduce((total, seat) => {
+    console.log(seat, 12312)
+    return total + (showtime.price * seat.multipler);
   }, 0);
 
   // Format date for display
@@ -133,7 +112,7 @@ const BookingModal = ({ visible, onClose, showtime }) => {
       room,
       date,
       time,
-      seats: selectedSeats,
+      seats: [selectedSeats.map(seat => seat.seatCode)],
       totalPrice,
       duration,
       ageLimit
@@ -201,7 +180,7 @@ const BookingModal = ({ visible, onClose, showtime }) => {
               )}
               {selectedSeats.map(seat => (
                 <Tag
-                  key={seat}
+                  key={seat.seatCode}
                   closable
                   onClose={(e) => {
                     e.preventDefault();
@@ -210,7 +189,7 @@ const BookingModal = ({ visible, onClose, showtime }) => {
                   color="red"
                   style={{ marginRight: 3, marginBottom: 3 }}
                 >
-                  {seat}
+                  {seat.seatCode}
                 </Tag>
               ))}
             </div>
