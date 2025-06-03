@@ -1,9 +1,13 @@
 package com.cibook.bookingticket.controller;
 
 import com.cibook.bookingticket.model.BookingDetail;
+import com.cibook.bookingticket.model.Showtime;
 import com.cibook.bookingticket.service.BookingDetailService;
 import com.cibook.bookingticket.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +29,10 @@ public class BookingDetailController implements IController<BookingDetail, Strin
     }
 
     @Override
-    public ResponseEntity<List<BookingDetail>> getAll() {
-        return ResponseEntity.ok(bookingDetailService.findAll());
+    public ResponseEntity<Page<BookingDetail>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BookingDetail> bookingDetails = bookingDetailService.findAll(pageable);
+        return ResponseEntity.ok(bookingDetails);
     }
 
     @Override
@@ -53,7 +59,7 @@ public class BookingDetailController implements IController<BookingDetail, Strin
 
     @PostMapping("/all")
     public ResponseEntity<List<BookingDetail>> addAll(@RequestBody List<BookingDetail> bookingDetails) {
-        return ResponseEntity.ok(bookingDetailService.addAll(bookingDetails));
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/all")

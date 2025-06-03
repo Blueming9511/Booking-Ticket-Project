@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   Form,
   InputNumber,
@@ -9,6 +9,7 @@ import {
   Col,
 } from "antd";
 import dayjs from "dayjs";
+import axios from "axios";
 
 const { Option } = Select;
 
@@ -20,17 +21,48 @@ const ModalShowTimeForm = ({
   roomOptions,
   movieOptions,
 }) => {
-  const statusOptions = ["AVAILABLE", "FULL"];
 
-  const handleFinish = (values) => {
+  console.log("ROom opTioNs", roomOptions)
+
+  const [durationMovie, setDurationMove] = useState(0);
+  const [filteredRoom, setFilteredRoom] = useState([]);
+  const [dateSt, setDateSt] = useState(null);
+  useEffect(() => {
+    const startTime = form.getFieldValue('startTime');
+    console.log(23)
+    if (startTime && durationMovie) {
+      const endTime = startTime.add(durationMovie, 'minute');
+      form.setFieldsValue({ endTime });
+    }
+  }, [form.getFieldValue('startTime'), durationMovie]);
+
+  const getDuration = async (code) => {
+    try {
+      const res = await axios.get(`http://localhost:8080/api/movies/duration/${code}`)
+      setDurationMove(res.data);
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleFinish = async (values) => {
+    const startTime = (values.date)
+      ? dayjs(`${values.date.format("YYYY-MM-DD")} ${values.startTime.format("HH:mm")}`).toISOString()
+      : null;
+
+    const endTime = (values.date)
+      ? dayjs(`${values.date.format("YYYY-MM-DD")} ${values.endTime.format("HH:mm")}`).toISOString()
+      : null;
+
     const formattedValues = {
       ...values,
-      date: values.date ? values.date.format("YYYY-MM-DD") : null,
-      startTime: values.timeRange ? values.timeRange[0].format("HH:mm") : null,
-      endTime: values.timeRange ? values.timeRange[1].format("HH:mm") : null,
+      startTime,
+      endTime
     };
     delete formattedValues.timeRange;
-    onFinish(formattedValues);
+    delete formattedValues.date
+    console.log("add error:", JSON.stringify(formattedValues)); 
+    await onFinish(formattedValues);
   };
 
   return (
@@ -39,14 +71,17 @@ const ModalShowTimeForm = ({
       layout="vertical"
       initialValues={{
         ...initialValues,
-        date: initialValues?.date ? dayjs(initialValues.date) : null,
+        date: initialValues?.startTime
+          ? dayjs.utc(initialValues.startTime).tz("Asia/Ho_Chi_Minh").startOf("day")
+          : null,
         timeRange:
           initialValues?.startTime && initialValues?.endTime
             ? [
-                dayjs(initialValues.startTime, "HH:mm"),
-                dayjs(initialValues.endTime, "HH:mm"),
-              ]
+              dayjs.utc(initialValues.startTime).tz("Asia/Ho_Chi_Minh"),
+              dayjs.utc(initialValues.endTime).tz("Asia/Ho_Chi_Minh"),
+            ]
             : null,
+        price: 50000
       }}
       onFinish={handleFinish}
     >
@@ -61,6 +96,7 @@ const ModalShowTimeForm = ({
               placeholder="Select movie"
               showSearch
               optionFilterProp="children"
+              onChange={(e) => getDuration(e)}
             >
               {movieOptions?.map((movie) => (
                 <Option key={movie.value} value={movie.value}>
@@ -76,7 +112,12 @@ const ModalShowTimeForm = ({
             label="Cinema"
             rules={[{ required: true, message: "Please select a cinema!" }]}
           >
-            <Select placeholder="Select cinema">
+            <Select placeholder="Select cinema"
+              onChange={(value) => {
+                form.setFieldsValue({ screenCode: null });
+                setFilteredRoom(roomOptions.find((room) => (room.value === value)).label)
+              }}
+            >
               {cinemaOptions.map((cinema) => (
                 <Option key={cinema.value} value={cinema.value}>
                   {cinema.label}
@@ -95,9 +136,9 @@ const ModalShowTimeForm = ({
             rules={[{ required: true, message: "Please select a room!" }]}
           >
             <Select placeholder="Select room">
-              {roomOptions.map((room) => (
-                <Option key={room.value} value={room.label}>
-                  {room.label}
+              {(filteredRoom || []).map((room) => (
+                <Option key={room} value={room}>
+                  {room}
                 </Option>
               ))}
             </Select>
@@ -125,46 +166,90 @@ const ModalShowTimeForm = ({
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item
-            name="timeRange"
-            label="Time Range"
-            rules={[{ required: true, message: "Please select time range!" }]}
-          >
-            <TimePicker.RangePicker
-              style={{ width: "100%" }}
-              format="HH:mm"
-              minuteStep={15}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item
             name="date"
             label="Date"
             rules={[{ required: true, message: "Please select a date!" }]}
           >
             <DatePicker
               style={{ width: "100%" }}
+              onChange={(e) => setDateSt(e)}
               disabledDate={(current) =>
                 current && current < dayjs().startOf("day")
               }
             />
           </Form.Item>
         </Col>
-      </Row>
+        <Col span={6}>
+          <Form.Item
+            name="startTime"
+            label="Start"
+            rules={[{ required: true, message: "Please select time range!" }]}
+          >
+            <TimePicker
+              onChange={(times) => {
+                const startTime = times;
+                const endTime = startTime.add(durationMovie + 20, 'minute');
+                form.setFieldsValue({
+                  endTime
+                });
+              }}
+              format="HH:mm"
+              minuteStep={15}
+              disabledTime={() => {
+                const now = dayjs();
+                if (!dateSt || dayjs(dateSt).isAfter(now, 'day')) {
+                  return {};
+                }
 
-      <Form.Item
-        name="status"
-        label="Status"
-        rules={[{ required: true, message: "Please select status!" }]}
-      >
-        <Select placeholder="Select status">
-          {statusOptions.map((status) => (
-            <Option key={status} value={status}>
-              {status}
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
+                const currentHour = now.hour();
+                const currentMinute = now.minute();
+                return {
+                  disabledHours: () => Array.from({ length: currentHour }, (_, i) => i),
+                  disabledMinutes: (selectedHour) => {
+                    if (selectedHour === currentHour) {
+                      return Array.from({ length: currentMinute }, (_, i) => i);
+                    }
+                    return [];
+                  },
+                };
+              }}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={6}>
+          <Form.Item
+            name="endTime"
+            label="End"
+            rules={[{ required: true, message: "Please select time range!" }]}
+          >
+            <TimePicker
+              format="HH:mm"
+              minuteStep={15}
+              disabledTime={
+                () => {
+                  const startTime = form.getFieldValue("startTime");
+                  if (!startTime) return {};
+
+                  const startHour = startTime.hour();
+                  const startMinute = startTime.minute();
+
+                  return {
+                    disabledHours: () =>
+                      Array.from({ length: 24 }, (_, i) => i).filter((h) => h < startHour),
+                    disabledMinutes: (selectedHour) => {
+                      if (selectedHour === startHour) {
+                        return Array.from({ length: 60 }, (_, i) => i).filter(
+                          (m) => m < startMinute
+                        );
+                      }
+                      return [];
+                    },
+                  };
+                }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
     </Form>
   );
 };

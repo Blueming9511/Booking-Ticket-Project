@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login Notification</title>
+</head>
+<body>
+<div th:fragment="content">
+    <h1 class="email-title">New Login Detected</h1>
+
+    <p>Hello,</p>
+
+    <p>We noticed a new login to your <span th:text="${applicationName}">CiBook</span> account. If this was you, no
+        further action is required.</p>
+
+    <div style="background-color: #f5f7fa; border-radius: 6px; padding: 20px; margin: 24px 0;">
+        <p style="margin: 0;"><strong>Login Time:</strong> <span th:text="${loginTime}">01 Jan 2023 12:34:56</span></p>
+    </div>
+
+    <p>If you did not initiate this login, please contact our support team immediately or change your password.</p>
+
+    <a href="#" th:href="${applicationUrl + '/account/security'}" class="btn">Review Account Security</a>
+
+    <p style="margin-top: 24px;">Thank you for using our service.</p>
+
+    <p>Best regards,<br>The <span th:text="${applicationName}">CiBook</span> Team</p>
+</div>
+</body>
+</html>

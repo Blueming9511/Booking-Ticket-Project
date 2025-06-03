@@ -3,6 +3,10 @@ import { useState } from "react";
 const useSlider = (slides) => {
   const [currentSlides, setCurrentSlides] = useState(slides);
 
+  const setSlides = (slides) => {
+    setCurrentSlides(slides);
+  };
+
   const nextSlide = () => {
     setCurrentSlides((prevSlides) => [...prevSlides.slice(1), prevSlides[0]]);
   };
@@ -14,7 +18,7 @@ const useSlider = (slides) => {
     ]);
   };
 
-  return { currentSlides, nextSlide, prevSlide };
+  return { currentSlides, setSlides, nextSlide, prevSlide };
 };
 
 export default useSlider;

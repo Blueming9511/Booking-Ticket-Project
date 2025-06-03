@@ -1,7 +1,7 @@
 import { Modal, Form } from "antd";
-import ModalMovie from "./ModalMovie";
 import dayjs from "dayjs";
 import { isString } from "antd/es/button";
+import ModalMovie from "./ModalMovie";
 
 const MovieAddModal = ({ visible, onCancel, onSuccess, loading }) => {
   const [form] = Form.useForm();

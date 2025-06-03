@@ -1,0 +1,587 @@
+###
+# ==========================================
+# == Global Variables
+# ==========================================
+# Replace with your actual running application URL
+@baseUrl = http://localhost:8080/api
+@contentType = application/json
+@accept = application/json
+
+# --- Resource IDs (Replace with actual IDs after creation) ---
+# !! Instructions: Run the POST request for a resource first,
+# !! then copy the generated 'id' from the response body
+# !! and paste it into the corresponding variable below.
+@cinemaId     = 67ef4c4de21d8829e5c0d4e9
+@screenId     = 67ef4ec5e21d8829e5c0d4f8
+@seatId       = 67effa70426dee0a01eb867a
+@movieId      = 67eeb346e21d8829e5c0d4a6
+@movieCode    = MOV010
+@couponId     = 67ef2a5b3433dd4a7bab353b
+@userId       = 67ef3c96b50a606c784293ba
+@bookingId    = 67ef47786954627740371e7a
+@screenCodeRef= SCR002
+@cinemaCodeRef= CIN002
+@showtimeId = 67ef5bca8225673361871d13
+
+###
+# ==========================================
+# == Cinemas CRUD Operations
+# ==========================================
+
+### [C] CREATE Cinema
+POST {{baseUrl}}/cinemas
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "cinemaName": "CGV Test Cinema",
+  "location": "123 Test Street",
+  "numberOfScreens": 5,
+  "owner": "Test Group",
+  "status": "OPEN"
+}
+
+### [R] READ ALL Cinemas
+GET {{baseUrl}}/cinemas
+Accept: {{accept}}
+
+### [R] READ Cinema by ID
+GET {{baseUrl}}/cinemas/{{cinemaId}}
+Accept: {{accept}}
+
+### [R] READ ALL Cinema Names
+# Gets a map or list of cinema names/codes.
+GET {{baseUrl}}/cinemas/names
+Accept: {{accept}}
+
+### [U] UPDATE Cinema
+# Updates the cinema identified by
+PUT {{baseUrl}}/cinemas/{{cinemaId}}
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+    "cinemaName": "CGV Test Cinema Updated",
+    "location": "456 Updated Ave",
+    "numberOfScreens": 6,
+    "owner": "Test Group",
+    "status": "RENOVATING"
+}
+
+### [D] DELETE Cinema
+DELETE {{baseUrl}}/cinemas/{{cinemaId}}
+
+
+###
+# ==========================================
+# == Screens CRUD Operations
+# ==========================================
+
+### [C] CREATE Screen
+POST {{baseUrl}}/screens
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+    "type": "Standard",
+    "capacity": 100,
+    "status": "Active",
+    "cinemaId": "{{cinemaId}}" # Assuming model links via cinema's ID
+}
+
+### [R] READ ALL Screens
+GET {{baseUrl}}/screens
+Accept: {{accept}}
+
+### [R] READ Screen by ID
+GET {{baseUrl}}/screens/{{screenId}}
+Accept: {{accept}}
+
+### [R] READ ALL Screen Names/Codes
+GET {{baseUrl}}/screens/names
+Accept: {{accept}}
+
+### [U] UPDATE Screen
+PUT {{baseUrl}}/screens/{{screenId}}
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "type": "IMAX",
+  "capacity": 150,
+  "status": "Active",
+  "cinemaId": "{{cinemaId}}" # Usually cannot change the parent cinema easily
+}
+
+### [D] DELETE Screen
+DELETE {{baseUrl}}/screens/{{screenId}}
+
+
+###
+# ==========================================
+# == Seats CRUD Operations
+# ==========================================
+
+### [C] CREATE Seat
+POST {{baseUrl}}/seats
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "number": "A1",
+  "type": "Standard",
+  "row": "A",
+  "screenCode": "{{screenCodeRef}}",
+  "cinemaCode": "{{cinemaCodeRef}}",
+  "multiplier": 1.0,
+  "status": "AVAILABLE"
+}
+
+### [R] READ ALL Seats
+GET {{baseUrl}}/seats
+Accept: {{accept}}
+
+### [R] READ Seat by ID
+GET {{baseUrl}}/seats/{{seatId}}
+Accept: {{accept}}
+
+### [U] UPDATE Seat
+PUT {{baseUrl}}/seats/{{seatId}}
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "number": "E1",
+  "type": "VIP",
+  "row": "A",
+  "screenCode": "{{screenCodeRef}}",
+  "cinemaCode": "{{cinemaCodeRef}}",
+  "multiplier": 1.5,
+  "status": "BOOKED"
+}
+
+### [D] DELETE Seat
+DELETE {{baseUrl}}/seats/{{seatId}}
+
+### [C] CREATE Multiple Seats
+# Path: POST /api/seats/all
+# Creates multiple seats provided in the list. Backend generates seatCodes/IDs.
+# Expects HTTP 200 OK with a JSON array of the created Seat objects.
+POST {{baseUrl}}/seats/all
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+[
+  {
+    "number": "D1", "type": "Standard", "row": "D", "screenCode": "{{screenCodeRef}}", "cinemaCode": "{{cinemaCodeRef}}", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "D2", "type": "Standard", "row": "D", "screenCode": "{{screenCodeRef}}", "cinemaCode": "{{cinemaCodeRef}}", "multiplier": 1.0, "status": "AVAILABLE"
+  },
+  {
+    "number": "D3", "type": "Couple", "row": "D", "screenCode": "{{screenCodeRef}}", "cinemaCode": "{{cinemaCodeRef}}", "multiplier": 1.0, "status": "AVAILABLE"
+  }
+]
+
+###
+# ==========================================
+# == Movies CRUD Operations
+# ==========================================
+
+### [C] CREATE Movie (Example - Adjust Body as Needed)
+POST {{baseUrl}}/movies
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "title": "New Test Movie",
+  "genre": ["Action", "Adventure"],
+  "releaseYear": 2024,
+  "director": "Jane Doe",
+  "duration": 120,
+  "language": "English",
+  "status": "COMING_SOON"
+
+}
+
+
+### [R] READ ALL Movies
+GET {{baseUrl}}/movies
+Accept: {{accept}}
+
+### [R] READ Movie by ID
+GET {{baseUrl}}/movies/{{movieId}}
+Accept: {{accept}}
+
+### [R] READ Movie by Code
+GET {{baseUrl}}/movies/code/{{movieCode}}
+Accept: {{accept}}
+
+### [U] UPDATE Movie
+PUT {{baseUrl}}/movies/{{movieId}}
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  # Include ALL fields expected by your PUT endpoint/service logic
+  # This example is copied from your original PUT, ensure it matches your model
+  "movieCode": "MOV010", # Often, Code is not updatable or derived from ID
+  "thumbnail": "https://image.tmdb.org/t/p/w200/updated.jpg",
+  "title": "Dune: Part Two - Updated Title",
+  "genre": [ "Sci-Fi", "Adventure" ],
+  "releaseYear": 2024,
+  "director": "Denis Villeneuve",
+  "rating": 4.5, # Updated Rating
+  "duration": 166, # Updated Duration
+  "language": "English",
+  "budget": 1.9E8,
+  "boxOffice": 7.0E8, # Updated Box Office
+  "casts": [ "Timothée Chalamet", "Zendaya", "Rebecca Ferguson", "Austin Butler" ], # Updated Casts
+  "releasedBy": "Warner Bros.", # Updated Distributor
+  "releaseDate": "2024-03-15T00:00:00Z",
+  "endDate": "2024-07-01T00:00:00Z", # Updated End Date
+  "trailer": "updated_trailer_link",
+  "description": "Updated description of the movie.",
+  "status": "NOW_SHOWING" # Updated Status
+}
+
+
+### [D] DELETE Movie
+DELETE {{baseUrl}}/movies/{{movieId}}
+
+
+###
+# ==========================================
+# == Coupons CRUD Operations
+# ==========================================
+
+### [C] CREATE Coupon
+POST {{baseUrl}}/coupons
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "couponCode": "SUMMER20",
+  "discountValue": 20.0,
+  "minOrderValue": 50.0,
+  "startDate":"2024-06-01T00:00:00Z",
+  "expiryDate": "2024-08-31T23:59:59Z",
+  "usageLimit": 500,
+  "description": "20% off for summer"
+}
+
+### [R] READ ALL Coupons
+GET {{baseUrl}}/coupons
+Accept: {{accept}}
+
+### [R] READ Coupon by ID
+GET {{baseUrl}}/coupons/{{couponId}}
+Accept: {{accept}}
+
+### [R] READ ALL Coupon Names/Descriptions
+# Gets a map or list of coupon codes/descriptions.
+GET {{baseUrl}}/coupons/names
+Accept: {{accept}}
+
+### [U] UPDATE Coupon
+PUT {{baseUrl}}/coupons/{{couponId}}
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  # Include fields to update. Code might not be updatable.
+  "couponCode": "SUMMER20", # Usually preserved or handled by service
+  "discountValue": 25.0,    # Updated value
+  "minOrderValue": 60.0,    # Updated minimum
+  "startDate": "2024-06-01T00:00:00Z",
+  "expiryDate": "2024-09-15T23:59:59Z", # Extended expiry
+  "usageLimit": 450, # Reduced limit?
+  "description": "UPDATED 25% off for summer/early fall"
+}
+
+### [D] DELETE Coupon
+DELETE {{baseUrl}}/coupons/{{couponId}}
+
+
+###
+# ==========================================
+# == Users CRUD Operations
+# ==========================================
+
+### [C] CREATE User
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "username": "testuser",
+  "email": "test.user@example.com",
+  "password": "password123", # Sent plain, backend should hash
+  "avatar": "https://example.com/default-avatar.png",
+  "role": "customer" # Or "admin", etc. based on your roles
+}
+
+### [R] READ ALL Users
+GET {{baseUrl}}/users
+Accept: {{accept}}
+
+### [R] READ User by ID
+GET {{baseUrl}}/users/{{userId}}
+Accept: {{accept}}
+
+### [R] READ ALL User Names
+GET {{baseUrl}}/users/names
+Accept: {{accept}}
+
+### [U] UPDATE User
+PUT {{baseUrl}}/users/{{userId}}
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "username": "testuser_updated",
+  "email": "test.user.updated@example.com",
+  "avatar": "https://example.com/new-avatar.jpg",
+  "role": "customer"
+  # "password": "newpassword" # Check if your PUT endpoint handles password changes
+}
+
+### [D] DELETE User
+DELETE {{baseUrl}}/users/{{userId}}
+
+
+###
+# ==========================================
+# == Bookings CRUD Operations
+# ==========================================
+
+### [C] CREATE Booking
+# Timestamps might be set automatically by the backend.
+POST {{baseUrl}}/bookings
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "totalPrice": 99.99
+  # "createdAt": "...", # Often set by backend
+  # "expiredAt": "...", # Often calculated/set by backend
+  # "cancelledAt": null
+}
+
+### [R] READ ALL Bookings
+GET {{baseUrl}}/bookings
+Accept: {{accept}}
+
+### [R] READ Booking by ID
+GET {{baseUrl}}/bookings/{{bookingId}}
+Accept: {{accept}}
+
+### [R] READ ALL Booking Names/Codes
+GET {{baseUrl}}/bookings/names
+Accept: {{accept}}
+
+### [U] UPDATE Booking
+PUT {{baseUrl}}/bookings/{{bookingId}}
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "totalPrice": 109.99, # Example update
+  # Include other updatable fields based on your model/service logic
+  # "expiredAt": "...",
+  "cancelledAt": "2024-12-31T23:59:59Z" # Example: Cancelling a booking
+}
+
+### [D] DELETE Booking
+# !! Consider implications if BookingDetails reference this Booking !!
+DELETE {{baseUrl}}/bookings/{{bookingId}}
+
+
+###
+# ==========================================
+# == Nested Booking Details CRUD (Example)
+# ==========================================
+###
+# ==========================================
+# == Variables
+# ==========================================
+# Replace with your actual running application URL
+
+# !! REPLACE with an ACTUAL ID of an existing Booking in your database !!
+
+# !! REPLACE with an ACTUAL ID of an existing BookingDetail AFTER you create one !!
+#detailId = existing_detail_id_abc
+#
+## !! REPLACE with actual IDs from your database !!
+#userId = YOUR_USER_ID
+#showtimeId = YOUR_SHOWTIME_ID
+#seatId1 = YOUR_SEAT_ID_1
+#seatId2 = YOUR_SEAT_ID_2
+#paymentId = YOUR_PAYMENT_ID # Use "null" if not required initially
+#couponId = YOUR_COUPON_ID  # Use "null" if not applicable
+
+
+###
+# ==========================================
+# == Nested Booking Detail CRUD Operations
+# ==========================================
+
+### --------------------------------------------------
+# CREATE: Add a new Booking Detail to a Booking
+# POST {{baseUrl}}/bookings/{{bookingId}}/details
+### --------------------------------------------------
+# - Creates a new BookingDetail associated with bookingId.
+# - The `booking` field in THIS JSON body is ignored by the controller,
+#   as it uses the bookingId from the URL path.
+# - Expects HTTP 201 Created on success.
+# - The response body will contain the newly created BookingDetail with its generated ID.
+POST {{baseUrl}}/bookings/{{bookingId}}/details
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  "user": { "id": "{{userId}}" },
+  "showTime": { "id": "{{showtimeId}}" },
+  "seats": [
+    { "id": "{{seatId1}}" },
+    { "id": "{{seatId2}}" }
+  ],
+  "subTotal": 25.00,
+  "discountAmount": 0.00,
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": {{couponId}},      // Use null if no coupon
+  "payment": {{paymentId}},    // Use null if payment comes later
+  "status": "PENDING"        // Or "CONFIRMED" etc.
+}
+
+### --------------------------------------------------
+# READ ALL: Get all Booking Details for a specific Booking
+# GET {{baseUrl}}/bookings/{{bookingId}}/details
+### --------------------------------------------------
+# - Retrieves a list of all BookingDetails associated with the bookingId.
+# - Expects HTTP 200 OK.
+# - Response body will be a JSON array (can be empty []).
+GET {{baseUrl}}/bookings/{{bookingId}}/details
+Accept: {{contentType}}
+
+
+### --------------------------------------------------
+# READ SINGLE: Get a specific Booking Detail by its ID (within a Booking context)
+# GET {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
+### --------------------------------------------------
+# - Requires both bookingId and the detailId obtained from the CREATE step.
+# - Expects HTTP 200 OK if found and associated correctly.
+# - Expects HTTP 404 Not Found otherwise.
+GET {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
+Accept: {{contentType}}
+
+
+### --------------------------------------------------
+# UPDATE: Update a specific Booking Detail
+# PUT {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
+### --------------------------------------------------
+# - Requires both bookingId and detailId.
+# - Updates fields of the specified BookingDetail.
+# - The `booking` field in THIS JSON body should be omitted or match the parent,
+#   as the controller prevents changing the parent booking via this endpoint.
+# - You only need to include the fields you want to change.
+# - Expects HTTP 200 OK on success with the updated detail.
+# - Expects HTTP 404 Not Found if detailId/bookingId combo is invalid.
+PUT {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  // "user": { "id": "{{userId}}" },             // Usually not changed
+  // "showTime": { "id": "{{showtimeId}}" },     // Usually not changed
+  // "seats": [ { "id": "newSeatIdXYZ" } ],      // Example: Changing seats
+  "subTotal": 26.00,                              // Example: Price change maybe?
+  "discountAmount": 1.00,                         // Example: Applying a discount later
+  "taxAmount": 2.50,
+  "totalAmount": 27.50,
+  "coupon": null,                                 // Example: Removing a coupon
+  "payment": { "id": "updatedPaymentId456" },     // Example: Linking the final payment
+  "status": "CONFIRMED"                           // Example: Changing status
+}
+
+
+### --------------------------------------------------
+# DELETE: Delete a specific Booking Detail
+# DELETE {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
+### --------------------------------------------------
+# - Requires both bookingId and detailId.
+# - Deletes the specified BookingDetail.
+# - Expects HTTP 204 No Content on successful deletion.
+# - Expects HTTP 404 Not Found if detailId/bookingId combo is invalid.
+DELETE {{baseUrl}}/bookings/{{bookingId}}/details/{{detailId}}
+
+
+###
+### [C] CREATE Showtime
+# !! Adjust JSON based on ACTUAL required fields and unique constraints (e.g., showTimeCode) !!
+# !! Sending 'date' in ISO format might fail. Sending 'startTime'/'endTime' with date part will fail. !!
+POST {{baseUrl}}/showtimes
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "date": "2025-04-04",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 18.50,
+  "movie": {
+    "id": "{{movieId}}"
+  },
+  "screen": {
+    "id": "{{screenId}}"
+  },
+  "cinema": {
+    "id": "{{cinemaId}}"
+  },
+  "status": "AVAILABLE"
+}
+
+### [R] READ ALL Showtimes
+# Retrieves a list of all showtimes.
+# Expects HTTP 200 OK.
+# !! Might fail if data in DB cannot be converted back to java.util.Date / java.sql.Time !!
+GET {{baseUrl}}/showtimes
+Accept: {{accept}}
+
+### [R] READ Showtime by ID
+GET {{baseUrl}}/showtimes/67efaf1186ad412329851d97
+Accept: {{accept}}
+
+### [R] READ ALL Showtime Names (Endpoint currently returns 404)
+GET {{baseUrl}}/showtimes/names
+Accept: {{accept}}
+
+
+### [U] UPDATE Showtime
+PUT {{baseUrl}}/showtimes/67efaf1186ad412329851d97
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "date": "2025-04-04T09:00:00+07:00",
+  "startTime": "09:00:00",
+  "endTime": "12:00:00",
+  "price": 16.00,
+  "movie": {
+    "id": "{{movieId}}"
+  },
+  "screen": {
+    "id": "{{screenId}}"
+  },
+  "cinema": {
+    "id": "{{cinemaId}}"
+  },
+  "status": "FULL"
+}
+
+### [D] DELETE Showtime
+DELETE {{baseUrl}}/showtimes/{{showtimeId}}
+
+
+###

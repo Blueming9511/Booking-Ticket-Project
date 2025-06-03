@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SliderComponent from '../../components/Slider/SliderComponent'
-import Carousel from '../../components/Carousel'
 import ShowcaseComponent from '../../components/Showcase/ShowcaseComponent'
+import MovieCarousel from '../../components/common/Carousel'
+import axios from 'axios'
 const HomePage = () => {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const getMovies = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/guest/movies-up-comming');
+        setMovies(response.data);
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+      }
+    };
+
+    getMovies();
+  }, [])
+
   return (
     <div className='flex flex-col gap-4'>
       <SliderComponent />
@@ -12,7 +28,7 @@ const HomePage = () => {
           UPCOMING
         </div>
 
-        <Carousel />
+        <MovieCarousel movies={movies}/>
       </div>
 
       <ShowcaseComponent />

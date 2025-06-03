@@ -1,6 +1,6 @@
-import { Dropdown, Tag, Button, Avatar } from "antd";
-import { EnvironmentOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { Avatar, Tag, Button, Dropdown, Menu, Modal } from "antd";
 import TagStatus from "../../ui/Tag/TagStatus";
+import { EllipsisOutlined, DeleteOutlined, EditOutlined, EnvironmentOutlined } from "@ant-design/icons";
 
 export const columns = (handleEdit, handleDelete) => [
   {
@@ -19,7 +19,7 @@ export const columns = (handleEdit, handleDelete) => [
           <div className="flex items-center text-xs text-gray-500">
             <EnvironmentOutlined className="mr-1" />
             {record.location?.split(/,\s*/).pop() || record.location}
-            </div>
+          </div>
         </div>
       </div>
     ),
@@ -39,7 +39,7 @@ export const columns = (handleEdit, handleDelete) => [
     key: "location",
     width: 250,
     render: (_, record) => (
-        <p className="text-xs text-gray-600">{record.location}</p>
+      <p className="text-xs text-gray-600">{record.location}</p>
     )
   },
   {

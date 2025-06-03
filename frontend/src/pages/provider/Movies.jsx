@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Card, Space, Button, message, Input } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-import ModalMovieEdit from "../../components/ProviderManagement/Movie/ModalMovieEdit";
 import ModalMovieAdd from "../../components/ProviderManagement/Movie/ModalMovieAdd";
 import MovieStatistics from "../../components/ProviderManagement/Movie/MovieStatistics";
 import MovieTable from "../../components/ProviderManagement/Movie/MovieTable";
 import axios from "axios";
 import ModalDelete from "../../components/ui/Modal/ModalDelete";
+import ModalMovieEdit from "../../components/ProviderManagement/Movie/ModalMovieEdit";
+const { Search } = Input;
 
 const Movies = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -21,17 +22,22 @@ const Movies = () => {
     add: false,
     delete: false
   });
+  const [pagination, setPagination] = useState({
+    page: 0,
+    size: 5,
+    totalElements: 0
+  })
 
   // Fetch movies data
-  const fetchMovies = async () => {
+  const fetchMovies = async (page = 0, size = 5) => {
     try {
       setLoading(true);
       messageApi.loading("Fetching movies...", 0);
-      const response = await axios.get("http://localhost:8080/api/movies", {
+      const response = await axios.get(`http://localhost:8080/api/provider/movies?page=${page}&size=${size}`, {
         withCredentials: true,
       });
-      setMovies(response.data);
-      setFilteredMovies(response.data);
+      setMovies(response.data.content);
+      setPagination((prev) => ({ ...prev, totalElements: response.data.totalElements }));
       messageApi.destroy();
       messageApi.success("Movies fetched successfully");
     } catch (error) {
@@ -57,8 +63,8 @@ const Movies = () => {
 
   // Initial data fetch
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(pagination.page, pagination.size);
+  }, [pagination.page]);
 
   const toggleModal = (modalName, isOpen, movie = null) => {
     setModalState(prev => ({ ...prev, [modalName]: isOpen }));
@@ -72,19 +78,19 @@ const Movies = () => {
 
       switch (operation) {
         case 'add':
-          response = await axios.post("http://localhost:8080/api/movies", values, {
+          response = await axios.post("http://localhost:8080/api/provider/movies", values, {
             withCredentials: true,
           });
           break;
         case 'edit':
           response = await axios.put(
-            `http://localhost:8080/api/movies/${currentMovie.id}`,
+            `http://localhost:8080/api/provider/movies/${currentMovie.id}`,
             values
           );
           break;
         case 'delete':
           response = await axios.delete(
-            `http://localhost:8080/api/movies/${currentMovie.id}`,
+            `http://localhost:8080/api/provider/movies/${currentMovie.id}`,
             { withCredentials: true }
           );
           break;
@@ -114,7 +120,7 @@ const Movies = () => {
         style={{boxShadow: "none"}}
         styles={{header: {borderBottom: "none"}}}
         extra={
-          <Space>
+          <div className="flex flex-wrap gap-2">
             <Input
               placeholder="Search by movie title"
               value={searchText}
@@ -132,17 +138,18 @@ const Movies = () => {
             >
               Add new movie
             </Button>
-          </Space>
+          </div>
         }
         variant="borderless"
         className="shadow-none"
       >
-        <MovieStatistics data={filteredMovies} loading={loading} />
         <MovieTable
-          data={filteredMovies}
+          data={movies}
           onEdit={(movie) => toggleModal('edit', true, movie)}
           onDelete={(movie) => toggleModal('delete', true, movie)}
           loading={loading}
+          pagination={pagination}
+          onChangePage={(page) => setPagination((prev) => ({...prev, page: page}))}
         />
       </Card>
 

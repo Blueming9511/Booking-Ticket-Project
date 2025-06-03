@@ -1,5 +1,5 @@
 // UserProfile.js
-import React, { useState,  useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Card, 
   Row, 
@@ -13,21 +13,29 @@ import {
   UserOutlined, 
   HistoryOutlined 
 } from '@ant-design/icons';
-import { useLocation } from 'react-router-dom';  // Make sure this import is correct
+import { useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
-import ProfileAvatar from '../../components/ProfileAvatar';
-import UserInfo from '../../components/UserInfo';
-import ProfileForm from '../../components/ProfileForm';
-import TicketTable from '../../components/TicketTable';
-import ChangePasswordModal from '../../components/ChangePasswordModal';
+import ProfileAvatar from '../../components/common/ProfileAvatar';
+import UserInfo from '../../components/common/UserInfo';
+import ProfileForm from '../../components/common/ProfileForm';
+import TicketTable from '../../components/common/TicketTable';
+import ChangePasswordModal from '../../components/common/ChangePasswordModal';
 
-const userData = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  phone: '0928988254',
-  DOB: '2004-02-05',
-  gender: 'male',
-  avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
+const ACCESS_TOKEN_COOKIE_NAME = 'accessToken';
+
+const decodeJWT = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => 
+      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('Error decoding JWT:', error);
+    return null;
+  }
 };
 
 const ticketData = [
@@ -214,32 +222,32 @@ const ticketData = [
 ];
 
 const UserProfile = () => {
-  const location = useLocation(); // Get current location
+  const location = useLocation();
   const [form] = Form.useForm();
   const [activeTab, setActiveTab] = useState('profile');
   const [changePwdOpen, setChangePwdOpen] = useState(false);
   const [pwdForm] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
+  const [userData, setUserData] = useState(null);
 
-  const uploadProps = {
-    name: 'avatar',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text'
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+  useEffect(() => {
+    const token = Cookies.get(ACCESS_TOKEN_COOKIE_NAME);
+    if (token) {
+      const decoded = decodeJWT(token);
+      if (decoded) {
+        setUserData({
+          name: decoded.name || 'N/A',
+          email: decoded.email || 'N/A',
+          phone: decoded.phoneNumber || 'N/A',
+          DOB: new Date(decoded.dob).toISOString().split('T')[0] || 'N/A',
+          gender: 'N/A', // Not included in token
+          avatar: 'https://randomuser.me/api/portraits/men/1.jpg' // Default avatar
+        });
       }
     }
-  };
+  }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     if (location.pathname === '/my-ticket') {
       setActiveTab('tickets');
     }
@@ -302,7 +310,7 @@ const UserProfile = () => {
           onEditClick={handleEditClick}
           onSaveClick={handleSaveClick}
           onChangePasswordClick={() => setChangePwdOpen(true)}
-          userData={userData}  // Add this prop
+          userData={userData}
         />
       )
     },
@@ -333,6 +341,10 @@ const UserProfile = () => {
     }
   ];
 
+  if (!userData) {
+    return <div className="text-center my-20">Loading...</div>;
+  }
+
   return (
     <div className="my-20 mx-10">
       <h1 className="font-bold text-[24px] mb-6">User Profile</h1>
@@ -342,7 +354,23 @@ const UserProfile = () => {
           <Card className="text-center">
             <ProfileAvatar 
               avatar={userData.avatar} 
-              uploadProps={uploadProps} 
+              uploadProps={{
+                name: 'avatar',
+                action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+                headers: {
+                  authorization: 'authorization-text'
+                },
+                onChange(info) {
+                  if (info.file.status !== 'uploading') {
+                    console.log(info.file, info.fileList);
+                  }
+                  if (info.file.status === 'done') {
+                    message.success(`${info.file.name} file uploaded successfully`);
+                  } else if (info.file.status === 'error') {
+                    message.error(`${info.file.name} file upload failed.`);
+                  }
+                }
+              }}
             />
             <h2 className="text-xl font-semibold">{userData.name}</h2>
             <Divider />

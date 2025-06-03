@@ -1,6 +1,7 @@
 package com.cibook.bookingticket.repository;
 
 import com.cibook.bookingticket.model.Screen;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

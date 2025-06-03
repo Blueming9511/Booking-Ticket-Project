@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Card, Space, Button, Input, Select, message } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import ModalCinemaEdit from "../../components/ProviderManagement/Cinema/ModalCinemaEdit";
 import ModalCinemaAdd from "../../components/ProviderManagement/Cinema/ModalCinemaAdd";
 import CinemaStatistics from "../../components/ProviderManagement/Cinema/CinemaStatistics";
 import ModalDelete from "../../components/ui/Modal/ModalDelete";
 import { CinemaTable } from "../../components/ProviderManagement/Cinema/CinemaTable";
 import axios from "axios";
+import cinemas from "../admin/Cinemas.jsx";
 
 const { Search } = Input;
 
@@ -14,16 +15,12 @@ const Cinemas = ({ role = "Admin" }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [state, setState] = useState({
     cinemas: [],
-    filteredCinemas: [],
-    filters: {
-      search: "",
-      status: null,
-      statusOptions: [
-        { value: "OPEN", label: "Open" },
-        { value: "CLOSE", label: "Close" },
-        { value: "MAINTENANCE", label: "Maintenance" },
-      ],
+    pagination: {
+      page: 0,
+      size: 5,
+      totalElements: 0,
     },
+    search: "",
     modals: {
       add: false,
       edit: false,
@@ -34,19 +31,23 @@ const Cinemas = ({ role = "Admin" }) => {
   });
 
   const fetchData = useCallback(
-    async (showSuccess = true) => {
+    async (showSuccess = true, page = 0, size = 5) => {
       try {
         setState((prev) => ({ ...prev, loading: true }));
         showSuccess && messageApi.loading("Fetching data...");
 
-        const response = await axios.get("http://localhost:8080/api/cinemas", {
+        const response = await axios.get(`http://localhost:8080/api/provider/cinemas?page=${page}&size=${size}`, {
           withCredentials: true,
         });
 
         setState((prev) => ({
           ...prev,
-          cinemas: response.data,
-          filteredCinemas: response.data,
+          cinemas: response.data.content,
+          filteredCinemas: response.data.content,
+          pagination: {
+            ...prev.pagination,
+            totalElements: response.data.totalElements,
+          }
         }));
 
         showSuccess && messageApi.destroy();
@@ -58,11 +59,11 @@ const Cinemas = ({ role = "Admin" }) => {
         setState((prev) => ({ ...prev, loading: false }));
       }
     },
-    [messageApi]
+    [messageApi, state.pagination.page]
   );
 
   useEffect(() => {
-    fetchData();
+    fetchData(true, state.pagination.page, state.pagination.size);
   }, [fetchData]);
 
   const handleFilterChange = (field, value) => {
@@ -70,6 +71,7 @@ const Cinemas = ({ role = "Admin" }) => {
       ...prev,
       filters: { ...prev.filters, [field]: value },
     }));
+
   };
 
   const toggleModal = (modalName, isOpen, cinema = null) => {
@@ -84,23 +86,23 @@ const Cinemas = ({ role = "Admin" }) => {
     const config = {
       add: {
         method: "post",
-        url: "http://localhost:8080/api/cinemas",
+        url: "http://localhost:8080/api/provider/cinemas",
         data: values,
       },
       edit: {
         method: "put",
-        url: `http://localhost:8080/api/cinemas/${state.selectedCinema?.id}`,
+        url: `http://localhost:8080/api/provider/cinemas/${state.selectedCinema?.id}`,
         data: values,
       },
       delete: {
         method: "delete",
-        url: `http://localhost:8080/api/cinemas/${state.selectedCinema?.id}`,
+        url: `http://localhost:8080/api/provider/cinemas/${state.selectedCinema}`,
       },
     };
 
     try {
       setState((prev) => ({ ...prev, loading: true }));
-      console.log(config[action].data);
+      console.log(selectedCinema)
       await axios({ ...config[action], withCredentials: true });
       messageApi.success(`Cinema ${action}ed successfully`, 2);
       await fetchData(false);
@@ -113,6 +115,16 @@ const Cinemas = ({ role = "Admin" }) => {
     }
   };
 
+  const handlePageChange = async (page) => {
+    setState((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        page,
+      },
+    }));
+  };
+
   const { filteredCinemas, filters, modals, selectedCinema, loading } = state;
 
   return (
@@ -120,37 +132,44 @@ const Cinemas = ({ role = "Admin" }) => {
       {contextHolder}
       <Card
         title={<span className="text-xl font-bold">Cinema Management</span>}
-        extra={
-          <Space>
-            <Search
-              placeholder="Search cinemas..."
-              allowClear
-              enterButton={<SearchOutlined />}
-              onChange={(e) => handleFilterChange("search", e.target.value)}
-              style={{ width: 300 }}
-            />
-
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => toggleModal("add", true)}
-            >
-              Add Cinema
-            </Button>
-          </Space>
-        }
         variant="borderless"
         style={{ boxShadow: "none" }}
         styles={{ header: { borderBottom: "none" } }}
       >
-        <CinemaStatistics data={filteredCinemas} />
+        <div className="flex flex-wrap gap-3 mb-5">
+          <Search
+            placeholder="Search cinemas..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            onChange={(e) => handleFilterChange("search", e.target.value)}
+            style={{ width: 300 }}
+          />
+
+          <Button
+            type="primary"
+            icon={<ReloadOutlined />}
+            onClick={() => setState((prev) => ({ ...prev, pagination: { ...prev.pagination, page: 0 } }))}
+          >
+          </Button>
+
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => toggleModal("add", true)}
+          >
+            Add Cinema
+          </Button>
+        </div>
+
         <CinemaTable
-          data={filteredCinemas}
+          data={state.cinemas}
           onEdit={(cinema) => toggleModal("edit", true, cinema)}
           onDelete={(cinema) => toggleModal("delete", true, cinema)}
           loading={loading}
+          pagination={state.pagination}
+          onPageChange={handlePageChange}
         />
-      </Card>
+      </Card >
 
       <ModalCinemaAdd
         visible={modals.add}

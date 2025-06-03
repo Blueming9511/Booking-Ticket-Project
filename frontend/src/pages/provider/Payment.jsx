@@ -47,44 +47,48 @@ const Payment = () => {
       add: false,
       edit: false,
     },
-    selectedPayment: null,
-    loading: false,
-  });
-
-  const fetchData = useCallback(
-    async (showSucces = true) => {
-      try {
-        setState((prev) => ({ ...prev, loading: true }));
-        showSucces && messageApi.loading("Fetching data...");
-
-        const paymentsRes = await axios.get(
-          "http://localhost:8080/api/payments",
-          {
-            withCredentials: true,
-          }
-        );
-
-        setState((prev) => ({
-          ...prev,
-          payments: paymentsRes.data,
-          filteredPayments: paymentsRes.data,
-        }));
-
-        showSucces && messageApi.destroy();
-        showSucces && messageApi.success("Data fetched successfully", 2);
-      } catch (error) {
-        messageApi.error("Failed to fetch data", 2);
-        console.error("Fetch error:", error);
-      } finally {
-        setState((prev) => ({ ...prev, loading: false }));
-      }
+    pagination: {
+      page: 0,
+      size: 5,
+      totalElements: 0
     },
-    [messageApi]
-  );
+    selectedPayment: null,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = async (page = 0, size = 5) => {
+    try {
+      setLoading(true);
+      messageApi.loading("Fetching data...");
+
+      const paymentsRes = await axios.get(
+        `http://localhost:8080/api/provider/payments?page=${page}&size=${size}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      setState((prev) => ({
+        ...prev,
+        payments: paymentsRes.data.content,
+        pagination: {
+          ...prev.pagination,
+          totalElements: paymentsRes.data.totalElements,
+        },
+      }));
+      messageApi.destroy();
+      messageApi.success("Data fetched successfully", 2);
+    } catch (error) {
+      messageApi.error("Failed to fetch data", 2);
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchData(state.pagination.page, state.pagination.size);
+  }, [state.pagination.page]);
 
   useEffect(() => {
     const { status, method, dateRange, searchText } = state.filters;
@@ -129,17 +133,17 @@ const Payment = () => {
     const config = {
       add: {
         method: "post",
-        url: "http://localhost:8080/api/payments",
+        url: "http://localhost:8080/api/provider/payments",
         data: values,
       },
       edit: {
         method: "put",
-        url: `http://localhost:8080/api/payments/${state.selectedPayment?.id}`,
+        url: `http://localhost:8080/api/provider/payments/${state.selectedPayment?.id}`,
         data: values,
       },
       delete: {
         method: "delete",
-        url: `http://localhost:8080/api/payments/${state.selectedPayment?.id}`,
+        url: `http://localhost:8080/api/provider/payments/${state.selectedPayment?.id}`,
       },
     };
 
@@ -150,7 +154,7 @@ const Payment = () => {
         `Payment ${action === "add" ? "added" : "updated"} successfully`,
         2
       );
-      await fetchData(false);
+      await fetchData(0, 5);
       toggleModal(action, false);
     } catch (error) {
       messageApi.error(`Failed to ${action} payment`, 2);
@@ -160,7 +164,7 @@ const Payment = () => {
     }
   };
 
-  const { filteredPayments, filters, modals, selectedPayment, loading } = state;
+  const { filteredPayments, filters, modals, selectedPayment } = state;
 
   return (
     <>
@@ -171,7 +175,7 @@ const Payment = () => {
         style={{ boxShadow: "none" }}
         styles={{ header: { borderBottom: "none" } }}
         extra={
-          <Space>
+          <div className="flex flex-wrap gap-3">
             <RangePicker
               style={{ width: 250 }}
               format="DD/MM/YYYY"
@@ -194,12 +198,11 @@ const Payment = () => {
             >
               Add Payment
             </Button>
-          </Space>
+          </div>
         }
       >
-        <PaymentStatistics data={filteredPayments} />
         <PaymentTable
-          data={filteredPayments}
+          data={state.payments}
           onEdit={(payment) => toggleModal("edit", true, payment)}
           onDelete={(payment) => toggleModal("delete", true, payment)}
           loading={loading}

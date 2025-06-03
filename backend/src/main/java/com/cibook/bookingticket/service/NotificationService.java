@@ -5,6 +5,8 @@ import com.cibook.bookingticket.model.Notification;
 import com.cibook.bookingticket.repository.NotificationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,6 +70,11 @@ public class NotificationService implements IService<Notification, String>{
         log.info("NotificationService: Finding all notifications");
         // Add sorting or filtering logic if needed
         return notificationRepo.findAll();
+    }
+
+    @Override
+    public Page<Notification> findAll(Pageable pageable) {
+        return notificationRepo.findAll(pageable);
     }
 
     /**

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Confirmation</title>
+</head>
+<body>
+<div th:fragment="content">
+    <h1 class="email-title">Your Booking is Confirmed!</h1>
+
+    <p>Hello,</p>
+
+    <p>Thank you for booking with <strong th:text="${applicationName}">CiBook</strong>! Your movie ticket has been successfully reserved.</p>
+
+    <div class="order-container">
+        <div class="order-details">
+            <div class="order-item">
+                <span>🎬 Movie</span>
+                <span th:text="${movieTitle}">Avengers: Endgame</span>
+            </div>
+            <div class="order-item">
+                <span>🕒 Showtime</span>
+                <span th:text="${#temporals.format(showtime, 'EEEE, MMM dd yyyy - HH:mm')}">Monday, Jan 01 2025 - 19:30</span>
+            </div>
+            <div class="order-item">
+                <span>🏢 Cinema</span>
+                <span th:text="${cinemaName + ' - ' + cinemaLocation}">CGV Landmark - 1050 Nguyễn Văn Linh</span>
+            </div>
+            <div class="order-item">
+                <span>💺 Seats</span>
+                <span th:text="${seatList}">A1, A2, A3</span>
+            </div>
+            <div class="order-item">
+                <span>💳 Payment Method</span>
+                <span th:text="${paymentMethod}">Credit Card</span>
+            </div>
+        </div>
+
+        <div class="order-total">
+            <span>Total Amount</span>
+            <span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', '.', 'VND')}">180,000 VND</span>
+        </div>
+    </div>
+
+    <p>You can check your bookings anytime on our website. We recommend arriving at the cinema 15 minutes before your showtime.</p>
+
+    <a href="#" th:href="${applicationUrl + '/bookings'}" class="btn">View Your Booking</a>
+
+    <p style="margin-top: 24px;">Thank you again for choosing <span th:text="${applicationName}">CiBook</span>.</p>
+
+    <p>Best regards,<br>The <span th:text="${applicationName}">CiBook</span> Team</p>
+</div>
+</body>
+</html>

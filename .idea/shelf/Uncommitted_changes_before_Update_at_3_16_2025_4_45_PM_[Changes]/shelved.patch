@@ -1,0 +1,555 @@
+Index: backend/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n\t\t xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n\t<modelVersion>4.0.0</modelVersion>\r\n\t<parent>\r\n\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\r\n\t\t<version>3.4.3</version>\r\n\t\t<relativePath/> <!-- lookup parent from repository -->\r\n\t</parent>\r\n\t<groupId>com.cibook</groupId>\r\n\t<artifactId>bookingticket</artifactId>\r\n\t<version>0.0.1-SNAPSHOT</version>\r\n\t<name>bookingticket</name>\r\n\t<description>Demo project for Spring Boot</description>\r\n\t<url/>\r\n\t<licenses>\r\n\t\t<license/>\r\n\t</licenses>\r\n\t<developers>\r\n\t\t<developer/>\r\n\t</developers>\r\n\t<scm>\r\n\t\t<connection/>\r\n\t\t<developerConnection/>\r\n\t\t<tag/>\r\n\t\t<url/>\r\n\t</scm>\r\n\t<properties>\r\n\t\t<java.version>21</java.version>\r\n\t</properties>\r\n\t<dependencies>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-web</artifactId>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-test</artifactId>\r\n\t\t\t<scope>test</scope>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-data-mongodb</artifactId>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.projectlombok</groupId>\r\n\t\t\t<artifactId>lombok</artifactId>\r\n\t\t\t<scope>provided</scope>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-oauth2-client</artifactId>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.webjars</groupId>\r\n\t\t\t<artifactId>jquery</artifactId>\r\n\t\t\t<version>3.4.1</version>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.webjars</groupId>\r\n\t\t\t<artifactId>bootstrap</artifactId>\r\n\t\t\t<version>4.3.1</version>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.webjars</groupId>\r\n\t\t\t<artifactId>webjars-locator-core</artifactId>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>io.jsonwebtoken</groupId>\r\n\t\t\t<artifactId>jjwt-api</artifactId>\r\n\t\t\t<version>0.12.6</version>\r\n\t\t</dependency>\r\n\r\n\t</dependencies>\r\n\r\n\t<build>\r\n\t\t<plugins>\r\n\t\t\t<plugin>\r\n\t\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t\t<artifactId>spring-boot-maven-plugin</artifactId>\r\n\t\t\t</plugin>\r\n\t\t</plugins>\r\n\t</build>\r\n\r\n</project>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/pom.xml b/backend/pom.xml
+--- a/backend/pom.xml	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/backend/pom.xml	(date 1742113240464)
+@@ -1,92 +1,94 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+-	<modelVersion>4.0.0</modelVersion>
+-	<parent>
+-		<groupId>org.springframework.boot</groupId>
+-		<artifactId>spring-boot-starter-parent</artifactId>
+-		<version>3.4.3</version>
+-		<relativePath/> <!-- lookup parent from repository -->
+-	</parent>
+-	<groupId>com.cibook</groupId>
+-	<artifactId>bookingticket</artifactId>
+-	<version>0.0.1-SNAPSHOT</version>
+-	<name>bookingticket</name>
+-	<description>Demo project for Spring Boot</description>
+-	<url/>
+-	<licenses>
+-		<license/>
+-	</licenses>
+-	<developers>
+-		<developer/>
+-	</developers>
+-	<scm>
+-		<connection/>
+-		<developerConnection/>
+-		<tag/>
+-		<url/>
+-	</scm>
+-	<properties>
+-		<java.version>21</java.version>
+-	</properties>
+-	<dependencies>
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-web</artifactId>
+-		</dependency>
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++    <parent>
++        <groupId>org.springframework.boot</groupId>
++        <artifactId>spring-boot-starter-parent</artifactId>
++        <version>3.4.3</version>
++        <relativePath/> <!-- lookup parent from repository -->
++    </parent>
++    <groupId>com.cibook</groupId>
++    <artifactId>bookingticket</artifactId>
++    <version>0.0.1-SNAPSHOT</version>
++    <name>bookingticket</name>
++    <description>Demo project for Spring Boot</description>
++    <url/>
++    <licenses>
++        <license/>
++    </licenses>
++    <developers>
++        <developer/>
++    </developers>
++    <scm>
++        <connection/>
++        <developerConnection/>
++        <tag/>
++        <url/>
++    </scm>
++    <properties>
++        <java.version>23</java.version>
++        <maven.compiler.source>23</maven.compiler.source>
++        <maven.compiler.target>23</maven.compiler.target>
++    </properties>
++    <dependencies>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-web</artifactId>
++        </dependency>
+ 
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-test</artifactId>
+-			<scope>test</scope>
+-		</dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-test</artifactId>
++            <scope>test</scope>
++        </dependency>
+ 
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+-		</dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-data-mongodb</artifactId>
++        </dependency>
+ 
+-		<dependency>
+-			<groupId>org.projectlombok</groupId>
+-			<artifactId>lombok</artifactId>
+-			<scope>provided</scope>
+-		</dependency>
++        <dependency>
++            <groupId>org.projectlombok</groupId>
++            <artifactId>lombok</artifactId>
++            <scope>provided</scope>
++        </dependency>
+ 
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+-		</dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-oauth2-client</artifactId>
++        </dependency>
+ 
+-		<dependency>
+-			<groupId>org.webjars</groupId>
+-			<artifactId>jquery</artifactId>
+-			<version>3.4.1</version>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.webjars</groupId>
+-			<artifactId>bootstrap</artifactId>
+-			<version>4.3.1</version>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.webjars</groupId>
+-			<artifactId>webjars-locator-core</artifactId>
+-		</dependency>
++        <dependency>
++            <groupId>org.webjars</groupId>
++            <artifactId>jquery</artifactId>
++            <version>3.4.1</version>
++        </dependency>
++        <dependency>
++            <groupId>org.webjars</groupId>
++            <artifactId>bootstrap</artifactId>
++            <version>4.3.1</version>
++        </dependency>
++        <dependency>
++            <groupId>org.webjars</groupId>
++            <artifactId>webjars-locator-core</artifactId>
++        </dependency>
+ 
+-		<dependency>
+-			<groupId>io.jsonwebtoken</groupId>
+-			<artifactId>jjwt-api</artifactId>
+-			<version>0.12.6</version>
+-		</dependency>
++        <dependency>
++            <groupId>io.jsonwebtoken</groupId>
++            <artifactId>jjwt-api</artifactId>
++            <version>0.12.6</version>
++        </dependency>
+ 
+-	</dependencies>
++    </dependencies>
+ 
+-	<build>
+-		<plugins>
+-			<plugin>
+-				<groupId>org.springframework.boot</groupId>
+-				<artifactId>spring-boot-maven-plugin</artifactId>
+-			</plugin>
+-		</plugins>
+-	</build>
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.springframework.boot</groupId>
++                <artifactId>spring-boot-maven-plugin</artifactId>
++            </plugin>
++        </plugins>
++    </build>
+ 
+ </project>
+Index: backend/src/main/java/com/cibook/bookingticket/service/BookingService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cibook.bookingticket.service;\r\n\r\nimport com.cibook.bookingticket.model.Booking;\r\nimport com.cibook.bookingticket.repository.BookingRepository;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@Service\r\npublic class BookingService  {\r\n    @Autowired\r\n    private BookingRepository bookingRepository;\r\n    // Create a new Booking\r\n    public Booking createBooking(Booking Booking) {\r\n        return bookingRepository.save(Booking);\r\n    }\r\n\r\n    // Get all Bookings\r\n    public List<Booking> getAllBookings() {\r\n        return bookingRepository.findAll();\r\n    }\r\n\r\n    // Get a Booking by ID\r\n    public Optional<Booking> getBookingById(String id) {\r\n        return bookingRepository.findById(id);\r\n    }\r\n\r\n    // Update a Booking\r\n    public Booking updateBooking(String id, Booking updatedBooking) {\r\n        if (bookingRepository.existsById(id)) {\r\n            updatedBooking.setBookingID(id);\r\n            return bookingRepository.save(updatedBooking);\r\n        }\r\n        return null;\r\n    }\r\n\r\n    // Delete a Booking\r\n    public void deleteBooking(String id) {\r\n        bookingRepository.deleteById(id);\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/com/cibook/bookingticket/service/BookingService.java b/backend/src/main/java/com/cibook/bookingticket/service/BookingService.java
+--- a/backend/src/main/java/com/cibook/bookingticket/service/BookingService.java	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/backend/src/main/java/com/cibook/bookingticket/service/BookingService.java	(date 1742112339171)
+@@ -28,13 +28,13 @@
+     }
+ 
+     // Update a Booking
+-    public Booking updateBooking(String id, Booking updatedBooking) {
+-        if (bookingRepository.existsById(id)) {
+-            updatedBooking.setBookingID(id);
+-            return bookingRepository.save(updatedBooking);
+-        }
+-        return null;
+-    }
++//    public Booking updateBooking(String id, Booking updatedBooking) {
++//        if (bookingRepository.existsById(id)) {
++//            updatedBooking.setBookingID(id);
++//            return bookingRepository.save(updatedBooking);
++//        }
++//        return null;
++//    }
+ 
+     // Delete a Booking
+     public void deleteBooking(String id) {
+Index: backend/src/main/java/com/cibook/bookingticket/HelloController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cibook.bookingticket;\r\n\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\n@RestController\r\npublic class HelloController {\r\n\r\n    @GetMapping(\"/\")\r\n    public String login() {\r\n        return \"App\";\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/com/cibook/bookingticket/HelloController.java b/backend/src/main/java/com/cibook/bookingticket/HelloController.java
+--- a/backend/src/main/java/com/cibook/bookingticket/HelloController.java	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/backend/src/main/java/com/cibook/bookingticket/HelloController.java	(date 1742114232826)
+@@ -1,8 +1,14 @@
+ package com.cibook.bookingticket;
+ 
++import org.springframework.security.core.Authentication;
++import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
++import org.springframework.security.oauth2.core.user.OAuth2User;
+ import org.springframework.web.bind.annotation.GetMapping;
+ import org.springframework.web.bind.annotation.RestController;
+ 
++import java.util.HashMap;
++import java.util.Map;
++
+ @RestController
+ public class HelloController {
+ 
+@@ -10,4 +16,20 @@
+     public String login() {
+         return "App";
+     }
++
++    @GetMapping("/api/user")
++    public Map<String, Object> getUserInfo(Authentication auth) {
++        Map<String, Object> userInfo = new HashMap<>();
++
++        if (auth instanceof OAuth2AuthenticationToken oauthToken) {
++            OAuth2User oAuth2User = oauthToken.getPrincipal();
++            userInfo.put("name", oAuth2User.getAttribute("name"));
++            userInfo.put("email", oAuth2User.getAttribute("email"));
++            userInfo.put("picture", oAuth2User.getAttribute("picture"));
++            userInfo.put("provider", oauthToken.getAuthorizedClientRegistrationId()); // e.g., "google"
++        } else {
++            userInfo.put("error", "User is not authenticated or not using OAuth2");
++        }
++        return userInfo;
++    }
+ }
+Index: backend/src/main/java/com/cibook/bookingticket/BookingticketApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cibook.bookingticket;\r\n\r\nimport org.springframework.boot.SpringApplication;\r\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\r\nimport org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\nimport java.util.Collections;\r\nimport java.util.Map;\r\n\r\n@SpringBootApplication\r\n@EnableWebSecurity\r\n@RestController\r\npublic class BookingticketApplication{\r\n\r\n\tpublic static void main(String[] args) {\r\n\t\tSpringApplication.run(BookingticketApplication.class, args);\r\n\t}\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/com/cibook/bookingticket/BookingticketApplication.java b/backend/src/main/java/com/cibook/bookingticket/BookingticketApplication.java
+--- a/backend/src/main/java/com/cibook/bookingticket/BookingticketApplication.java	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/backend/src/main/java/com/cibook/bookingticket/BookingticketApplication.java	(date 1742112943763)
+@@ -5,9 +5,6 @@
+ import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+ import org.springframework.web.bind.annotation.RestController;
+ 
+-import java.util.Collections;
+-import java.util.Map;
+-
+ @SpringBootApplication
+ @EnableWebSecurity
+ @RestController
+Index: backend/src/main/java/com/cibook/bookingticket/security/SecurityConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cibook.bookingticket.security;\r\n\r\nimport jakarta.servlet.ServletException;\r\nimport jakarta.servlet.http.HttpServletRequest;\r\nimport jakarta.servlet.http.HttpServletResponse;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.Configuration;\r\nimport org.springframework.security.config.Customizer;\r\nimport org.springframework.security.config.annotation.web.builders.HttpSecurity;\r\nimport org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;\r\nimport org.springframework.security.core.Authentication;\r\nimport org.springframework.security.web.SecurityFilterChain;\r\nimport org.springframework.security.web.authentication.AuthenticationSuccessHandler;\r\n\r\nimport java.io.IOException;\r\n\r\n@Configuration\r\n@EnableWebSecurity\r\npublic class SecurityConfig {\r\n    @Bean\r\n    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {\r\n        http\r\n                .authorizeHttpRequests(authorize -> authorize\r\n                        .requestMatchers(\"/\", \"/login\").permitAll()\r\n                        .anyRequest().authenticated()\r\n                )\r\n//                .oauth2Login(oauth2 -> oauth2\r\n//                        .loginPage(\"/login\")\r\n//                        .successHandler((req, res, authentication) -> res.sendRedirect(\"/home\"))\r\n//                )\r\n                .formLogin(Customizer.withDefaults())\r\n                .oauth2Login(Customizer.withDefaults())\r\n                .csrf(csrf -> csrf.disable());\r\n        return http.build();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/com/cibook/bookingticket/security/SecurityConfig.java b/backend/src/main/java/com/cibook/bookingticket/security/SecurityConfig.java
+--- a/backend/src/main/java/com/cibook/bookingticket/security/SecurityConfig.java	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/backend/src/main/java/com/cibook/bookingticket/security/SecurityConfig.java	(date 1742115503331)
+@@ -4,6 +4,7 @@
+ import jakarta.servlet.http.HttpServletRequest;
+ import jakarta.servlet.http.HttpServletResponse;
+ import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.context.annotation.Bean;
+ import org.springframework.context.annotation.Configuration;
+ import org.springframework.security.config.Customizer;
+@@ -18,19 +19,20 @@
+ @Configuration
+ @EnableWebSecurity
+ public class SecurityConfig {
++    @Value("${frontend.url}")
++    private String frontendURL;
+     @Bean
+     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
++        System.out.println(frontendURL);
+         http
+                 .authorizeHttpRequests(authorize -> authorize
+                         .requestMatchers("/", "/login").permitAll()
+                         .anyRequest().authenticated()
+                 )
+-//                .oauth2Login(oauth2 -> oauth2
+-//                        .loginPage("/login")
+-//                        .successHandler((req, res, authentication) -> res.sendRedirect("/home"))
+-//                )
+-                .formLogin(Customizer.withDefaults())
+-                .oauth2Login(Customizer.withDefaults())
++                .oauth2Login(oauth2 -> oauth2
++                        .successHandler((req, res, authentication) -> res.sendRedirect(frontendURL + "/home"))
++                )
++                .logout(logout -> logout.logoutSuccessUrl(frontendURL + "/home"))
+                 .csrf(csrf -> csrf.disable());
+         return http.build();
+     }
+Index: backend/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring.application.name=bookingticket\r\nspring.data.mongodb.uri=mongodb://localhost:27017/ticketbooking\r\nspring.data.mongodb.database=ticketbooking\r\n\r\n#Login Facebook\r\n#Them vo day\r\n\r\n\r\n# Frontend URL\r\nfrontend.url=http://localhost:5173/home\r\n\r\n# Server Port\r\nserver.port=8080
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/backend/src/main/resources/application.properties b/backend/src/main/resources/application.properties
+--- a/backend/src/main/resources/application.properties	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/backend/src/main/resources/application.properties	(date 1742114568537)
+@@ -3,11 +3,13 @@
+ spring.data.mongodb.database=ticketbooking
+ 
+ #Login Facebook
+-#Them vo day
++spring.security.oauth2.client.registration.google.client-id=412166994384-b38db0ljspb9d1mlmalarqu9cku87ag0.apps.googleusercontent.com
++spring.security.oauth2.client.registration.google.client-secret=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
++spring.security.oauth2.client.registration.google.redirect-uri=http://localhost:8080/login/oauth2/code/google
+ 
+ 
+ # Frontend URL
+-frontend.url=http://localhost:5173/home
++frontend.url=http://localhost:5173
+ 
+ # Server Port
+ server.port=8080
+\ No newline at end of file
+Index: frontend/.vite/deps/_metadata.json
+===================================================================
+diff --git a/frontend/.vite/deps/_metadata.json b/frontend/.vite/deps/_metadata.json
+new file mode 100644
+--- /dev/null	(date 1742062509330)
++++ b/frontend/.vite/deps/_metadata.json	(date 1742062509330)
+@@ -0,0 +1,8 @@
++{
++  "hash": "6c5e3901",
++  "configHash": "caf1f3ac",
++  "lockfileHash": "2fd6ef24",
++  "browserHash": "ccec4332",
++  "optimized": {},
++  "chunks": {}
++}
+\ No newline at end of file
+Index: frontend/src/pages/Home.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { useEffect, useState } from \"react\";\r\nimport { useSearchParams } from \"react-router-dom\";\r\n\r\nconst Home = () => {\r\n    const [user, setUser] = useState(null);\r\n    const [searchParams] = useSearchParams();\r\n    const token = searchParams.get(\"token\");\r\n\r\n    useEffect(() => {\r\n        if (token) {\r\n            fetch(\"http://localhost:8080/api/user\", {\r\n                headers: { Authorization: `Bearer ${token}` },\r\n            })\r\n                .then((res) => res.json())\r\n                .then((data) => setUser(data));\r\n        }\r\n    }, [token]);\r\n\r\n    return (\r\n        <div>\r\n            <h1>Welcome, {user ? user.username : \"Guest\"}!</h1>\r\n        </div>\r\n    );\r\n};\r\n\r\nexport default Home;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/pages/Home.jsx b/frontend/src/pages/Home.jsx
+--- a/frontend/src/pages/Home.jsx	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/frontend/src/pages/Home.jsx	(date 1742115704835)
+@@ -1,26 +1,42 @@
+-import { useEffect, useState } from "react";
+-import { useSearchParams } from "react-router-dom";
++import { useEffect, useState } from 'react';
+ 
+-const Home = () => {
+-    const [user, setUser] = useState(null);
+-    const [searchParams] = useSearchParams();
+-    const token = searchParams.get("token");
++function UserProfile() {
++  const [user, setUser] = useState(null);
++  const [error, setError] = useState(null);
+ 
+-    useEffect(() => {
+-        if (token) {
+-            fetch("http://localhost:8080/api/user", {
+-                headers: { Authorization: `Bearer ${token}` },
+-            })
+-                .then((res) => res.json())
+-                .then((data) => setUser(data));
+-        }
+-    }, [token]);
++  useEffect(() => {
++    fetch('/api/user', { credentials: 'include' })
++      .then(response => {
++        if (!response.ok) {
++          throw new Error('Failed to fetch user info');
++        }
++        return response.json();
++      })
++      .then(data => setUser(data))
++      .catch(err => setError(err.message));
++  }, []);
++
++  if (error) {
++    return <div className="text-red-500">Error: {error}</div>;
++  }
++
++  if (!user) {
++    return <div>Loading...</div>;
++  }
+ 
+-    return (
+-        <div>
+-            <h1>Welcome, {user ? user.username : "Guest"}!</h1>
+-        </div>
+-    );
+-};
++  return (
++    <div className="container mx-auto p-4">
++      <h1 className="text-3xl font-bold">User Profile</h1>
++      <div className="mt-4">
++        <p><strong>Name:</strong> {user.name}</p>
++        <p><strong>Email:</strong> {user.email}</p>
++        <p><strong>Provider:</strong> {user.provider}</p>
++        {user.picture && (
++          <img src={user.picture} alt="Profile" className="w-24 h-24 rounded-full mt-2" />
++        )}
++      </div>
++    </div>
++  );
++}
+ 
+-export default Home;
++export default UserProfile;
+\ No newline at end of file
+Index: frontend/src/pages/Login.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React from \"react\";\r\nimport { FcGoogle } from \"react-icons/fc\";\r\n\r\nconst Login = () => {\r\n  return (\r\n    <div className=\"flex items-center justify-center min-h-screen  bg-gray-100\">\r\n      <div className=\"bg-white p-8 px-15 rounded-2xl w-lg shadow-lg\">\r\n        {/* Title */}\r\n        <h2 className=\"text-3xl font-bold text-left text-gray-800 mb-6\">\r\n          SIGN IN TO YOUR <br></br>TICKET ACCOUNT\r\n        </h2>\r\n\r\n        {/* Username Input */}\r\n        <div className=\"mb-4\">\r\n          <label className=\"block text-gray-600 font-medium mb-2\">Username</label>\r\n          <input\r\n            type=\"text\"\r\n            className=\"w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400\"\r\n            placeholder=\"Enter your username\"\r\n          />\r\n        </div>\r\n\r\n        {/* Password Input */}\r\n        <div className=\"mb-4\">\r\n          <label className=\"block text-gray-600 font-medium mb-2\">Password</label>\r\n          <input\r\n            type=\"password\"\r\n            className=\"w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400\"\r\n            placeholder=\"Enter your password\"\r\n          />\r\n        </div>\r\n\r\n        {/* Remember Me & Forgot Password */}\r\n        <div className=\"flex items-center justify-between text-sm text-gray-500 mb-4\">\r\n          <label className=\"flex items-center\">\r\n            <input type=\"checkbox\" className=\"mr-2\" />\r\n            Remember me\r\n          </label>\r\n          <a href=\"#\" className=\"hover:text-blue-500\">Forgot password?</a>\r\n        </div>\r\n\r\n        {/* Login Button */}\r\n        <button className=\"w-full bg-blue-600 text-white py-3 rounded-lg font-medium text-lg hover:bg-blue-700 transition duration-300\">\r\n          Sign In\r\n        </button>\r\n\r\n        {/* Divider */}\r\n        <div className=\"text-center my-4 text-gray-400 text-sm\">or</div>\r\n\r\n        {/* Google Login */}\r\n        <button\r\n          className=\"flex items-center justify-center w-full border py-3 rounded-lg hover:bg-gray-100 transition duration-300\"\r\n          onClick={() => (window.location.href = \"http://localhost:8080/oauth2/authorization/google\")}\r\n        >\r\n          <FcGoogle className=\"text-2xl mr-2\" />\r\n          Sign in with Google\r\n        </button>\r\n\r\n        {/* Signup Link */}\r\n        <p className=\"text-center text-gray-600 mt-4 text-sm\">\r\n          Don't have an account? <a href=\"#\" className=\"text-blue-500 font-medium\">Sign up</a>\r\n        </p>\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Login;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/pages/Login.jsx b/frontend/src/pages/Login.jsx
+--- a/frontend/src/pages/Login.jsx	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/frontend/src/pages/Login.jsx	(date 1742113623197)
+@@ -33,14 +33,14 @@
+         {/* Remember Me & Forgot Password */}
+         <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+           <label className="flex items-center">
+-            <input type="checkbox" className="mr-2" />
++            <input type="checkbox" className="mr-2 cursor-pointer" />
+             Remember me
+           </label>
+           <a href="#" className="hover:text-blue-500">Forgot password?</a>
+         </div>
+ 
+         {/* Login Button */}
+-        <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium text-lg hover:bg-blue-700 transition duration-300">
++        <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium text-lg hover:bg-blue-700 transition duration-300 cursor-pointer">
+           Sign In
+         </button>
+ 
+@@ -49,7 +49,7 @@
+ 
+         {/* Google Login */}
+         <button
+-          className="flex items-center justify-center w-full border py-3 rounded-lg hover:bg-gray-100 transition duration-300"
++          className="flex items-center justify-center w-full border py-3 rounded-lg hover:bg-gray-100 transition duration-300 cursor-pointer"
+           onClick={() => (window.location.href = "http://localhost:8080/oauth2/authorization/google")}
+         >
+           <FcGoogle className="text-2xl mr-2" />
+Index: frontend/vite.config.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { defineConfig } from 'vite'\r\nimport react from '@vitejs/plugin-react'\r\nimport tailwindcss from '@tailwindcss/vite'\r\n\r\n// https://vite.dev/config/\r\nexport default defineConfig({\r\n  plugins: [react(), tailwindcss()],\r\n})\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/vite.config.js b/frontend/vite.config.js
+--- a/frontend/vite.config.js	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/frontend/vite.config.js	(date 1742115680535)
+@@ -5,4 +5,14 @@
+ // https://vite.dev/config/
+ export default defineConfig({
+   plugins: [react(), tailwindcss()],
++  server: {
++    port: 5173,
++    proxy: {
++      '/api': {
++        target: 'http://localhost:8080', // Backend port
++        changeOrigin: true,
++        secure: false,
++      },
++    },
++  },
+ })
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"MavenProjectsManager\">\r\n    <option name=\"originalFiles\">\r\n      <list>\r\n        <option value=\"$PROJECT_DIR$/backend/pom.xml\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_23\" default=\"true\" project-jdk-name=\"23\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/.idea/misc.xml	(date 1742113398135)
+@@ -8,7 +8,7 @@
+       </list>
+     </option>
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="23" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" project-jdk-name="23" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: frontend/src/App.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { BrowserRouter as Router, Routes, Route } from \"react-router-dom\";\r\nimport Login from \"./pages/Login\";\r\nimport Home from \"./pages/Home\";\r\nfunction App() {\r\n  return (\r\n    <Router>\r\n      <Routes>\r\n        <Route path=\"/\" element={<Login />} />\r\n      </Routes>\r\n    </Router>\r\n  );\r\n}\r\n\r\nexport default App;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/App.jsx b/frontend/src/App.jsx
+--- a/frontend/src/App.jsx	(revision 86a97f9172d4758006974d0a2adeef4a32fde0f4)
++++ b/frontend/src/App.jsx	(date 1742114401971)
+@@ -6,6 +6,7 @@
+     <Router>
+       <Routes>
+         <Route path="/" element={<Login />} />
++        <Route path="/home" element={<Home />} />
+       </Routes>
+     </Router>
+   );
+Index: frontend/.vite/deps/package.json
+===================================================================
+diff --git a/frontend/.vite/deps/package.json b/frontend/.vite/deps/package.json
+new file mode 100644
+--- /dev/null	(date 1742062509276)
++++ b/frontend/.vite/deps/package.json	(date 1742062509276)
+@@ -0,0 +1,3 @@
++{
++  "type": "module"
++}
