@@ -1,83 +1,98 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import DatePicker from '../Showcase/DatePicker';         // Assuming path is correct
 import CinemaSelector from '../Showcase/CinemaSelector';     // Assuming path is correct
-import { Collapse, Tag, Button, Image, Divider } from 'antd'; // Import Image and Divider
+import { Collapse, Tag, Button, Image, Divider, message, Pagination, Spin } from 'antd'; // Import Image and Divider
 import BookingModal from '../Showcase/BookingModal';       // Assuming path is correct
 import { getEndTime, getNext7Days } from '../../utils/dateUtils'; // Use correct util import
+import axios from 'axios';
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: 'http://localhost:8080',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': '*/*'
+  },
+  withCredentials: true // Important for CORS with credentials
+});
 
 // --- Data ---
 // Assuming 'movies' and 'allCinemas' are passed as props or fetched,
 // but using the provided constants for this example.
 
-// Cinema BRANCHES Data
-const allCinemas = [
-    // ... (keep the full allCinemas array from your provided code) ...
-      // CGV branches
-    { id: 'cgv-aeon', name: 'CGV Aeon Long Biên', brand: 'cgv', address: 'Tầng 3, Aeon Mall Long Biên, Hà Nội' },
-    { id: 'cgv-xuan-dieu', name: 'CGV Xuân Diệu', brand: 'cgv', address: 'Tầng 5, Syrena Tower, 51 Xuân Diệu, Tây Hồ, Hà Nội' },
-    { id: 'cgv-tran-duy-hung', name: 'CGV Trần Duy Hưng', brand: 'cgv', address: 'Tầng 3, Vincom Trần Duy Hưng, Cầu Giấy, Hà Nội' },
-    { id: 'cgv-lieu-giai', name: 'CGV Liễu Giai', brand: 'cgv', address: 'Tầng hầm B1, Vincom Center Metropolis, 29 Liễu Giai, Ba Đình, Hà Nội' },
-    { id: 'cgv-long-bien', name: 'CGV Long Biên', brand: 'cgv', address: 'Tầng 4, Savico Megamall, 7-9 Nguyễn Văn Linh, Long Biên, Hà Nội' },
-    { id: 'cgv-ocean-park', name: 'CGV Ocean Park', brand: 'cgv', address: 'Tầng 4, Vincom Mega Mall Ocean Park, Gia Lâm, Hà Nội' },
-    { id: 'cgv-vincom-ba-trieu', name: 'CGV Vincom Bà Triệu', brand: 'cgv', address: 'Tầng 6, Vincom Center Bà Triệu, 191 Bà Triệu, Hai Bà Trưng, Hà Nội' },
-    { id: 'cgv-vincom-nguyen-chi-thanh', name: 'CGV Vincom Nguyễn Chí Thanh', brand: 'cgv', address: 'Tầng 5, Vincom Center Nguyễn Chí Thanh, 54A Nguyễn Chí Thanh, Đống Đa, Hà Nội' },
 
-    // Lotte branches
-    { id: 'lotte-cau-giay', name: 'Lotte Cầu Giấy', brand: 'lotte', address: 'Tầng 5, Lotte Center, 54 Liễu Giai, Ba Đình, Hà Nội' },
-    { id: 'lotte-thang-long', name: 'Lotte Thăng Long', brand: 'lotte', address: 'Tầng 3, Big C Thăng Long, 222 Trần Duy Hưng, Cầu Giấy, Hà Nội' },
-    { id: 'lotte-my-dinh', name: 'Lotte Mỹ Đình', brand: 'lotte', address: 'Tầng 3, The Garden Shopping Center, Mễ Trì, Nam Từ Liêm, Hà Nội' },
-
-    // Galaxy branches
-    { id: 'galaxy-quang-trung', name: 'Galaxy Quang Trung', brand: 'galaxy', address: 'Lầu 3, CoopMart Foodcosa, 304A Quang Trung, P. 11, Q. Gò Vấp, TPHCM' },
-    { id: 'galaxy-kinh-duong-vuong', name: 'Galaxy Kinh Dương Vương', brand: 'galaxy', address: '718bis Kinh Dương Vương, P. 13, Q. 6, TPHCM' },
-    { id: 'galaxy-tan-binh', name: 'Galaxy Tân Bình', brand: 'galaxy', address: '246 Nguyễn Hồng Đào, P. 14, Q. Tân Bình, TPHCM' },
-
-    // BHD branches
-    { id: 'bhd-star-vincom-pham-ngoc-thach', name: 'BHD Star Vincom PNT', brand: 'bhd', address: 'Tầng 8, Vincom Center Phạm Ngọc Thạch, Đống Đa, Hà Nội' },
-    { id: 'bhd-star-bitexco', name: 'BHD Star Bitexco', brand: 'bhd', address: 'Lầu 3 & 4, TTTM Icon 68, Bitexco Financial Tower, 2 Hải Triều, P. Bến Nghé, Q. 1, TPHCM' },
-
-    // Mega GS branches
-    { id: 'mega-gs-cao-thang', name: 'Mega GS Cao Thắng', brand: 'mega', address: '19 Cao Thắng, P. 2, Q. 3, TPHCM' }
-];
-
-// Movie Data - Assuming this structure, even if the array contains only one item
-const movies = [ // Array containing one movie object
-  {
-    id: '1',
-    title: 'Nhà Gia Tiên',
-    poster:
-      'https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg',
-    duration: 102,
-    categories: ['Horror', 'Thriller'],
-    ageLimit: '18+',
-    description: "Một bộ phim kinh dị ám ảnh về những bí mật đen tối trong một gia đình tưởng chừng như bình thường.", // Example description
-    showtimes: [
-      // ... (keep the full showtimes array from your provided code) ...
-       { cinema: 'cgv-aeon', room: 'Room A', date: '2025-04-07', time: '17:25', seats: { types: { Standard: { price: 100000, available: 30 }, VIP: { price: 150000, available: 20 }, Couple: { price: 250000, available: 7 } }, bookedSeats: ['A1', 'A2', 'B3', 'CP01'] } },
-      { cinema: 'cgv-tran-duy-hung', room: 'Room B', date: '2025-04-07', time: '19:00', seats: { types: { Standard: { price: 120000, available: 50 }, VIP: { price: 180000, available: 50 } }, bookedSeats: ['C5', 'D8', 'D9'] } },
-      { cinema: 'cgv-aeon', room: 'Room A', date: '2025-04-02', time: '20:00', seats: { types: { Standard: { price: 100000, available: 30 }, VIP: { price: 150000, available: 20 }, Couple: { price: 250000, available: 7 } }, bookedSeats: ['B1'] } },
-      { cinema: 'lotte-cau-giay', room: 'Room L1', date: '2025-04-07', time: '18:00', seats: { types: { Standard: { price: 95000, available: 60 }, VIP: { price: 145000, available: 40 } }, bookedSeats: ['L_A5', 'L_B2'] } },
-      { cinema: 'galaxy-quang-trung', room: 'Room G1', date: '2025-04-07', time: '19:30', seats: { types: { Standard: { price: 90000, available: 70 } }, bookedSeats: ['G_C1', 'G_C2'] } },
-      { cinema: 'bhd-star-vincom-pham-ngoc-thach', room: 'Room B1', date: '2025-04-03', time: '21:15', seats: { types: { Standard: { price: 110000, available: 45 }, VIP: { price: 160000, available: 35 } }, bookedSeats: ['B1_A3'] } }
-    ]
-  }
-];
 
 // --- Component ---
 // Renamed for clarity if it's specifically for one movie's showtimes
-export default function SingleMovieShowtimes() {
+export default function SingleMovieShowtimes({ movieDetails }) {
+
+  console.log("movieDetails: ",movieDetails);
   // --- State ---
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedShowtime, setSelectedShowtime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedBrandId, setSelectedBrandId] = useState('all');
+  const [showtimes, setShowtimes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 0,
+    pageSize: 5,
+    total: 0
+  });
 
-  // --- Extract Single Movie Data ---
-  // If this component ALWAYS shows one movie, extract it here.
-  // If it might show multiple later, keep iterating over the 'movies' array.
-  const movie = movies && movies.length > 0 ? movies[0] : null;
+  // --- Fetch Showtimes ---
+  const fetchShowtimes = async (page = 0) => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  // --- Initialize Date ---
+      const response = await api.get('/api/showtimes/v2', { // Removed trailing slash
+        params: {
+          page,
+          size: pagination.pageSize,
+          movie: movieDetails?.title || '',
+          status: 'AVAILABLE'
+        }
+      });
+      
+      if (response.data) {
+        setShowtimes(response.data.content);
+        setPagination({
+          current: response.data.pageable.pageNumber,
+          pageSize: response.data.pageable.pageSize,
+          total: response.data.totalElements
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching showtimes:', error);
+      let errorMessage = 'Failed to load showtimes. Please try again later.';
+      
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        errorMessage = error.response.data?.message || 'Server error occurred.';
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage = 'Could not connect to the server. Please check your connection.';
+        console.error('Request error:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error message:', error.message);
+      }
+      
+      setError(errorMessage);
+      message.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Initialize Date and Fetch Data ---
   useEffect(() => {
     if (!selectedDate) {
       const today = getNext7Days()[0]?.fullDate;
@@ -87,14 +102,27 @@ export default function SingleMovieShowtimes() {
     }
   }, [selectedDate]);
 
+  useEffect(() => {
+    if (movieDetails?.title) {
+      fetchShowtimes(0);
+      console.log("movieDetails?.title: ",movieDetails?.title);
+    
+    }
+    
+  }, [movieDetails?.title, selectedDate]);
+
+  // --- Extract Single Movie Data ---
+  // If this component ALWAYS shows one movie, extract it here.
+  // If it might show multiple later, keep iterating over the 'movies' array.
+  const movie = movieDetails;
 
   // --- Handlers ---
-  const handleShowtimeSelection = (showtimeSession, movieDetails) => {
+  const handleShowtimeSelection = (showtimeSession) => {
     setSelectedShowtime({
       ...showtimeSession,
       movieTitle: movieDetails.title,
       ageLimit: movieDetails.ageLimit,
-      duration: movieDetails.duration,
+      duration: showtimeSession.movieDuration
     });
     setIsModalVisible(true);
   };
@@ -107,57 +135,66 @@ export default function SingleMovieShowtimes() {
     setSelectedBrandId(brandId);
   };
 
+  const handlePageChange = (page) => {
+    fetchShowtimes(page - 1); // API uses 0-based indexing
+  };
+
   // --- Process Data for Collapse ---
   const collapseItems = useMemo(() => {
     // Exit early if essential data is missing
-    if (!selectedDate || !movie || !movie.showtimes) return [];
-
-    const cinemaBranchMap = allCinemas.reduce((acc, cinema) => {
-      acc[cinema.id] = cinema;
-      return acc;
-    }, {});
+    if (!selectedDate || !movieDetails || !showtimes.length) return [];
 
     const groupedByCinema = {};
 
-    // Iterate over the *single movie's* showtimes
-    movie.showtimes.forEach(show => {
+    // Process showtimes from API
+    showtimes.forEach(show => {
+      const cinemaId = show.cinemaCode;
+      const showDate = new Date(show.startTime).toISOString().split('T')[0];
+      
       // Filter by DATE
-      if (show.date !== selectedDate) {
+      if (showDate !== selectedDate) {
         return;
       }
 
-      const cinemaId = show.cinema;
-      const cinemaInfo = cinemaBranchMap[cinemaId];
-
       // Filter by BRAND
-      if (!cinemaInfo || (selectedBrandId !== 'all' && cinemaInfo.brand !== selectedBrandId)) {
+      if (selectedBrandId !== 'all' && show.owner !== selectedBrandId) {
         return;
       }
 
       // Initialize cinema entry if needed
       if (!groupedByCinema[cinemaId]) {
         groupedByCinema[cinemaId] = {
-          cinemaInfo: cinemaInfo,
-          // Store movie details directly since there's only one movie per cinema now
-          movieDetails: {
-            id: movie.id,
-            title: movie.title,
-            poster: movie.poster,
-            duration: movie.duration,
-            categories: movie.categories,
-            ageLimit: movie.ageLimit,
+          cinemaInfo: {
+            id: cinemaId,
+            name: show.cinemaLocation,
+            address: show.cinemaLocation,
+            brand: show.owner
           },
-          sessions: [] // Store sessions directly under the cinema
+          sessions: []
         };
       }
 
       // Add the valid showtime session
       groupedByCinema[cinemaId].sessions.push({
-        time: show.time,
-        room: show.room,
-        date: show.date,
-        seats: show.seats,
-        cinema: cinemaId
+        id: show.id,
+        showTimeCode: show.showTimeCode,
+        time: new Date(show.startTime).toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit', 
+          hour12: false 
+        }),
+        endTime: new Date(show.endTime).toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }),
+        room: show.screenCode,
+        date: showDate,
+        availableSeats: show.seats - show.bookedSeats,
+        totalSeats: show.seats,
+        cinema: cinemaId,
+        price: show.price,
+        movieDuration: show.movieDuration
       });
     });
 
@@ -165,7 +202,7 @@ export default function SingleMovieShowtimes() {
     return Object.entries(groupedByCinema)
       .sort(([, a], [, b]) => a.cinemaInfo.name.localeCompare(b.cinemaInfo.name))
       .map(([cinemaId, data]) => {
-        const { cinemaInfo, movieDetails, sessions } = data;
+        const { cinemaInfo, sessions } = data;
 
         // Skip rendering if there are no sessions for this cinema after filtering
         if (!sessions || sessions.length === 0) {
@@ -177,34 +214,36 @@ export default function SingleMovieShowtimes() {
           label: (
             <div className='flex justify-start flex-col'>
               <span className='font-semibold text-base'>{cinemaInfo.name}</span>
-              <span className='text-xs text-gray-500'>{cinemaInfo.address || 'Address not available'}</span>
+              <Tag color="blue" className='mt-1 w-fit'>{cinemaInfo.brand}</Tag>
             </div>
           ),
           children: (
-            // Only one movie is displayed per panel now, no need for inner map/div
-            <div className='flex flex-col sm:flex-row gap-4 pb-4'> {/* Removed border */}
-           
-
-              {/* Movie Details & Showtimes */}
-              <div className='flex-grow text-center sm:text-left'>
-         
-
-                {/* List of Showtime Buttons */}
-                <div className='flex flex-wrap gap-2 justify-center sm:justify-start'>
-                  {sessions // Map directly over the sessions for this cinema
+            <div className='flex flex-col gap-4 pb-4'>
+              {/* Showtimes */}
+              <div className='flex-grow'>
+                <div className='flex flex-wrap gap-2 justify-start'>
+                  {sessions
                     .sort((a, b) => a.time.localeCompare(b.time))
                     .map((session, index) => (
-                      <Button
-                        key={`${cinemaId}-${movieDetails.id}-${session.time}-${index}`}
-                        type='default'
-                        className='border-primary text-primary hover:!bg-red-100 hover:!text-primary px-3 py-1 text-sm h-auto'
-                        onClick={() => handleShowtimeSelection(session, movieDetails)}
-                      >
-                        {session.time}
-                        <span className='text-xs text-gray-400 ml-1'>
-                          ~ {getEndTime(session.time, movieDetails.duration)}
-                        </span>
-                      </Button>
+                      <div key={`${session.id}-${index}`} className='flex flex-col gap-1'>
+                        <Button
+                          type='default'
+                          className='border-primary text-primary hover:!bg-red-100 hover:!text-primary px-3 py-1 text-sm h-auto'
+                          onClick={() => handleShowtimeSelection(session)}
+                          disabled={session.availableSeats === 0}
+                        >
+                          <div className='flex flex-col items-center'>
+                            <span className='font-medium'>{session.time}</span>
+                            <span className='text-xs text-gray-400'>
+                              ~ {session.endTime}
+                            </span>
+                          </div>
+                        </Button>
+                        <div className='text-center text-xs text-gray-500'>
+                          <span>{session.availableSeats}/{session.totalSeats}</span>
+                          <div>{(session.price / 1000).toFixed(3)}k VND</div>
+                        </div>
+                      </div>
                     ))}
                 </div>
               </div>
@@ -214,24 +253,23 @@ export default function SingleMovieShowtimes() {
       })
       .filter(item => item !== null); // Filter out null items if a cinema had no valid sessions
   // Dependencies: Re-run when movie data changes OR when filters change
-  }, [movie, allCinemas, selectedDate, selectedBrandId]); // Depend on the single 'movie' object now
+  }, [movieDetails, showtimes, selectedDate, selectedBrandId]); // Depend on the single 'movie' object now
 
   // Handle case where the movie data itself might be loading or invalid
-  if (!movie) {
-      // Optional: Add a loading indicator or message
-      return <div className="text-center p-10">Loading movie data...</div>;
+  if (!movieDetails) {
+    return <div className="text-center p-10">Loading movie data...</div>;
   }
 
   return (
     <div className='my-3 sm:my-5'>
       {/* Header - Show Movie Title */}
       <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center flex-wrap mb-4 gap-y-3'>
-          <div>
-              <h1 className='text-xl sm:text-2xl font-bold'>{movie.title} - Showtimes</h1>
-              {/* Optional: Movie description */}
-              {/* <p className='text-sm text-gray-600 mt-1'>{movie.description || ''}</p> */}
-          </div>
-        {/* <LocationSelector /> */}
+        <div>
+          <h1 className='text-xl sm:text-2xl font-bold'>{movieDetails.title} - Showtimes</h1>
+          {movieDetails.duration && (
+            <p className='text-sm text-gray-600 mt-1'>Duration: {movieDetails.duration} minutes</p>
+          )}
+        </div>
       </div>
 
       <Divider />
@@ -245,20 +283,52 @@ export default function SingleMovieShowtimes() {
         <Divider className="mt-0 mb-2" />
 
         {/* Collapse Section */}
-        <h3 className="text-lg font-semibold mb-2">Available Cinemas</h3>
-        {collapseItems.length > 0 ? (
-          <Collapse
-            items={collapseItems}
-            defaultActiveKey={collapseItems.map(item => item.key)} // Open all panels with showtimes
-            accordion={false}
-            bordered={false}
-            className='bg-transparent movie-showtime-collapse'
-          />
-        ) : (
-          <div className='text-center text-gray-500 py-6'>
-            No showtimes available for "{movie.title}" on the selected date and cinema brand.
-          </div>
-        )}
+        <div className='flex flex-col gap-4'>
+          <h3 className="text-lg font-semibold">Available Cinemas</h3>
+          
+          {loading ? (
+            <div className='text-center py-8'>
+              <Spin size="large" />
+              <p className='text-gray-500 mt-2'>Loading showtimes...</p>
+            </div>
+          ) : error ? (
+            <div className='text-center text-red-500 py-6'>
+              <p>{error}</p>
+              <Button 
+                type="primary" 
+                onClick={() => fetchShowtimes(pagination.current)}
+                className='mt-4'
+              >
+                Retry
+              </Button>
+            </div>
+          ) : collapseItems.length > 0 ? (
+            <>
+              <Collapse
+                items={collapseItems}
+                defaultActiveKey={collapseItems.map(item => item.key)}
+                accordion={false}
+                bordered={false}
+                className='bg-transparent movie-showtime-collapse'
+              />
+              {pagination.total > pagination.pageSize && (
+                <div className='flex justify-center mt-4'>
+                  <Pagination
+                    current={pagination.current + 1}
+                    total={pagination.total}
+                    pageSize={pagination.pageSize}
+                    onChange={handlePageChange}
+                    showSizeChanger={false}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <div className='text-center text-gray-500 py-6'>
+              No showtimes available for "{movieDetails.title}" on the selected date and cinema brand.
+            </div>
+          )}
+        </div>
       </div>
 
       {/* --- Booking Modal --- */}

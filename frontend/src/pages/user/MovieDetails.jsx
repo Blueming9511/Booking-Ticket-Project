@@ -218,7 +218,7 @@ export default function MovieDetails() {
 
       <div className='flex flex-wrap md:flex-row justify-center items-start gap-8 md:mx-20'>
         <div className='flex-shrink-0 w-full md:w-auto'>
-          <MovieShowtimes />
+          <MovieShowtimes movieDetails={movie} />
           <CommentSection movieId={movie.movieCode} />
         </div>
         <div className='flex-shrink-0 w-full md:w-auto'>

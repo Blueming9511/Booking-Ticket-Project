@@ -17,7 +17,14 @@ const TheaterLayoutView = ({ screen }) => {
         const getSeats = async (screenCode, cinemaCode) => {
             try {
                 const res = await axios.get(
-                    `http://localhost:8080/api/seats/v2/?cinema=${cinemaCode}&screen=${screenCode}`
+                    `http://localhost:8080/api/seats/v2/?cinema=${cinemaCode}&screen=${screenCode}`, 
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': '*/*'
+                        },
+                        withCredentials: true
+                    }
                 );
                 const seatData = res.data;
                 const allRows = [...new Set(seatData.map((s) => s.row))].sort();

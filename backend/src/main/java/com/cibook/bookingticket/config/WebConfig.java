@@ -19,6 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .exposedHeaders("*")
                 .allowCredentials(true)
-                .maxAge(3600);
+                .maxAge(3600L); // 1 hour in seconds
     }
 } 

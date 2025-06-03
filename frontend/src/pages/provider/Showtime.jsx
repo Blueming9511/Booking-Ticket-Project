@@ -40,7 +40,14 @@ const Showtime = () => {
     const fetchShowtime = async (page = 0, size = 5) => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:8080/api/showtimes/v2/?page=${page}&size=${size}`);
+            const res = await axios.get(`http://localhost:8080/api/showtimes?page=${page}&size=${size}`, 
+                {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                    withCredentials: true,
+                }
+            );
             setState((prev) => ({
                 ...prev,
                 showtimes: res.data.content,

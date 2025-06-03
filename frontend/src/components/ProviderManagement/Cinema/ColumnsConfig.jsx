@@ -1,3 +1,7 @@
+import { Avatar, Tag, Dropdown, Button } from "antd";
+import { EnvironmentOutlined, EllipsisOutlined } from "@ant-design/icons";
+import TagStatus from "../../ui/Tag/TagStatus";
+
 export const columns = (handleEdit, handleDelete) => [
   {
     title: "Cinema Info",
