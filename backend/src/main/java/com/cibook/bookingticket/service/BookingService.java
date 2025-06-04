@@ -11,6 +11,7 @@ import com.cibook.bookingticket.repository.BookingDetailRepository;
 import com.cibook.bookingticket.repository.BookingRepository;
 import com.cibook.bookingticket.repository.PaymentRepository;
 import com.cibook.bookingticket.repository.ShowtimeRepository;
+import com.cibook.bookingticket.service.Email.EmailService;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 
@@ -53,6 +54,8 @@ public class BookingService implements IService<Booking, String> {
     private final SeatService seatService;
     private final MongoTemplate mongoTemplate;
     private final VNPayService vnPayService;
+    private final EmailService emailService;
+    private final UserService userService;
 
     @Autowired
     public BookingService(BookingRepository bookingRepository, BookingDetailService bookingDetailService,
@@ -60,7 +63,8 @@ public class BookingService implements IService<Booking, String> {
             BookingDetailRepository bookingDetailRepository, BookingDetailRepository bookingDetailRepository1,
             PaymentRepository paymentRepository, ShowtimeService showtimeService, MovieService movieService,
             CinemaService cinemaService, CouponService couponService, SeatService seatService,
-            ShowtimeRepository showtimeRepository, MongoTemplate mongoTemplate, VNPayService vnPayService) {
+            ShowtimeRepository showtimeRepository, MongoTemplate mongoTemplate, VNPayService vnPayService,
+            EmailService emailService, UserService userService) {
         this.bookingRepository = bookingRepository;
         this.bookingDetailService = bookingDetailService;
         this.notificationSubject = notificationSubject;
@@ -75,6 +79,8 @@ public class BookingService implements IService<Booking, String> {
         this.showtimeRepository = showtimeRepository;
         this.mongoTemplate = mongoTemplate;
         this.vnPayService = vnPayService;
+        this.emailService = emailService;
+        this.userService = userService;
     }
 
     @Override
@@ -159,26 +165,7 @@ public class BookingService implements IService<Booking, String> {
         // 5. Update status seats
         seatService.updateSeatStatus(dto.getSeats(), showtime.getScreenCode(), showtime.getCinemaCode(), "PENDING");
         log.info("BookingService: Seats updated to PENDING status for booking ID: {}", finalBooking.getId());
-        // 6. Send notification
-        Movie movie = movieService.findByCode(showtime.getMovieCode()).orElseThrow();
-        Cinema cinema = cinemaService.findByCode(showtime.getCinemaCode()).orElseThrow();
-        Map<String, Object> data = new HashMap<>();
-        data.put("Booking", booking);
-        data.put("BookingDetail", details);
-        data.put("Payment", payment);
-        data.put("Showtime", showtime);
-        data.put("Movie", movie);
-        data.put("Cinema", cinema);
-        if (coupon != null) {
-            data.put("Coupon", coupon);
-        }
-        notificationSubject.notifyAll(
-                Notification.NotificationType.BOOKING_CONFIRMATION,
-                dto.getUserId(),
-                "Xác nhận đặt vé!",
-                "Vé của bạn đã được chúng tôi ghi nhận!",
-                data);
-
+        
         finalBooking.setPaymentUrl(paymentUrl.get("url"));
         finalBooking.setTxnRef(paymentUrl.get("vnp_TxnRef"));
         return bookingRepository.save(finalBooking);
@@ -482,6 +469,12 @@ public class BookingService implements IService<Booking, String> {
             if ("00".equals(request.getParameter("vnp_ResponseCode"))) {
                 booking.setStatus(Booking.BookingStatus.APPROVED);
                 bookingRepository.save(booking);
+                notificationSubject.notifyAll(
+                        Notification.NotificationType.PAYMENT_SUCCESS,
+                        booking.getUserId(),
+                        "Đặt vé thành công!",
+                        "Vé của bạn đã được xác nhận thành công!",
+                        Map.of("booking", booking));
                 return true;
 
             } else {

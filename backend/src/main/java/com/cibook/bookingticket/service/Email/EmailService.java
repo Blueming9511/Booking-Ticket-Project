@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -55,6 +56,9 @@ public class EmailService {
             templateModel.put("loginTime", loginTime.format(DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")));
             templateModel.put("applicationUrl", applicationUrl);
 
+            System.out.println("Sending login notification to: " + to);
+            System.out.println("Login time: "
+                    + loginTime.format(DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss", Locale.ENGLISH)));
             String htmlContent = processTemplate("login", templateModel);
 
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -170,7 +174,8 @@ public class EmailService {
             templateModel.put("applicationName", applicationName);
             templateModel.put("applicationUrl", applicationUrl);
             templateModel.put("booking", response);
-            templateModel.put("movieTitle", response.getMovie().getTitle() != null ? response.getMovie().getTitle() : "Unknown Movie");
+            templateModel.put("movieTitle",
+                    response.getMovie().getTitle() != null ? response.getMovie().getTitle() : "Unknown Movie");
             templateModel.put("showtimeStartDate", response.getShowtime().getStartTime());
             templateModel.put("showtimeEndDate", response.getShowtime().getEndTime());
             templateModel.put("cinemaName", response.getCinema().getCinemaName());
@@ -179,8 +184,11 @@ public class EmailService {
                     .map(BookingDetail::getSeatCode)
                     .toList());
             templateModel.put("paymentMethod", response.getPayment().getMethod());
-            templateModel.put("totalAmount", response.getPayment().getAmount());
-
+            NumberFormat formatter = NumberFormat.getInstance(new Locale.Builder()
+                    .setLanguage("vi")
+                    .setRegion("VN")
+                    .build());
+            templateModel.put("formattedAmount", formatter.format(response.getPayment().getAmount()) + " VND");
 
             templateModel.put("customerName",
                     response.getUser().getName() != null ? response.getUser().getName() : "Valued Customer");

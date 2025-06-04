@@ -4,6 +4,7 @@ import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.repository.UserRepository;
 import com.cibook.bookingticket.service.Auth.CookieService;
 import com.cibook.bookingticket.service.Auth.JWTService;
+import com.cibook.bookingticket.service.Email.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,20 +14,25 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+
 
     @Value("${frontend.url}")
     private String frontendUrl;
     private final JWTService jwtService;
     private final CookieService cookieService;
     private final UserRepository userService;
+    private final EmailService emailService;
 
-    public OAuth2SuccessHandler(JWTService jwtService, CookieService cookieService, UserRepository userService) {
+    public OAuth2SuccessHandler(JWTService jwtService, CookieService cookieService, UserRepository userService, EmailService emailService) {
         this.jwtService = jwtService;
         this.cookieService = cookieService;
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -44,6 +50,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.generateToken(u);
         String refreshToken = jwtService.generateRefreshToken(u);
         cookieService.addAuthCookies(response, accessToken, refreshToken);
+        emailService.sendLoginNotification(u.getEmail(), LocalDateTime.now());
         response.sendRedirect(frontendUrl + "/");
     }
 }

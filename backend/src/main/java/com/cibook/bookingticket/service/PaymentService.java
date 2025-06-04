@@ -6,6 +6,7 @@ import com.cibook.bookingticket.dto.RecentBookingsDto;
 import com.cibook.bookingticket.dto.RevenueDTO;
 import com.cibook.bookingticket.model.Payment;
 import com.cibook.bookingticket.model.Payment.PaymentStatus;
+import com.cibook.bookingticket.model.User;
 import com.cibook.bookingticket.repository.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -304,7 +305,7 @@ public class PaymentService implements IService<Payment, String> {
 
                 Aggregation.addFields()
                         .addField("convertedBookingId")
-                        .withValue(ConvertOperators.ToObjectId.toObjectId("$bookingID"))
+                        .withValue(ConvertOperators.ToObjectId.toObjectId(""))
                         .build(),
 
                 Aggregation.lookup("bookings", "convertedBookingId", "_id", "booking"),
@@ -337,7 +338,7 @@ public class PaymentService implements IService<Payment, String> {
 
                 Aggregation.addFields()
                         .addField("convertedBookingId")
-                        .withValue(ConvertOperators.ToObjectId.toObjectId("$bookingID"))
+                        .withValue(ConvertOperators.ToObjectId.toObjectId(""))
                         .build(),
 
                 Aggregation.lookup("bookings", "convertedBookingId", "_id", "booking"),
@@ -368,7 +369,7 @@ public class PaymentService implements IService<Payment, String> {
 
                 Aggregation.addFields()
                         .addField("convertedBookingId")
-                        .withValue(ConvertOperators.ToObjectId.toObjectId("$bookingID"))
+                        .withValue(ConvertOperators.ToObjectId.toObjectId(""))
                         .build(),
 
                 Aggregation.lookup("bookings", "convertedBookingId", "_id", "booking"),
@@ -382,7 +383,7 @@ public class PaymentService implements IService<Payment, String> {
 
                 Aggregation.addFields()
                         .addField("userIdObj")
-                        .withValue(ConvertOperators.ToObjectId.toObjectId("$booking.userId"))
+                        .withValue(ConvertOperators.ToObjectId.toObjectId(".userId"))
                         .build(),
 
                 Aggregation.lookup("users", "userIdObj", "_id", "user"),
@@ -402,5 +403,9 @@ public class PaymentService implements IService<Payment, String> {
 
         return mongoTemplate.aggregate(aggregation, "payments",
                 RecentBookingsDto.class).getMappedResults();
+    }
+
+    public Optional<Payment> findByBookingId(String id) {
+        return paymentRepository.findByBookingID(id);
     }
 }

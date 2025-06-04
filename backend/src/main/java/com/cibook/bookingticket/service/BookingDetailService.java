@@ -88,4 +88,8 @@ public class BookingDetailService implements IService<BookingDetail, String> {
         return details.stream().map(BookingDetail::getSeatCode).toList();
     }
 
+    public List<BookingDetail> findByBookingId(String id) {
+        return bookingDetailRepository.findByBookingId(id);
+    }
+
 }

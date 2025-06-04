@@ -18,8 +18,16 @@ public class EmailNotificationListener implements NotificationListener {
     private final ShowtimeService showtimeService;
     private final MovieService movieService;
     private final CinemaService cinemaService;
+    private final BookingDetailService bookingDetailService;
+    private final PaymentService paymentService;
+    private final CouponService couponService;
 
-    public EmailNotificationListener(UserService userService, EmailService emailService, BookingService bookingService, ShowtimeService showtimeService, MovieService movieService, CinemaService cinemaService) {
+    public EmailNotificationListener(UserService userService, EmailService emailService, BookingService bookingService,
+            ShowtimeService showtimeService, MovieService movieService, CinemaService cinemaService,
+            BookingDetailService bookingDetailService, PaymentService paymentService, CouponService couponService) {
+        this.couponService = couponService;
+        this.paymentService = paymentService;
+        this.bookingDetailService = bookingDetailService;
         this.userService = userService;
         this.emailService = emailService;
         this.bookingService = bookingService;
@@ -30,18 +38,22 @@ public class EmailNotificationListener implements NotificationListener {
 
     @Async
     @Override
-    public void update(Notification.NotificationType type, String userId, String title, String content, Map<String, Object> data) {
-        User user = userService.findById(userId).orElseThrow();
+    public void update(Notification.NotificationType type, String userId, String title, String content,
+            Map<String, Object> data) {
+        Booking booking = (Booking) data.get("booking");
+        System.out.println("USERID: " + booking);
+        User user = userService.findById(booking.getUserId()).orElseThrow();
         if (user == null) {
             return;
         }
-        Booking booking = (Booking) data.get("Booking");
-        List<BookingDetail> bookingDetails = (List<BookingDetail>) data.get("BookingDetail");
-        Payment payment = (Payment) data.get("Payment");
-        Showtime showtime = (Showtime) data.get("Showtime");
-        Movie movie = (Movie) data.get("Movie");
-        Cinema cinema = (Cinema) data.get("Cinema");
-        Coupon coupon = (Coupon) data.get("Coupon");
+        System.out.println("Sending email notification to user: " + user.getEmail());
+        List<BookingDetail> bookingDetails = bookingDetailService.findByBookingId(booking.getId());
+        Showtime showtime = showtimeService.findByCode(booking.getShowTimeCode()).orElseThrow();
+        Movie movie = movieService.findByCode(showtime.getMovieCode()).orElseThrow();
+        Cinema cinema = cinemaService.findByCode(showtime.getCinemaCode()).orElseThrow();
+        Coupon coupon = booking.getCouponCode() != null ? couponService.findByCode(booking.getCouponCode()).orElse(null)
+                : null;
+        Payment payment = paymentService.findByBookingId(booking.getId()).orElseThrow();
         BookingResponseDto bookingResponseDto = BookingResponseDto.builder()
                 .booking(booking)
                 .bookingDetail(bookingDetails)
@@ -52,6 +64,8 @@ public class EmailNotificationListener implements NotificationListener {
                 .showtime(showtime)
                 .cinema(cinema)
                 .build();
+        System.out.println("BookingResponseDto: " + bookingResponseDto);
         emailService.sendOrderConfirmationEmail(user.getEmail(), bookingResponseDto);
+        System.out.println("Email notification sent to: " + user.getEmail());
     }
 }

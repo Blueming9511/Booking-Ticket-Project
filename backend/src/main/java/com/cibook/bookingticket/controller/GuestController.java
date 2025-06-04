@@ -98,19 +98,12 @@ public class GuestController {
         }
     }
 
-    @PostMapping("/booking")
-    public ResponseEntity<?> createWithDetail(@RequestBody BookingRequestDto entity, HttpServletRequest request) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println("Authentication: " + authentication.getPrincipal() + "\n"
-                    + authentication.getCredentials() + "\n" + authentication.getAuthorities());
-            if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-                String userId = userDetails.getId();
-                System.out.println("User ID from authentication: " + userId);
-                entity.setUserId(userId);
-            }
 
+    @PostMapping("/booking")
+    public ResponseEntity<?> createWithDetail(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestBody BookingRequestDto entity, HttpServletRequest request) {
+        try {
+            System.out.println(userDetails.getId());
+            entity.setUserId(userDetails.getId());
             var ipAdress = Config.getIpAddress(request);
             entity.setIp(ipAdress);
 
