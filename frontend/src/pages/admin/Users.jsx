@@ -208,7 +208,7 @@ const Users = () => {
 
     const handleUnban = async (userId) => {
         try {
-            await axios.put(`http://localhost:8080/api/admin/users/${userId}/unban`, {
+            await axios.put(`http://localhost:8080/api/admin/users/${userId}/unban`,{}, {
                 withCredentials: true
             });
             messageApi.success("User unbanned successfully");
@@ -220,7 +220,7 @@ const Users = () => {
 
     const handleBan = async (userId) => {
         try {
-            await axios.put(`http://localhost:8080/api/admin/users/${userId}/ban`, {
+            await axios.put(`http://localhost:8080/api/admin/users/${userId}/ban`, {},{
                 withCredentials: true
             });
             messageApi.success("User banned successfully");

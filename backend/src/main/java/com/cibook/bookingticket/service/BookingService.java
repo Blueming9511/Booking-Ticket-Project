@@ -151,7 +151,7 @@ public class BookingService implements IService<Booking, String> {
                 .bookingID(booking.getId())
                 .method(Payment.PaymentMethod.valueOf(dto.getPaymentMethod().toUpperCase()))
                 .amount(dto.getTotalAmount())
-                .owner(dto.getUserId())
+                .owner(showtime.getOwner())
                 .build();
         payment = paymentRepository.save(payment);
         PaymentInitRequestDto paymentInitRequestDto = PaymentInitRequestDto.builder()

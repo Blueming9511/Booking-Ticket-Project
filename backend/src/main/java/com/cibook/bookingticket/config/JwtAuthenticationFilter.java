@@ -50,7 +50,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userService.findById(userId).ifPresent(user -> {
                             String newAccessToken = jwtService.generateToken(user);
                             cookieService.addCookie("accessToken", newAccessToken, 15 * 60, response);
-
                             CustomUserDetails userDetails = new CustomUserDetails(user);
                             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                                     userDetails, null, userDetails.getAuthorities());

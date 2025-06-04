@@ -336,7 +336,7 @@ const Cinemas = () => {
                 </div>
 
                 <Table
-                    columns={columns(handleEdit, handleDelete, handleStatusChange)}
+                    columns={columns(handleEdit, handleStatusChange)}
                     dataSource={cinemas}
                     loading={loading}
                     pagination={pagination}

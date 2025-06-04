@@ -61,8 +61,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/admin/**").hasRole("ADMIN")
 
-
-                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(d -> d.disable()) 
                 .logout(logout -> logout.logoutUrl("/api/auth/logout"))
