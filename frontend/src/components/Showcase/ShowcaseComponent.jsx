@@ -3,9 +3,20 @@ import React, { useState, useMemo, useEffect } from 'react'; // Import useState,
 import './showcase.css';
 import LocationSelector from './LocationSelector';
 import CinemaSelector from './CinemaSelector'; // Re-import CinemaSelector
-import { Divider } from 'antd';
+import { Divider, message } from 'antd';
 import CinemaBooking from './CinemaBooking';
 import axios from 'axios';
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: 'http://localhost:8080',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': '*/*'
+  },
+  withCredentials: true // Important for CORS
+});
 
 // --- Data Definitions ---
 
@@ -190,14 +201,27 @@ const ShowcaseComponent = () => {
   const [brands, setBrands] = useState([]);
   const [cinemas, setCinemas] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('all');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getBrands = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/guest/all-brands");
-        setBrands(res.data);
+        setLoading(true);
+        const response = await api.get("/api/guest/all-brands");
+        setBrands(response.data);
       } catch (error) {
         console.error('Error fetching brands:', error);
+        let errorMessage = 'Failed to load cinema brands.';
+        
+        if (error.response) {
+          errorMessage = error.response.data?.message || 'Server error occurred.';
+        } else if (error.request) {
+          errorMessage = 'Could not connect to the server. Please check your connection.';
+        }
+        
+        message.error(errorMessage);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -207,20 +231,42 @@ const ShowcaseComponent = () => {
   useEffect(() => {
     const getCinemas = async () => {
       try {
-        const url = 'http://localhost:8080/api/guest/all-cinemas';
-        const params = new URLSearchParams();
-        params.append('brand', selectedBrand);
-        params.append('page', 0);
-        params.append('size', 100);
-        const res = await axios.get(`${url}?${params.toString()}`);
-        setCinemas(res.data.content);
+        setLoading(true);
+        const params = new URLSearchParams({
+          brand: selectedBrand,
+          page: 0,
+          size: 100
+        });
+
+        const response = await api.get(`/api/guest/all-cinemas?${params}`);
+        
+        // Transform the data to ensure we have all required fields
+        const transformedCinemas = response.data.content.map(cinema => ({
+          id: cinema.id,
+          cinemaCode: cinema.cinemaCode,
+          cinemaName: cinema.cinemaName,
+          brand: cinema.brand,
+          location: cinema.location
+        }));
+        setCinemas(transformedCinemas);
       } catch (error) {
         console.error('Error fetching cinemas:', error);
+        let errorMessage = 'Failed to load cinemas.';
+        
+        if (error.response) {
+          errorMessage = error.response.data?.message || 'Server error occurred.';
+        } else if (error.request) {
+          errorMessage = 'Could not connect to the server. Please check your connection.';
+        }
+        
+        message.error(errorMessage);
+      } finally {
+        setLoading(false);
       }
     }
 
     getCinemas();
-  }, [selectedBrand])
+  }, [selectedBrand]);
 
   const handleBrandChange = (brandId) => {
     setSelectedBrand(brandId);
@@ -244,9 +290,9 @@ const ShowcaseComponent = () => {
             selectedBrand={selectedBrand}
             onBrandChange={handleBrandChange}
             cinemaBrands={brands}
+            loading={loading}
           />
         </div>
-
 
         <Divider className='m-0 flex-shrink-0' />
 

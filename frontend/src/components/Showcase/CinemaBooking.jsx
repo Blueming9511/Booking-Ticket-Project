@@ -1,6 +1,6 @@
 // src/components/CinemaBooking/CinemaBooking.js
 import React, { useState, useEffect, useMemo } from 'react';
-import { Menu, Select, Divider, Image } from 'antd';
+import { Menu, Select, Divider, Image, message } from 'antd';
 import DatePicker from './DatePicker';
 import BookingModal from './BookingModal';
 import ShowtimeButtons from '../common/ShowtimeButtons';
@@ -10,36 +10,100 @@ import axios from 'axios';
 const { Option } = Select;
 
 // Note: The 'cinemas' prop received here might be the *filtered* list
-const CinemaBooking = ({ cinemas = [] }) => {
-
+const CinemaBooking = ({ cinemas = [], movies = [] }) => {
   const initialDate = useMemo(() => getNext7Days()[0]?.fullDate || null, []);
   const [selectedDate, setSelectedDate] = useState(initialDate);
   const [showtimes, setShowtimes] = useState([]);
-
-  // State for the specific selected cinema BRANCH
   const [selectedCinema, setSelectedCinema] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedShowtime, setSelectedShowtime] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  const handleCinemaSelect = (cinemaId) => {
+    const cinema = cinemas.find(c => String(c.id) === String(cinemaId));
+    setSelectedCinema(cinema);
+  };
 
   useEffect(() => {
     const getShowtimes = async () => {
+      if (!selectedCinema?.cinemaCode || !selectedDate) return;
+      
+      setLoading(true);
       try {
-        const url = `http://localhost:8080/api/guest/cinema/${selectedCinema}/showtimes`;
-        const res = await axios.get(url);
-        setShowtimes(res.data);
+        const params = new URLSearchParams({
+          page: 0,
+          size: 100,
+          status: 'AVAILABLE',
+          date: selectedDate,
+          cinema: selectedCinema.cinemaCode
+        });
+
+        const url = `http://localhost:8080/api/showtimes/v2`;
+        const res = await axios.get(url, {
+          params,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*'
+          }
+        });
+        
+        if (res.data?.content) {
+          // Group showtimes by movie
+          const movieShowtimes = {};
+          res.data.content.forEach(showtime => {
+            if (!movieShowtimes[showtime.movieCode]) {
+              movieShowtimes[showtime.movieCode] = {
+                id: showtime.movieCode,
+                title: showtime.movieTitle,
+                poster: showtime.movieThumbnail,
+                ageLimit: showtime.ageLimit,
+                duration: showtime.movieDuration,
+                rating: showtime.movieRating,
+                categories: showtime.categories || [],
+                showtimes: []
+              };
+            }
+            movieShowtimes[showtime.movieCode].showtimes.push({
+              id: showtime.id,
+              showTimeCode: showtime.showTimeCode,
+              time: new Date(showtime.startTime).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+              }),
+              endTime: new Date(showtime.endTime).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+              }),
+              date: selectedDate,
+              availableSeats: showtime.seats - showtime.bookedSeats,
+              totalSeats: showtime.seats,
+              price: showtime.price,
+              screenCode: showtime.screenCode,
+              cinema: selectedCinema.cinemaCode
+            });
+          });
+          setShowtimes(Object.values(movieShowtimes));
+        }
       } catch (error) {
         console.error('Error fetching showtimes:', error);
+        message.error('Failed to load showtimes. Please try again.');
+      } finally {
+        setLoading(false);
       }
     };
+
     getShowtimes();
-  }, [selectedCinema]);
-
-
+  }, [selectedCinema, selectedDate]);
 
   const handleShowtimeSelection = (showtime, movieTitle, ageLimit, duration) => {
-    const showtimeWithDate = { ...showtime, date: showtime.date || selectedDate };
-    setSelectedShowtime({ ...showtimeWithDate, movieTitle, ageLimit, duration });
+    setSelectedShowtime({
+      ...showtime,
+      movieTitle,
+      ageLimit,
+      duration
+    });
     setIsModalVisible(true);
   };
 
@@ -49,13 +113,10 @@ const CinemaBooking = ({ cinemas = [] }) => {
   };
 
   // Render Loading or Empty States for Branches
-  // Display message if the *filtered* cinemas list is empty
   const noBranchesAvailable = !cinemas || cinemas.length === 0;
 
   return (
-    // Adjusted height calculation might be needed depending on sibling elements
     <div className='flex flex-col md:flex-row h-[calc(100vh-250px)] max-h-[calc(100vh-250px)] overflow-hidden'>
-
       {/* --- Sidebar Menu (Cinema Branches) --- */}
       <div className='hidden md:block w-60 lg:w-64 p-2 pr-4 overflow-y-auto border-r border-gray-200 flex-shrink-0'>
         <h2 className='text-base font-semibold mb-3 px-2'>Cinemas</h2>
@@ -64,8 +125,8 @@ const CinemaBooking = ({ cinemas = [] }) => {
         ) : (
           <Menu
             mode='vertical'
-            selectedKeys={selectedCinema}
-            onClick={e => setSelectedCinema(e.key)}
+            selectedKeys={[selectedCinema?.id]}
+            onClick={e => handleCinemaSelect(e.key)}
             style={{ borderRight: 0 }}
             className="cinema-menu"
             items={cinemas.map(cinema => ({
@@ -79,27 +140,25 @@ const CinemaBooking = ({ cinemas = [] }) => {
 
       {/* --- Main Content Area --- */}
       <div className="flex-grow flex flex-col overflow-hidden">
-
         {/* --- Mobile Dropdown (Branches) & Date Picker Row --- */}
         <div className='p-3 border-b border-gray-200 flex-shrink-0'>
           {/* Mobile Cinema Branch Selector */}
           <div className='block md:hidden mb-3'>
             <label htmlFor="cinema-select-mobile" className="block text-sm font-medium text-gray-700 mb-1">
-              Select Cinema Branch:
+              Select Cinema:
             </label>
             {noBranchesAvailable ? (
               <div className="text-sm text-gray-500 italic">No cinemas available.</div>
             ) : (
               <Select
                 id="cinema-select-mobile"
-                value={selectedCinema}
-                onChange={value => setSelectedCinema(value)}
+                value={selectedCinema?.id}
+                onChange={value => handleCinemaSelect(value)}
                 className="w-full"
-                placeholder="Choose a cinema branch"
-                getPopupContainer={triggerNode => triggerNode.parentNode}
+                placeholder="Choose a cinema"
               >
                 {cinemas.map(cinema => (
-                  <Option key={String(cinema.cinemaCode)} value={String(cinema.cinemaCode)}>
+                  <Option key={String(cinema.id)} value={String(cinema.id)}>
                     {cinema.cinemaName}
                   </Option>
                 ))}
@@ -118,7 +177,12 @@ const CinemaBooking = ({ cinemas = [] }) => {
             </div>
           ) : !selectedCinema ? (
             <div className="text-center py-10 text-gray-500">
-              Please select a cinema branch.
+              Please select a cinema to view showtimes.
+            </div>
+          ) : loading ? (
+            <div className="text-center py-10">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+              <p className="text-gray-500 mt-2">Loading showtimes...</p>
             </div>
           ) : showtimes.length > 0 ? (
             <div className='space-y-4 w-full'>
@@ -145,10 +209,12 @@ const CinemaBooking = ({ cinemas = [] }) => {
                     <p className='text-gray-500 text-xs sm:text-sm mb-1'>
                       {movie.categories?.join(', ')} {' · '} {movie.duration} min
                     </p>
-                    <p className='text-gray-600 text-sm mb-2'>2D Phụ đề</p>
+                    {movie.rating && (
+                      <p className='text-gray-600 text-sm mb-2'>Rating: {movie.rating.toFixed(1)}/10</p>
+                    )}
                     <ShowtimeButtons
                       movie={movie}
-                      selectedCinema={selectedCinema} // Still pass the selected branch ID
+                      selectedCinema={selectedCinema.cinemaCode}
                       selectedDate={selectedDate}
                       handleShowtimeClick={handleShowtimeSelection}
                     />
@@ -156,9 +222,9 @@ const CinemaBooking = ({ cinemas = [] }) => {
                 </div>
               ))}
             </div>
-          ) : ( // This case handles when a branch is selected, but no movies match the date
+          ) : (
             <div className="text-center py-10 text-gray-500">
-              No movies found at this cinema for {selectedDate ? new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-CA') : 'the selected date'}.
+              No movies available at this cinema for {selectedDate ? new Date(selectedDate).toLocaleDateString() : 'the selected date'}.
             </div>
           )}
         </div>
