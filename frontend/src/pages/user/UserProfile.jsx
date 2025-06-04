@@ -1,17 +1,17 @@
 // UserProfile.js
 import React, { useState, useEffect } from 'react';
-import { 
-  Card, 
-  Row, 
-  Col, 
-  Divider, 
-  Tabs, 
-  message, 
-  Form,  
+import {
+  Card,
+  Row,
+  Col,
+  Divider,
+  Tabs,
+  message,
+  Form,
 } from 'antd';
-import { 
-  UserOutlined, 
-  HistoryOutlined 
+import {
+  UserOutlined,
+  HistoryOutlined
 } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -21,205 +21,9 @@ import UserInfo from '../../components/common/UserInfo';
 import ProfileForm from '../../components/common/ProfileForm';
 import TicketTable from '../../components/common/TicketTable';
 import ChangePasswordModal from '../../components/common/ChangePasswordModal';
-
-const ACCESS_TOKEN_COOKIE_NAME = 'accessToken';
-
-const decodeJWT = (token) => {
-  try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => 
-      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-    ).join(''));
-    return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.error('Error decoding JWT:', error);
-    return null;
-  }
-};
-
-const ticketData = [
-  {
-    key: '1',
-    movie: 'Avengers: Endgame',
-    date: '2023-05-15',
-    time: '19:30',
-    seats: ['A1', 'A2'],
-    price: '$24.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '2',
-    movie: 'Spider-Man: No Way Home',
-    date: '2023-06-20',
-    time: '15:45',
-    seats: ['B3'],
-    price: '$12.00',
-    status: 'Completed'
-  },
-  {
-    key: '3',
-    movie: 'The Batman',
-    date: '2023-07-10',
-    time: '21:00',
-    seats: ['C4', 'C5'],
-    price: '$20.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '4',
-    movie: 'Inception',
-    date: '2023-08-01',
-    time: '18:00',
-    seats: ['D1'],
-    price: '$15.00',
-    status: 'Cancelled'
-  },
-  {
-    key: '5',
-    movie: 'Interstellar',
-    date: '2023-09-15',
-    time: '20:00',
-    seats: ['E2', 'E3'],
-    price: '$22.00',
-    status: 'Completed'
-  },
-  {
-    key: '6',
-    movie: 'Dune',
-    date: '2023-10-05',
-    time: '14:30',
-    seats: ['F7', 'F8', 'F9'],
-    price: '$36.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '7',
-    movie: 'Black Panther: Wakanda Forever',
-    date: '2023-11-11',
-    time: '17:15',
-    seats: ['G12'],
-    price: '$14.50',
-    status: 'Completed'
-  },
-  {
-    key: '8',
-    movie: 'Top Gun: Maverick',
-    date: '2023-12-25',
-    time: '13:00',
-    seats: ['H4', 'H5'],
-    price: '$28.00',
-    status: 'Cancelled'
-  },
-  {
-    key: '9',
-    movie: 'Avatar: The Way of Water',
-    date: '2024-01-07',
-    time: '19:45',
-    seats: ['J10', 'J11', 'J12'],
-    price: '$42.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '10',
-    movie: 'Jurassic World Dominion',
-    date: '2024-02-14',
-    time: '20:30',
-    seats: ['K6'],
-    price: '$16.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '11',
-    movie: 'The Super Mario Bros. Movie',
-    date: '2024-03-10',
-    time: '11:00',
-    seats: ['L3', 'L4'],
-    price: '$24.00',
-    status: 'Completed'
-  },
-  {
-    key: '12',
-    movie: 'Oppenheimer',
-    date: '2024-04-22',
-    time: '21:15',
-    seats: ['M8', 'M9'],
-    price: '$30.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '13',
-    movie: 'Barbie',
-    date: '2024-05-30',
-    time: '16:20',
-    seats: ['N1', 'N2', 'N3', 'N4'],
-    price: '$48.00',
-    status: 'Cancelled'
-  },
-  {
-    key: '14',
-    movie: 'Mission: Impossible - Dead Reckoning',
-    date: '2024-06-18',
-    time: '18:45',
-    seats: ['O7'],
-    price: '$18.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '15',
-    movie: 'Guardians of the Galaxy Vol. 3',
-    date: '2024-07-05',
-    time: '14:00',
-    seats: ['P5', 'P6'],
-    price: '$26.00',
-    status: 'Completed'
-  },
-  {
-    key: '16',
-    movie: 'Fast X',
-    date: '2024-08-12',
-    time: '20:00',
-    seats: ['Q9', 'Q10'],
-    price: '$32.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '17',
-    movie: 'The Little Mermaid',
-    date: '2024-09-09',
-    time: '15:30',
-    seats: ['R2'],
-    price: '$14.00',
-    status: 'Cancelled'
-  },
-  {
-    key: '18',
-    movie: 'Indiana Jones and the Dial of Destiny',
-    date: '2024-10-28',
-    time: '19:00',
-    seats: ['S4', 'S5', 'S6'],
-    price: '$36.00',
-    status: 'Upcoming'
-  },
-  {
-    key: '19',
-    movie: 'Elemental',
-    date: '2024-11-15',
-    time: '12:45',
-    seats: ['T8'],
-    price: '$12.00',
-    status: 'Completed'
-  },
-  {
-    key: '20',
-    movie: 'The Marvels',
-    date: '2024-12-20',
-    time: '22:00',
-    seats: ['U3', 'U4'],
-    price: '$28.00',
-    status: 'Upcoming'
-  }
-];
+import { useAuth } from '../../context/AuthContext';
+import dayjs from 'dayjs';
+import axios from 'axios';
 
 const UserProfile = () => {
   const location = useLocation();
@@ -229,33 +33,87 @@ const UserProfile = () => {
   const [pwdForm] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(null);
-
+  const [bookingData, setBookingData] = useState(null);
+  const [historyData, setHistoryData] = useState(null);
+  const [paginationBookings, setPaginationBookings] = useState({});
+  const [paginationHistory, setPaginationHistory] = useState({});
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
   useEffect(() => {
-    const token = Cookies.get(ACCESS_TOKEN_COOKIE_NAME);
-    if (token) {
-      const decoded = decodeJWT(token);
-      if (decoded) {
+    console.log('User data:', user);
+    const init = async () => {
+      if (user) {
         setUserData({
-          name: decoded.name || 'N/A',
-          email: decoded.email || 'N/A',
-          phone: decoded.phoneNumber || 'N/A',
-          DOB: new Date(decoded.dob).toISOString().split('T')[0] || 'N/A',
-          gender: 'N/A', // Not included in token
+          name: user.name || 'N/A',
+          email: user.email || 'N/A',
+          phone: user.phoneNumber || 'N/A',
+          DOB: user.DOB ? dayjs(user.DOB).format('YYYY-MM-DD') : 'N/A',
+          gender: 'N/A',
           avatar: 'https://randomuser.me/api/portraits/men/1.jpg' // Default avatar
         });
+
+        await Promise.all([
+          getBooking(),
+          getHistory()
+        ]);
       }
     }
-  }, []);
+    init();
+  }, [user]);
+
+  useEffect(() => {
+    getBooking(paginationBookings.current || 1, paginationBookings.pageSize || 5);
+  }, [paginationBookings.current, paginationBookings.pageSize]);
+
+  useEffect(() => {
+    getHistory(paginationHistory.current || 1, paginationHistory.pageSize || 5);
+  }, [paginationHistory.current, paginationHistory.pageSize]);
+
+  const getBooking = async (page = 1, size = 3) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://localhost:8080/api/guest/my-bookings?page=${page - 1}&size=${size}`, { withCredentials: true });
+      setBookingData(response.data.content);
+      setPaginationBookings({
+        current: response.data.pageable.pageNumber + 1,
+        pageSize: response.data.pageable.pageSize,
+        total: response.data.totalElements
+      });
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      message.error('Failed to fetch bookings.');
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const getHistory = async (page = 1, size = 3) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/guest/my-history?page=${page - 1}&size=${size}`, { withCredentials: true });
+      setHistoryData(response.data.content);
+      setPaginationHistory({
+        current: response.data.pageable.pageNumber + 1,
+        pageSize: response.data.pageable.pageSize,
+        total: response.data.totalElements
+      });
+    } catch (error) {
+      console.error('Error fetching history:', error);
+      message.error('Failed to fetch history.');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (location.pathname === '/my-ticket') {
       setActiveTab('tickets');
     }
-    
+
     if (location.pathname === '/my-history') {
       setActiveTab('history');
     }
-    
+
   }, [location.pathname]);
 
   const onFinish = values => {
@@ -283,16 +141,6 @@ const UserProfile = () => {
     message.success(`Ticket ${ticketId} cancelled successfully!`);
   };
 
-  // Filter tickets for My Tickets tab (excluding Completed and Cancelled)
-  const activeTickets = ticketData.filter(
-    ticket => ticket.status !== 'Completed' && ticket.status !== 'Cancelled'
-  );
-
-  // Filter tickets for History tab (Completed and Cancelled only)
-  const historyTickets = ticketData.filter(
-    ticket => ticket.status === 'Completed' || ticket.status === 'Cancelled'
-  );
-
   const items = [
     {
       key: 'profile',
@@ -318,9 +166,12 @@ const UserProfile = () => {
       key: 'tickets',
       label: <span>My Tickets</span>,
       children: (
-        <TicketTable 
-          data={activeTickets} 
-          onCancelTicket={handleCancelTicket} 
+        <TicketTable
+          data={bookingData || []}
+          onCancelTicket={handleCancelTicket}
+          pagination={paginationBookings}
+          setPagination={(page) => setPaginationBookings(page)}
+          loading={loading}
         />
       )
     },
@@ -333,9 +184,12 @@ const UserProfile = () => {
         </span>
       ),
       children: (
-        <TicketTable 
-          data={historyTickets} 
-          onCancelTicket={handleCancelTicket} 
+        <TicketTable
+          data={historyData || []}
+          onCancelTicket={handleCancelTicket}
+          pagination={paginationHistory}
+          setPagination={(page) => setPaginationHistory(page)}
+          loading={loading}
         />
       )
     }
@@ -352,8 +206,8 @@ const UserProfile = () => {
       <Row gutter={[24, 24]}>
         <Col xs={24} md={8}>
           <Card className="text-center">
-            <ProfileAvatar 
-              avatar={userData.avatar} 
+            <ProfileAvatar
+              avatar={userData.avatar}
               uploadProps={{
                 name: 'avatar',
                 action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',

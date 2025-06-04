@@ -18,16 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.data.domain.PageRequest;
@@ -98,9 +88,9 @@ public class GuestController {
         }
     }
 
-
     @PostMapping("/booking")
-    public ResponseEntity<?> createWithDetail(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestBody BookingRequestDto entity, HttpServletRequest request) {
+    public ResponseEntity<?> createWithDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody BookingRequestDto entity, HttpServletRequest request) {
         try {
             System.out.println(userDetails.getId());
             entity.setUserId(userDetails.getId());
@@ -132,4 +122,19 @@ public class GuestController {
         }
     }
 
+    @GetMapping("/my-bookings")
+    public ResponseEntity<?> getMyBookings(@AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size) {
+        return ResponseEntity.ok(bookingService.findAllBookingByUserId(userDetails.getId(),
+                PageRequest.of(page, size)));
+    }
+
+    @GetMapping("/my-history")
+    public ResponseEntity<?> getMyHistory(@AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size) {
+        return ResponseEntity.ok(bookingService.findAllBookingHistoryByUserId(userDetails.getId(),
+                PageRequest.of(page, size)));
+    }
 }

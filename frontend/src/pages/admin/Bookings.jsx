@@ -65,7 +65,7 @@ const getStatusOptions = (currentStatus) => {
     }
 };
 
-const columns = (handleEdit, handleDelete) => [
+const columns = [
     {
         title: "Booking Info",
         dataIndex: "bookingCode",

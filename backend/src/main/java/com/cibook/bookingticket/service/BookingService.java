@@ -3,6 +3,7 @@ package com.cibook.bookingticket.service;
 import com.cibook.bookingticket.common.Config;
 import com.cibook.bookingticket.dto.BookingAdminDto;
 import com.cibook.bookingticket.dto.BookingRequestDto;
+import com.cibook.bookingticket.dto.BookingResponseDto;
 import com.cibook.bookingticket.dto.PaymentInitRequestDto;
 import com.cibook.bookingticket.model.*;
 import com.cibook.bookingticket.model.Booking.BookingStatus;
@@ -23,6 +24,7 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -165,7 +167,7 @@ public class BookingService implements IService<Booking, String> {
         // 5. Update status seats
         seatService.updateSeatStatus(dto.getSeats(), showtime.getScreenCode(), showtime.getCinemaCode(), "PENDING");
         log.info("BookingService: Seats updated to PENDING status for booking ID: {}", finalBooking.getId());
-        
+
         finalBooking.setPaymentUrl(paymentUrl.get("url"));
         finalBooking.setTxnRef(paymentUrl.get("vnp_TxnRef"));
         return bookingRepository.save(finalBooking);
@@ -457,7 +459,7 @@ public class BookingService implements IService<Booking, String> {
         if (fields.containsKey("vnp_SecureHash")) {
             fields.remove("vnp_SecureHash");
         }
-        
+
         String signValue = Config.hashAllFields(fields);
         log.info("Fields: {}", fields);
         log.info("BookingService: vnp_SecureHash: {}, signValue: {}", vnp_SecureHash, signValue);
@@ -487,5 +489,13 @@ public class BookingService implements IService<Booking, String> {
         }
 
         return false;
+    }
+
+    public Page<BookingAdminDto> findAllBookingByUserId(String id, PageRequest of) {
+        return findAllBooking(of, id, null, null);
+    }
+
+    public Page<BookingAdminDto> findAllBookingHistoryByUserId(String id, PageRequest of) {
+        return findAllBooking(of, id, "APPROVED", null);
     }
 }

@@ -1,10 +1,125 @@
 // src/components/TicketTable.jsx
 import React, { useState } from 'react'; // <-- Import useState
 import PropTypes from 'prop-types'; // <-- Import PropTypes
-import { Table, Tag, Button, message } from 'antd'; // <-- Import message
+import { Table, Tag, Button, message, Image, Badge, Divider} from 'antd'; // <-- Import message
+import { UserOutlined, MailOutlined, PhoneOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import CancelTicketModal from './CancelTicketModal'; // <-- 1. Import the modal component (adjust path)
+import dayjs from 'dayjs';
+import TagStatus from '../ui/Tag/TagStatus';
+const columns = [
+  {
+    title: "Booking Info",
+    dataIndex: "bookingCode",
+    key: "bookingCode",
+    render: (_, record) => (
+      <div className="flex flex-col">
+        <div className="font-bold text-lg">{record.bookingCode}</div>
+        <div className="text-gray-500 text-sm">
+          {dayjs.utc(record.createdAt).format('YYYY-MM-DD HH:mm')}
+        </div>
+        <div className="mt-2">
+          <TagStatus status={record.status} />
+        </div>
+      </div>
+    ),
+    width: 200,
+  },
+  {
+    title: "Movie & Showtime",
+    key: "movie",
+    render: (_, record) => (
+      <div className="flex gap-3">
+        <Image
+          width={60}
+          height={120}
+          src={record.movie.thumbnail}
+          className="rounded-md object-cover"
+          preview={false}
+        />
+        <div className="flex-1">
+          <div className="font-bold">{record.movie.title}</div>
+          <div className="text-sm text-gray-500 flex flex-wrap gap-1">
+            {record.movie.genre.map(g => (
+              <Tag key={g} className="text-xs">{g}</Tag>
+            ))}
+          </div>
+          <div className="flex gap-2 items-center mt-1">
+            <UserOutlined />
+            <span className="font-bold text-xs">Owner: </span> <span>{record.showtime.owner}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ClockCircleOutlined className="text-blue-500" />
+            <span>
+              {dayjs.utc(record.showtime.startTime).format('YYYY-MM-DD HH:mm')}
+              {" - "}
+              {dayjs.utc(record.showtime.endTime).format('HH:mm')}
+            </span>
+          </div>
+          <div className="text-sm mt-1">
+            <span className="font-medium">Screen:</span> {record.showtime.screenCode}
+          </div>
+        </div>
+      </div>
+    ),
+    width: 300,
+  },
+  {
+    title: "User Info",
+    key: "user",
+    render: (_, record) => (
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2">
+          <UserOutlined className="text-gray-500" />
+          <span className="font-medium">{record?.user?.name}</span>
+        </div>
+        <div className="flex items-center gap-2 mt-2">
+          <MailOutlined className="text-gray-500" />
+          <span>{record?.user?.email}</span>
+        </div>
+        <div className="flex items-center gap-2 mt-2">
+          <PhoneOutlined className="text-gray-500" />
+          <span>{record?.user?.phoneNumber}</span>
+        </div>
+      </div>
+    ),
+    width: 250,
+  },
+  {
+    title: "Seats & Price",
+    key: "seats",
+    render: (_, record) => (
+      <div>
+        <div className="font-medium mb-2">Seats:</div>
+        <div className="flex flex-wrap gap-2">
+          {record.bookingDetails.map(detail => (
+            <Badge
+              key={detail.seatCode}
+              count={detail.seatCode}
+              color="blue"
+              className="bg-blue-100 text-blue-800 rounded px-2 py-1"
+            />
+          ))}
+        </div>
+        <Divider className="my-2" />
+        <div className="flex justify-between">
+          <span>Subtotal:</span>
+          <span>{(record.totalAmount / (1 + record.taxAmount)).toLocaleString()} VND</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Tax ({record.taxAmount * 100}%):</span>
+          <span>{(record.totalAmount - (record.totalAmount / (1 + record.taxAmount))).toLocaleString()} VND</span>
+        </div>
+        <div className="flex justify-between font-bold mt-1">
+          <span>Total:</span>
+          <span className="text-green-600">{record.totalAmount.toLocaleString()} VND</span>
+        </div>
+      </div>
+    ),
+    width: 250,
+  }
+];
 
-const TicketTable = ({ data, onCancelTicket }) => {
+const TicketTable = ({ data, onCancelTicket, pagination, setPagination, loading }) => {
   // --- 2. Add State for Modal ---
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [ticketToCancel, setTicketToCancel] = useState(null); // Store details of the ticket for the modal
@@ -28,49 +143,26 @@ const TicketTable = ({ data, onCancelTicket }) => {
   // --- 5. Handler after Confirmation ---
   // This function is passed to the modal and called by it upon successful cancellation simulation
   const handleConfirmCancellation = (ticketKey) => {
-     console.log("Modal confirmed cancellation for key:", ticketKey);
-     // Now call the original prop function passed from the parent component
-     // This function should handle the actual state update (e.g., removing/updating the ticket in the parent's list)
-     onCancelTicket(ticketKey);
-     // The modal closes itself, but we ensure state is clean here too
-     handleCloseModal();
+    console.log("Modal confirmed cancellation for key:", ticketKey);
+    // Now call the original prop function passed from the parent component
+    // This function should handle the actual state update (e.g., removing/updating the ticket in the parent's list)
+    onCancelTicket(ticketKey);
+    // The modal closes itself, but we ensure state is clean here too
+    handleCloseModal();
   };
   // ------------------------------------
-
-  const columns = [
-    { title: 'Movie', dataIndex: 'movie', key: 'movie', sorter: (a, b) => a.movie.localeCompare(b.movie), sortDirections: ['ascend', 'descend'] },
-    { title: 'Date', dataIndex: 'date', key: 'date', sorter: (a, b) => new Date(a.date) - new Date(b.date), sortDirections: ['ascend', 'descend'], defaultSortOrder: 'ascend' },
-    { title: 'Time', dataIndex: 'time', key: 'time', sorter: (a, b) => a.time.localeCompare(b.time), sortDirections: ['ascend', 'descend'] },
-    { title: 'Seats', dataIndex: 'seats', key: 'seats', render: seats => (<>{seats.map(seat => (<Tag color="blue" key={seat}>{seat}</Tag>))}</>), sorter: (a, b) => a.seats.length - b.seats.length, sortDirections: ['ascend', 'descend'] },
-    { title: 'Price', dataIndex: 'price', key: 'price', sorter: (a, b) => parseFloat(a.price.replace(/[$,]/g, '')) - parseFloat(b.price.replace(/[$,]/g, '')), sortDirections: ['ascend', 'descend'] }, // Improved price parsing
-    { title: 'Status', dataIndex: 'status', key: 'status', render: status => { let color = status === 'Completed' ? 'green' : status === 'Cancelled' ? 'volcano' : 'orange'; return (<Tag color={color} key={status}>{status.toUpperCase()}</Tag>); }, sorter: (a, b) => a.status.localeCompare(b.status), sortDirections: ['ascend', 'descend'] }, // Use 'volcano' for better red contrast
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) =>
-        // Only show Cancel button for 'Upcoming' tickets
-        record.status === 'Upcoming' ? (
-          <Button
-            type="link"
-            danger
-            // --- 6. Update onClick to show the modal ---
-            onClick={() => showCancelModal(record)} // Pass the whole record
-          >
-            Cancel
-          </Button>
-        ) : null // No action for other statuses
-    }
-  ];
 
   return (
     <> {/* Use Fragment to render Table and Modal */}
       <Table
         columns={columns}
         dataSource={data}
-        pagination={{ pageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '20'] }} // Enhanced pagination
         showSorterTooltip={true} // Keep sorter tooltip
         rowKey="key" // Ensure rowKey is set if 'key' is the unique identifier
         scroll={{ x: 'max-content' }} // Add horizontal scroll if needed
+        pagination={pagination} // Use pagination prop
+        onChange={(pagination) => setPagination(pagination)} // Update pagination state on change
+        loading={loading} // Show loading state if provided
       />
 
       {/* --- 7. Render the Modal Conditionally --- */}
@@ -88,16 +180,16 @@ const TicketTable = ({ data, onCancelTicket }) => {
 
 // --- 8. Add PropTypes for TicketTable ---
 TicketTable.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-        key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-        movie: PropTypes.string,
-        date: PropTypes.string,
-        time: PropTypes.string,
-        seats: PropTypes.arrayOf(PropTypes.string),
-        price: PropTypes.string,
-        status: PropTypes.oneOf(['Upcoming', 'Completed', 'Cancelled']),
-    })).isRequired,
-    onCancelTicket: PropTypes.func.isRequired, // Function expected from parent
+  data: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    movie: PropTypes.string,
+    date: PropTypes.string,
+    time: PropTypes.string,
+    seats: PropTypes.arrayOf(PropTypes.string),
+    price: PropTypes.string,
+    status: PropTypes.oneOf(['Upcoming', 'Completed', 'Cancelled']),
+  })).isRequired,
+  onCancelTicket: PropTypes.func.isRequired, // Function expected from parent
 };
 // --- End PropTypes ---
 
