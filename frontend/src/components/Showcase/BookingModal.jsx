@@ -2,42 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'; // Import PropTypes
 import { Modal, Button, Divider, message, Tag } from 'antd'; // Added message, Tag
-import { CloseCircleFilled } from '@ant-design/icons';
 import { getAgeLimitColor, getEndTime, formatPrice } from '../../utils/dateUtils'; // Import helpers
 import PaymentModal from '../common/PaymentModal'; // <-- 1. Import PaymentModal (Adjust path if needed)
-import TheaterLayoutView from '../ProviderManagement/Layout/TheaterLayoutView';
 import TheaterLayoutViewSelection from './TheaterLayoutViewSelection';
+import { useAuth } from '../../context/AuthContext'; // Import Auth context if needed
 
-// --- Helper Functions (Moved outside component for better practice) ---
-const generateSeatGrid = (totalSeats, columns, startRow = 0) => {
-  const seatGrid = [];
-  let rowIndex = startRow;
-  if (totalSeats <= 0 || columns <= 0) return []; // Guard
-  for (let i = 0; i < totalSeats; i++) {
-    const rowLabel = String.fromCharCode(65 + rowIndex);
-    const seatLabel = `${rowLabel}${(i % columns) + 1}`;
-    seatGrid.push(seatLabel);
-    if ((i + 1) % columns === 0) rowIndex++;
-  }
-  return seatGrid;
-};
-
-const generateCoupleSeatGrid = totalSeats => {
-  if (!totalSeats || totalSeats <= 0) return [];
-  return Array.from(
-    { length: totalSeats },
-    (_, i) => `CP${(i + 1).toString().padStart(2, '0')}`
-  );
-};
-// --- End Helper Functions ---
-
-
-const BookingModal = ({ visible, onClose, showtime }) => {
+const BookingModal = ({ visible, onClose, showtime, movie }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
   const [currentBookingDetails, setCurrentBookingDetails] = useState(null);
   const [screenData, setScreenData] = useState(null);
-  console.log(showtime)
+  const { user } = useAuth(); // Assuming you have an Auth context for user info
+  console.log("BookingModal showtime:", showtime);
   useEffect(() => {
     if (visible && showtime) {
       setSelectedSeats([]);
@@ -94,7 +70,7 @@ const BookingModal = ({ visible, onClose, showtime }) => {
     try {
       const d = new Date(date + 'T00:00:00');
       return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-    } catch(e) {
+    } catch (e) {
       console.error("Error parsing date:", date, e);
       return 'Invalid Date';
     }
@@ -106,24 +82,27 @@ const BookingModal = ({ visible, onClose, showtime }) => {
       return;
     }
     const details = {
-      showtimeId,
-      movieTitle,
-      cinemaId,
-      room,
-      date,
+      movieTitle: movie.title,
       time,
+      date,
+      room,
+      showtimeId: showtime.showTimeCode,
+      cinemaId,
       seats: [selectedSeats.map(seat => seat.seatCode)],
-      totalPrice,
-      duration,
-      ageLimit
+      paymentMethod: 'BANK',
+      totalAmount: totalPrice,
     };
     setCurrentBookingDetails(details);
     setPaymentModalVisible(true);
   };
 
-  const handleFinalBookingSuccess = (paidBookingDetails) => {
-    console.log('Payment successful, booking confirmed for:', paidBookingDetails);
-    message.success('Booking and payment successful!');
+  const handleFinalBookingSuccess = async (paidBookingDetails) => {
+    try {
+      message.success('Booking and payment successful!');
+    } catch (err) {
+      console.error(err);
+      message.error('Booking failed. Please try again later.');
+    }
     setPaymentModalVisible(false);
     onClose();
   };
@@ -204,34 +183,48 @@ const BookingModal = ({ visible, onClose, showtime }) => {
                 {formatPrice(totalPrice)} đ
               </span>
             </div>
-            <Button
-              type='primary'
-              danger
-              disabled={selectedSeats.length === 0}
-              onClick={handleProceedToPayment}
-              className='!bg-red-600 hover:!bg-red-700 !border-red-600 hover:!border-red-700'
-              style={{
-                padding: '10px 20px',
-                height: 'auto',
-                fontWeight: 'bold',
-                fontSize: '1rem'
-              }}
-            >
-              Book Ticket{selectedSeats.length > 0 ? ` (${selectedSeats.length})` : ''}
-            </Button>
+            {user === null ? (
+              <Button
+                variant='solid'
+                color='danger'
+                href='/login'
+              >
+                Please login to book tickets
+              </Button>
+            ) :
+
+              < Button
+                type='primary'
+                danger
+                disabled={selectedSeats.length === 0}
+                onClick={handleProceedToPayment}
+                className='!bg-red-600 hover:!bg-red-700 !border-red-600 hover:!border-red-700'
+                style={{
+                  padding: '10px 20px',
+                  height: 'auto',
+                  fontWeight: 'bold',
+                  fontSize: '1rem'
+                }}
+              >
+                Book Ticket{selectedSeats.length > 0 ? ` (${selectedSeats.length})` : ''}
+
+              </Button>
+            }
           </div>
         </div>
-      </Modal>
+      </Modal >
 
       {/* Payment Modal */}
-      {currentBookingDetails && (
-        <PaymentModal
-          visible={paymentModalVisible}
-          onClose={() => setPaymentModalVisible(false)}
-          bookingDetails={currentBookingDetails}
-          onPaymentSuccess={handleFinalBookingSuccess}
-        />
-      )}
+      {
+        currentBookingDetails && (
+          <PaymentModal
+            visible={paymentModalVisible}
+            onClose={() => setPaymentModalVisible(false)}
+            bookingDetails={currentBookingDetails}
+            onPaymentSuccess={handleFinalBookingSuccess}
+          />
+        )
+      }
     </>
   );
 };

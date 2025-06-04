@@ -17,4 +17,6 @@ public class BookingRequestDto {
     private String paymentMethod;
     private String couponCode;
     private Double totalAmount;
+    private String ip;
+    private String paymentUrl;
 }

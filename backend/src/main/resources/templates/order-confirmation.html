@@ -19,7 +19,8 @@
             </div>
             <div class="order-item">
                 <span>🕒 Showtime</span>
-                <span th:text="${#temporals.format(showtime, 'EEEE, MMM dd yyyy - HH:mm')}">Monday, Jan 01 2025 - 19:30</span>
+                <span th:text="${showtimeStartDate}">Monday, Jan 01 2025 - 19:30 - </span>
+                <span th:text="${showtimeEndDate}">21:30</span>
             </div>
             <div class="order-item">
                 <span>🏢 Cinema</span>
@@ -37,7 +38,7 @@
 
         <div class="order-total">
             <span>Total Amount</span>
-            <span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', '.', 'VND')}">180,000 VND</span>
+            <span th:text="${totalAmount} VND">180,000 VND</span>
         </div>
     </div>
 

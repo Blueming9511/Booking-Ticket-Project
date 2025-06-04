@@ -9,6 +9,7 @@ import MovieDetails from '../pages/user/MovieDetails'
 import MoviePage from '../pages/user/MoviePage'
 import Register from '../pages/register'
 import ForgotPassword from "../pages/ForgotPassword.jsx";
+import RedirectPayment from '../pages/user/RedirectPayment.jsx'
 
 const MainRoutes = () => {
   return (
@@ -17,6 +18,8 @@ const MainRoutes = () => {
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
+
+
 
       {/* Protected Routes (Wrapped inside Layout) */}
       <Route path='/' element={<Layout />}>
@@ -27,6 +30,7 @@ const MainRoutes = () => {
         <Route path='/my-ticket' element={<UserProfile />} />
         <Route path='/my-history' element={<UserProfile />} />
         <Route path='/movie/:id' element={<MovieDetails />} />
+        <Route path='/redirectPayment' element={<RedirectPayment />} />
         <Route path='/*' element={<ErrorPage />} />
       </Route>
     </Routes>

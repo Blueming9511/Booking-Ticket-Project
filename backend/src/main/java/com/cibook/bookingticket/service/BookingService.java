@@ -1,7 +1,9 @@
 package com.cibook.bookingticket.service;
 
+import com.cibook.bookingticket.common.Config;
 import com.cibook.bookingticket.dto.BookingAdminDto;
 import com.cibook.bookingticket.dto.BookingRequestDto;
+import com.cibook.bookingticket.dto.PaymentInitRequestDto;
 import com.cibook.bookingticket.model.*;
 import com.cibook.bookingticket.model.Booking.BookingStatus;
 import com.cibook.bookingticket.observer.NotificationSubject;
@@ -12,6 +14,8 @@ import com.cibook.bookingticket.repository.ShowtimeRepository;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import org.bson.Document;
@@ -25,6 +29,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -47,6 +52,7 @@ public class BookingService implements IService<Booking, String> {
     private final CouponService couponService;
     private final SeatService seatService;
     private final MongoTemplate mongoTemplate;
+    private final VNPayService vnPayService;
 
     @Autowired
     public BookingService(BookingRepository bookingRepository, BookingDetailService bookingDetailService,
@@ -54,7 +60,7 @@ public class BookingService implements IService<Booking, String> {
             BookingDetailRepository bookingDetailRepository, BookingDetailRepository bookingDetailRepository1,
             PaymentRepository paymentRepository, ShowtimeService showtimeService, MovieService movieService,
             CinemaService cinemaService, CouponService couponService, SeatService seatService,
-            ShowtimeRepository showtimeRepository, MongoTemplate mongoTemplate) {
+            ShowtimeRepository showtimeRepository, MongoTemplate mongoTemplate, VNPayService vnPayService) {
         this.bookingRepository = bookingRepository;
         this.bookingDetailService = bookingDetailService;
         this.notificationSubject = notificationSubject;
@@ -68,6 +74,7 @@ public class BookingService implements IService<Booking, String> {
         this.seatService = seatService;
         this.showtimeRepository = showtimeRepository;
         this.mongoTemplate = mongoTemplate;
+        this.vnPayService = vnPayService;
     }
 
     @Override
@@ -77,16 +84,23 @@ public class BookingService implements IService<Booking, String> {
     }
 
     @Transactional
-    public Booking addWithDetail(BookingRequestDto dto) {
-        Coupon coupon =  couponService.findByCode(dto.getCouponCode()).orElseThrow(() -> new NoSuchElementException("Coupon not found with code: " + dto.getCouponCode()));
+    @SneakyThrows
+    public Booking addWithDetail(BookingRequestDto dto) throws UnsupportedEncodingException {
+        Coupon coupon = couponService.findByCode(dto.getCouponCode()).orElse(null);
+        log.info("BookingService: Adding booking with details: {}", dto);
         Double amount = dto.getTotalAmount();
-        if (coupon.getType() == Coupon.CouponType.PERCENTAGE) {
-            amount = dto.getTotalAmount() * (1 - coupon.getDiscountValue() / 100);
-        } else if (coupon.getType() == Coupon.CouponType.FIXED) {
-            amount = dto.getTotalAmount() - coupon.getDiscountValue();
+        if (coupon == null) {
+            amount = dto.getTotalAmount();
+        } else {
+            if (coupon.getType() == Coupon.CouponType.PERCENTAGE) {
+                amount = dto.getTotalAmount() * (1 - coupon.getDiscountValue() / 100);
+            } else if (coupon.getType() == Coupon.CouponType.FIXED) {
+                amount = dto.getTotalAmount() - coupon.getDiscountValue();
+            } else {
+                amount = dto.getTotalAmount();
+            }
         }
 
-        // 1.Create booking
         Booking booking = Booking.builder()
                 .bookingCode(codeGenerator.generateBookingCode())
                 .userId(dto.getUserId())
@@ -96,10 +110,10 @@ public class BookingService implements IService<Booking, String> {
                 .status(BookingStatus.PENDING)
                 .build();
         booking = bookingRepository.save(booking);
-
+        log.info("BookingService: Booking created with ID: {}", booking.getId());
         // 2. Update showtime booked seats
         Showtime showtime = showtimeService.findByCode(booking.getShowTimeCode()).orElseThrow();
-
+        log.info("BookingService: Showtime found with code: {}", showtime.getShowTimeCode());
         // 3. Create booking details
         Booking finalBooking = booking;
         // 3.1 Check seat availability
@@ -112,7 +126,7 @@ public class BookingService implements IService<Booking, String> {
         if (!unavailableSeats.isEmpty()) {
             throw new SeatUnavailableException("Booked seats: " + unavailableSeats);
         }
-
+        log.info("BookingService: All requested seats are available: {}", dto.getSeats());
         showtime.setBookedSeats(showtime.getBookedSeats() + dto.getSeats().size());
         showtimeRepository.save(showtime);
 
@@ -122,7 +136,7 @@ public class BookingService implements IService<Booking, String> {
                 .seatCode(seatId)
                 .build()).toList();
         details = bookingDetailRepository.saveAll(details);
-
+        log.info("BookingService: Booking details created for booking ID: {}", finalBooking.getId());
         // 4. Create payment
         Payment payment = Payment.builder()
                 .paymentCode(codeGenerator.generatePaymentCode())
@@ -132,10 +146,19 @@ public class BookingService implements IService<Booking, String> {
                 .owner(dto.getUserId())
                 .build();
         payment = paymentRepository.save(payment);
-
+        PaymentInitRequestDto paymentInitRequestDto = PaymentInitRequestDto.builder()
+                .userId(dto.getUserId())
+                .amount(dto.getTotalAmount().longValue())
+                .txnRef(booking.getId())
+                .ipAddress(dto.getIp())
+                .requestId(booking.getId())
+                .build();
+        Map<String, String> paymentUrl = vnPayService.init(paymentInitRequestDto);
+        log.info("BookingService: Payment created with ID: {}", payment.getId());
+        log.info("BookingService: Payment URL generated: {}", paymentUrl);
         // 5. Update status seats
         seatService.updateSeatStatus(dto.getSeats(), showtime.getScreenCode(), showtime.getCinemaCode(), "PENDING");
-
+        log.info("BookingService: Seats updated to PENDING status for booking ID: {}", finalBooking.getId());
         // 6. Send notification
         Movie movie = movieService.findByCode(showtime.getMovieCode()).orElseThrow();
         Cinema cinema = cinemaService.findByCode(showtime.getCinemaCode()).orElseThrow();
@@ -155,7 +178,10 @@ public class BookingService implements IService<Booking, String> {
                 "Xác nhận đặt vé!",
                 "Vé của bạn đã được chúng tôi ghi nhận!",
                 data);
-        return finalBooking;
+
+        finalBooking.setPaymentUrl(paymentUrl.get("url"));
+        finalBooking.setTxnRef(paymentUrl.get("vnp_TxnRef"));
+        return bookingRepository.save(finalBooking);
     }
 
     @Override
@@ -232,9 +258,8 @@ public class BookingService implements IService<Booking, String> {
         if (status != null && !status.isEmpty()) {
             pipeline.add(new Document("$match", new Document("status", status)));
         }
-
         if (owner != null && !owner.isEmpty()) {
-            pipeline.add(new Document("$match", new Document("owner", owner)));
+            pipeline.add(new Document("$match", new Document("userId", owner)));
         }
 
         pipeline.addAll(Arrays.asList(
@@ -279,8 +304,6 @@ public class BookingService implements IService<Booking, String> {
                 new Document("$unwind",
                         new Document("path", "$user")
                                 .append("preserveNullAndEmptyArrays", true)),
-                new Document("$sort",
-                        new Document("createdAt", -1L)),
                 new Document("$project",
                         new Document("bookingCode", 1L)
                                 .append("createdAt", 1L)
@@ -313,7 +336,7 @@ public class BookingService implements IService<Booking, String> {
 
         List<Document> countPipeline = new ArrayList<>();
         countPipeline.add(new Document("$count", "total"));
-
+        pipeline.add(new Document("$sort", new Document("createdAt", -1)));
         pipeline.add(new Document("$facet", new Document()
                 .append("content", facetPipeline)
                 .append("count", countPipeline)));
@@ -428,5 +451,48 @@ public class BookingService implements IService<Booking, String> {
                 "total", getTotalBooking(),
                 "thisMonth", getTotalBookingThisMonth(now.withDayOfMonth(1), now),
                 "lastMonth", getTotalBookingThisMonth(now.withDayOfMonth(1).minusMonths(1), now.minusMonths(1)));
+    }
+
+    public boolean handleBooking(HttpServletRequest request) throws UnsupportedEncodingException {
+        Map fields = new HashMap();
+        for (Enumeration params = request.getParameterNames(); params.hasMoreElements();) {
+            String fieldName = (String) params.nextElement();
+            String fieldValue = request.getParameter(fieldName);
+            if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                fields.put(fieldName, fieldValue);
+            }
+        }
+
+        String vnp_SecureHash = request.getParameter("vnp_SecureHash");
+        if (fields.containsKey("vnp_SecureHashType")) {
+            fields.remove("vnp_SecureHashType");
+        }
+        if (fields.containsKey("vnp_SecureHash")) {
+            fields.remove("vnp_SecureHash");
+        }
+        
+        String signValue = Config.hashAllFields(fields);
+        log.info("Fields: {}", fields);
+        log.info("BookingService: vnp_SecureHash: {}, signValue: {}", vnp_SecureHash, signValue);
+        if (signValue.equals(vnp_SecureHash)) {
+            Booking booking = bookingRepository.findByTxnRef(request.getParameter("vnp_TxnRef"))
+                    .orElseThrow(() -> new NoSuchElementException("Booking not found with TxnRef: "
+                            + request.getParameter("vnp_TxnRef")));
+            log.info("BookingService: Booking with TxnRef {} found", request.getParameter("vnp_TxnRef"));
+            if ("00".equals(request.getParameter("vnp_ResponseCode"))) {
+                booking.setStatus(Booking.BookingStatus.APPROVED);
+                bookingRepository.save(booking);
+                return true;
+
+            } else {
+                booking.setStatus(Booking.BookingStatus.CANCELLED);
+                bookingRepository.save(booking);
+                return false;
+            }
+        } else {
+            log.info("BookingService: Booking with TxnRef {} not approved", request.getParameter("vnp_TxnRef"));
+        }
+
+        return false;
     }
 }

@@ -17,6 +17,7 @@ import org.thymeleaf.context.Context;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -169,9 +170,20 @@ public class EmailService {
             templateModel.put("applicationName", applicationName);
             templateModel.put("applicationUrl", applicationUrl);
             templateModel.put("booking", response);
+            templateModel.put("movieTitle", response.getMovie().getTitle() != null ? response.getMovie().getTitle() : "Unknown Movie");
+            templateModel.put("showtimeStartDate", response.getShowtime().getStartTime());
+            templateModel.put("showtimeEndDate", response.getShowtime().getEndTime());
+            templateModel.put("cinemaName", response.getCinema().getCinemaName());
+            templateModel.put("cinemaLocation", response.getCinema().getLocation());
+            templateModel.put("seatList", response.getBookingDetail().stream()
+                    .map(BookingDetail::getSeatCode)
+                    .toList());
+            templateModel.put("paymentMethod", response.getPayment().getMethod());
+            templateModel.put("totalAmount", response.getPayment().getAmount());
+
+
             templateModel.put("customerName",
                     response.getUser().getName() != null ? response.getUser().getName() : "Valued Customer");
-
             String htmlContent = processTemplate("order-confirmation", templateModel);
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");

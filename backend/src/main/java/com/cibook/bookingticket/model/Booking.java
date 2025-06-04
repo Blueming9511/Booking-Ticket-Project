@@ -28,6 +28,8 @@ public class Booking {
     private LocalDateTime createdAt;
     @Builder.Default
     private BookingStatus status = BookingStatus.PENDING;
+    private String paymentUrl;
+    private String txnRef;
 
     public enum BookingStatus {
         PENDING,

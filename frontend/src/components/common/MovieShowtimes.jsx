@@ -340,6 +340,7 @@ export default function SingleMovieShowtimes({ movieDetails }) {
             setSelectedShowtime(null);
           }}
           showtime={selectedShowtime}
+          movie={movie}
         />
       )}
     </div>

@@ -44,8 +44,10 @@ public class BookingTimeoutScheduler {
             List<String> seatCodes = bookingDetailService.getSeatCodesByBookingId(booking.getId());
 
             // 3. Update status seats back AVAILABLE
-            Showtime showtime = showtimeService.findByCode(booking.getShowTimeCode()).orElseThrow(
-                    () -> new RuntimeException("Cannot find showtime with id: " + booking.getShowTimeCode()));
+            Showtime showtime = showtimeService.findByCode(booking.getShowTimeCode()).orElse(null);
+            if (showtime == null) {
+                continue; // Skip if showtime not found
+            }
             seatService.updateSeatStatus(seatCodes, showtime.getScreenCode(), showtime.getCinemaCode(), "AVAILABLE");
 
             // 4. Update showtime booked seats

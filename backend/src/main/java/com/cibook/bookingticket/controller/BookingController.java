@@ -95,12 +95,12 @@ public class BookingController implements IController<Booking, String> {
 
     @PostMapping("/u/")
     public ResponseEntity<?> createWithDetail(@RequestBody BookingRequestDto entity) {
-        try {
-            Booking booking = bookingService.addWithDetail(entity);
-            return ResponseEntity.ok(booking);
-        } catch (SeatUnavailableException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+        // try {
+        //     Booking booking = bookingService.addWithDetail(entity);
+        //     return ResponseEntity.ok(booking);
+        // } catch (SeatUnavailableException e) {
+            return ResponseEntity.badRequest().build();
+        // }
     }
 
 }

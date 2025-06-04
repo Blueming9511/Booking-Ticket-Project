@@ -129,15 +129,15 @@ const columns = (handleEdit, handleDelete) => [
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                     <UserOutlined className="text-gray-500" />
-                    <span className="font-medium">{record.user.name}</span>
+                    <span className="font-medium">{record?.user?.name}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                     <MailOutlined className="text-gray-500" />
-                    <span>{record.user.email}</span>
+                    <span>{record?.user?.email}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                     <PhoneOutlined className="text-gray-500" />
-                    <span>{record.user.phoneNumber}</span>
+                    <span>{record?.user?.phoneNumber}</span>
                 </div>
             </div>
         ),
